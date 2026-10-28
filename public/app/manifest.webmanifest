@@ -1,0 +1,15 @@
+{
+  "name": "MOK-Business",
+  "short_name": "MOK-Business",
+  "description": "Gestion de la boutique électronique MOK-Business",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f766e",
+  "theme_color": "#0f766e",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
