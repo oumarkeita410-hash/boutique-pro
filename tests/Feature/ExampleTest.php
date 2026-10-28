@@ -12,8 +12,7 @@ class ExampleTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response(): void
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        // La page d'accueil redirige vers l'application MOK-Business.
+        $this->get('/')->assertRedirect('/app/');
     }
 }

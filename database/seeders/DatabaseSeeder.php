@@ -11,7 +11,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             ReparateurSeeder::class,
-            CatalogueSeeder::class,
+            // Catalogue réel de la boutique (export JSON). Remplace le catalogue vide de départ.
+            CatalogueJsonSeeder::class,
         ]);
     }
 }

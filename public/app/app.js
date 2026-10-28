@@ -414,20 +414,72 @@ async function adminTableau() {
   cadre('Tableau de bord', `<div id="tb"><div class="spinner"></div></div>`, ongletsAdmin(), 0);
   try {
     const d = await api('GET', '/admin/tableau-de-bord'); const ca = d.chiffre_affaires || {};
+    const jours = (d.ventes_par_jour || []).map(x => ({ label: x.jour, value: Number(x.montant), n: x.nombre }));
+    const vendeurs = (d.top_vendeurs_mois || []).map(v => ({ nom: v.vendeur ? `${v.vendeur.prenom} ${v.vendeur.name}` : '—', value: Number(v.montant) }));
+    const produits = (d.top_produits_mois || []).map(p => ({ nom: p.produit ? p.produit.nom : '—', value: Number(p.quantite), suffix: ' u.' }));
+    const regions = (d.ca_par_region_mois || []).map(r => ({ nom: r.region, value: Number(r.montant) }));
+
     $('#tb').innerHTML = `
-      <div class="tiles">
-        <div class="tile wide"><div class="value">${gnf(ca.mois)}</div><div class="label">Chiffre d'affaires du mois</div></div>
-        <div class="tile"><div class="value">${gnf(ca.aujourdhui)}</div><div class="label">Aujourd'hui</div></div>
-        <div class="tile"><div class="value">${d.ventes_aujourdhui ?? 0}</div><div class="label">Ventes aujourd'hui</div></div>
-        <div class="tile"><div class="value">${gnf(d.marge_mois)}</div><div class="label">Marge du mois</div></div>
-        <div class="tile"><div class="value">${d.stock?.en_rupture ?? 0}</div><div class="label">En rupture</div></div>
-        <div class="tile"><div class="value">${d.stock?.stock_bas ?? 0}</div><div class="label">Stock bas</div></div>
-        <div class="tile"><div class="value">${d.reparateurs?.en_alerte ?? 0}</div><div class="label">Réparateurs en alerte</div></div>
-        <div class="tile"><div class="value">${d.comptes?.verrouilles ?? 0}</div><div class="label">Comptes verrouillés</div></div>
-        <div class="tile"><div class="value">${d.messages_non_lus ?? 0}</div><div class="label">Messages non lus</div></div>
+      <div class="hero-card">
+        <div class="hero-label">Chiffre d'affaires du mois</div>
+        <div class="hero-value">${gnf(ca.mois)}</div>
+        <div class="hero-sub">Aujourd'hui : ${gnf(ca.aujourdhui)} · ${d.ventes_aujourdhui ?? 0} vente(s) · Marge du mois : ${gnf(d.marge_mois)}</div>
       </div>
-      <div class="card mt"><h3>Dette réparateurs</h3><div class="value" style="font-size:1.3rem">${gnf(d.reparateurs?.dette_totale)}</div></div>`;
+
+      <div class="card"><h3>Ventes des 30 derniers jours</h3>${chartCourbe(jours)}</div>
+
+      ${blocTop('Meilleurs vendeurs du mois', vendeurs, 'c1')}
+      ${blocTop('Produits les plus vendus', produits, 'c2')}
+      ${blocTop('Ventes par région / préfecture', regions, 'c3')}
+
+      <div class="card"><h3>À surveiller</h3>
+        <div class="stat-row">
+          <div class="stat-chip ${d.stock?.en_rupture ? 'alerte' : ''}"><b>${d.stock?.en_rupture ?? 0}</b>En rupture de stock</div>
+          <div class="stat-chip"><b>${d.stock?.stock_bas ?? 0}</b>Stock bas</div>
+          <div class="stat-chip ${d.reparateurs?.en_alerte ? 'alerte' : ''}"><b>${d.reparateurs?.en_alerte ?? 0}</b>Réparateurs en alerte</div>
+          <div class="stat-chip"><b style="font-size:.95rem">${gnf(d.reparateurs?.dette_totale)}</b>Dette réparateurs</div>
+          <div class="stat-chip ${d.messages_non_lus ? 'alerte' : ''}"><b>${d.messages_non_lus ?? 0}</b>Messages non lus</div>
+          <div class="stat-chip"><b>${d.comptes?.verrouilles ?? 0}</b>Comptes verrouillés</div>
+          <div class="stat-chip"><b>${d.paiements_en_attente ?? 0}</b>Paiements à confirmer</div>
+          <div class="stat-chip"><b>${d.clients?.total ?? 0}</b>Clients enregistrés</div>
+        </div>
+      </div>`;
   } catch (ex) { $('#tb').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
+
+/* Courbe des ventes par jour (une seule série → couleur unique, pas de légende). */
+function chartCourbe(data) {
+  if (!data.length) return '<p class="muted">Aucune vente sur la période.</p>';
+  if (data.length === 1) {
+    return `<p class="muted">Une seule journée de ventes : ${gnf(data[0].value)}.</p>`;
+  }
+  const max = Math.max(1, ...data.map(d => d.value));
+  const W = 300, H = 100, padX = 4, padT = 8, padB = 10;
+  const n = data.length;
+  const px = i => padX + (i * (W - padX * 2)) / (n - 1);
+  const py = v => padT + (1 - v / max) * (H - padT - padB);
+  const pts = data.map((d, i) => [px(i), py(d.value)]);
+  const ligne = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const aire = `M${px(0).toFixed(1)},${(H - padB)} ` + pts.map(p => 'L' + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ') + ` L${px(n - 1).toFixed(1)},${(H - padB)} Z`;
+  const points = data.map((d, i) => `<circle cx="${px(i).toFixed(1)}" cy="${py(d.value).toFixed(1)}" r="1.8" fill="var(--primary)"><title>${esc((d.label || '').slice(5))} : ${gnf(d.value)} (${d.n} vente(s))</title></circle>`).join('');
+  return `<div class="chart-line"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Courbe des ventes par jour sur 30 jours">
+    <line x1="${padX}" y1="${H - padB}" x2="${W - padX}" y2="${H - padB}" stroke="var(--border)" stroke-width="0.7"/>
+    <path d="${aire}" fill="var(--primary)" fill-opacity="0.12"/>
+    <path d="${ligne}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${points}</svg></div>
+    <p class="muted" style="font-size:.74rem;text-align:right;margin:4px 0 0">Jour le plus fort : ${gnf(max)}</p>`;
+}
+
+/* Barres horizontales (classement par grandeur). `cls` = couleur du bloc (c1/c2/c3). */
+function blocTop(titre, items, cls = 'c1') {
+  if (!items.length) return '';
+  const max = Math.max(1, ...items.map(i => i.value));
+  return `<div class="card"><h3>${esc(titre)}</h3>${items.slice(0, 5).map(i => `
+    <div class="hbar-row">
+      <div class="hbar-name">${esc(i.nom)}</div>
+      <div class="hbar-track"><div class="hbar-fill ${cls}" style="width:${Math.max(3, Math.round(i.value / max * 100))}%"></div></div>
+      <div class="hbar-val">${i.suffix ? i.value + i.suffix : gnf(i.value)}</div>
+    </div>`).join('')}</div>`;
 }
 
 /* ---- Comptes : liste + création + modification ---- */

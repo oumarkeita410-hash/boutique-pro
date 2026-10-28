@@ -1,0 +1,5042 @@
+[
+    {
+        "nom": "Batterie A16",
+        "categorie": "Batterie de téléphone",
+        "modele": "A16",
+        "prix_achat": 50000,
+        "prix_unitaire": 55000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Batterie KD6",
+        "categorie": "Batterie de téléphone",
+        "modele": "KD6",
+        "prix_achat": 40000,
+        "prix_unitaire": 55000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Batterie P30pro",
+        "categorie": "Batterie de téléphone",
+        "modele": "P30pro",
+        "prix_achat": 75000,
+        "prix_unitaire": 80000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Batterie iphone 12",
+        "categorie": "Batterie de téléphone",
+        "modele": "iphone 12",
+        "prix_achat": 135000,
+        "prix_unitaire": 140000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Batterie redmi 14C",
+        "categorie": "Batterie de téléphone",
+        "modele": "redmi 14C",
+        "prix_achat": 80000,
+        "prix_unitaire": 90000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Batterie x657",
+        "categorie": "Batterie de téléphone",
+        "modele": "x657",
+        "prix_achat": 40000,
+        "prix_unitaire": 55000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Carte SIM A16",
+        "categorie": "Carte SIM",
+        "modele": "A16",
+        "prix_achat": 25000,
+        "prix_unitaire": 30000,
+        "stock": 30,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Carte SIM KL4",
+        "categorie": "Carte SIM",
+        "modele": "KL4",
+        "prix_achat": 25000,
+        "prix_unitaire": 30000,
+        "stock": 30,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Carte SIM X682",
+        "categorie": "Carte SIM",
+        "modele": "X682",
+        "prix_achat": 25000,
+        "prix_unitaire": 30000,
+        "stock": 30,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Cova A17",
+        "categorie": "Cova",
+        "modele": "A17",
+        "prix_achat": 45000,
+        "prix_unitaire": 100000,
+        "stock": 22,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Cova KL4",
+        "categorie": "Cova",
+        "modele": "KL4",
+        "prix_achat": 45000,
+        "prix_unitaire": 100000,
+        "stock": 22,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Cova X657",
+        "categorie": "Cova",
+        "modele": "X657",
+        "prix_achat": 45000,
+        "prix_unitaire": 100000,
+        "stock": 22,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Cova iphone 13pro-max",
+        "categorie": "Cova",
+        "modele": "iphone 13pro-max",
+        "prix_achat": 90000,
+        "prix_unitaire": 100000,
+        "stock": 22,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Carte mémoire",
+        "categorie": "Informatique",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Clavier",
+        "categorie": "Informatique",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Clé USB",
+        "categorie": "Informatique",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Disque dur externe",
+        "categorie": "Informatique",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Ordinateur portable",
+        "categorie": "Informatique",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Souris",
+        "categorie": "Informatique",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Colle",
+        "categorie": "Outils et consommables",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Gaz",
+        "categorie": "Outils et consommables",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Tournevis",
+        "categorie": "Outils et consommables",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Petit écran 16G",
+        "categorie": "Petit écran de téléphone",
+        "modele": "16G",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Petit écran 16P",
+        "categorie": "Petit écran de téléphone",
+        "modele": "16P",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 42,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Petit écran 17G",
+        "categorie": "Petit écran de téléphone",
+        "modele": "17G",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 40,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Petit écran 20G",
+        "categorie": "Petit écran de téléphone",
+        "modele": "20G",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Petit écran 20P",
+        "categorie": "Petit écran de téléphone",
+        "modele": "20P",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 43,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Petit écran 37G",
+        "categorie": "Petit écran de téléphone",
+        "modele": "37G",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Petit écran 37P",
+        "categorie": "Petit écran de téléphone",
+        "modele": "37P",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 41,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Cole",
+        "categorie": "Pièces et consommables",
+        "modele": "Cole",
+        "prix_achat": 20000,
+        "prix_unitaire": 25000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Gaz",
+        "categorie": "Pièces et consommables",
+        "modele": "Gaz",
+        "prix_achat": 45000,
+        "prix_unitaire": 60000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Micro",
+        "categorie": "Pièces et consommables",
+        "modele": "Micro",
+        "prix_achat": 15000,
+        "prix_unitaire": 25000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Ruban",
+        "categorie": "Pièces et consommables",
+        "modele": "Ruban",
+        "prix_achat": 40000,
+        "prix_unitaire": 45000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Tournevis",
+        "categorie": "Pièces et consommables",
+        "modele": "Tournevis",
+        "prix_achat": 20000,
+        "prix_unitaire": 30000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "allumage",
+        "categorie": "Pièces et consommables",
+        "modele": "allumage",
+        "prix_achat": 15000,
+        "prix_unitaire": 20000,
+        "stock": 35,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Allumage",
+        "categorie": "Pièces téléphone",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Batterie de téléphone",
+        "categorie": "Pièces téléphone",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Petit écran de téléphone",
+        "categorie": "Pièces téléphone",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Ruban",
+        "categorie": "Pièces téléphone",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A03",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A03",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A03 Core",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A03 Core",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A03s",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A03s",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A04",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A04",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A04E",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A04E",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A04s",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A04s",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A05",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A05",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A05s",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A05s",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A06",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A06",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A07",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A07",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A10",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A10",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A10s",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A10s",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A11",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A11",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A12",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A12",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A13",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A13",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A14 4G",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A14 4G",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A14 5G",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A14 5G",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A15",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A15",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A16",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A16",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A17",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A17",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A20",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A20",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A20E",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A20E",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A20s",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A20s",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A21",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A21",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A22",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A22",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A23",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A23",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A24",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A24",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A25",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A25",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A26",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A26",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A30",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A30",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A32",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A32",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A33",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A33",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A34",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A34",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A42",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A42",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A50",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A50",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A51 4G",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A51 4G",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A51 5G",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A51 5G",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A52",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A52",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A53",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A53",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A54",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A54",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A56",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A56",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A58",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A58",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A58 Lite",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A58 Lite",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A60",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A60",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A662",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A662",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A80",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A80",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A82",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A82",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette A90",
+        "categorie": "Plaquette de téléphone",
+        "modele": "A90",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BA2",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BA2",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BB2",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BB2",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BC1",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BC1",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BC2",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BC2",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BC3",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BC3",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BD2",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BD2",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BD3",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BD3",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BD4",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BD4",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BE7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BE7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BE8",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BE8",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BF6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BF6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BF7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BF7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BG6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BG6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BG6M",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BG6M",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette BG7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "BG7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CD6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CD6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CD7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CD7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CE8",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CE8",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CE9",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CE9",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CG6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CG6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CG8",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CG8",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CH6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CH6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CK6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CK6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CK7N",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CK7N",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CK8N",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CK8N",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CL6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CL6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CL7K",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CL7K",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CM5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CM5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette CM6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "CM6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Ci6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Ci6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette F16",
+        "categorie": "Plaquette de téléphone",
+        "modele": "F16",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Huawei P30",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Huawei P30",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Huawei P30 Pro",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Huawei P30 Pro",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Huawei P30L",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Huawei P30L",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Huawei P40 Pro",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Huawei P40 Pro",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KC8",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KC8",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KD6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KD6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KD7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KD7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KE5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KE5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KF6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KF6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KF7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KF7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KF8",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KF8",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KG5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KG5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KG5J",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KG5J",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KG6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KG6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KG7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KG7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KH6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KH6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KJ5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KJ5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KJ6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KJ6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KJ7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KJ7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KL4",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KL4",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KL5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KL5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KL6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KL6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KM4",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KM4",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KM5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KM5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KM6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KM6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KN3",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KN3",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KN4",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KN4",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette KN8",
+        "categorie": "Plaquette de téléphone",
+        "modele": "KN8",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Ki5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Ki5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Ki7",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Ki7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette LC6",
+        "categorie": "Plaquette de téléphone",
+        "modele": "LC6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette M15",
+        "categorie": "Plaquette de téléphone",
+        "modele": "M15",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette M16",
+        "categorie": "Plaquette de téléphone",
+        "modele": "M16",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette M20",
+        "categorie": "Plaquette de téléphone",
+        "modele": "M20",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Note 9",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Note 9",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Redmi 12",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Redmi 12",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Redmi 13C",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Redmi 13C",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Redmi 14C",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Redmi 14C",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Redmi 15C",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Redmi 15C",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Redmi A03",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Redmi A03",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Redmi A2",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Redmi A2",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette Redmi A5",
+        "categorie": "Plaquette de téléphone",
+        "modele": "Redmi A5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette S17",
+        "categorie": "Plaquette de téléphone",
+        "modele": "S17",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette S8",
+        "categorie": "Plaquette de téléphone",
+        "modele": "S8",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette S8+",
+        "categorie": "Plaquette de téléphone",
+        "modele": "S8+",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette S9+",
+        "categorie": "Plaquette de téléphone",
+        "modele": "S9+",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X612",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X612",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X624",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X624",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6517",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6517",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6525",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6525",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X653",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X653",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6532",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6532",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X657",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X657",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X665",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X665",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6725",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6725",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X680",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X680",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6816",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6816",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X682",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X682",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6823",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6823",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6825",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6825",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X683",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X683",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6840",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6840",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X688",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X688",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette X6886",
+        "categorie": "Plaquette de téléphone",
+        "modele": "X6886",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 11 IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 11 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 11 JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 11 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 11 Pro IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 11 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 11 Pro JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 11 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 11 Pro Max IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 11 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 11 Pro Max JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 11 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 12 IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 12 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 12 JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 12 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 12 Pro IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 12 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 12 Pro JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 12 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 12 Pro Max IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 12 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 12 Pro Max JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 12 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 13 IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 13 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 13 JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 13 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 13 Pro IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 13 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 13 Pro JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 13 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 13 Pro Max IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 13 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 13 Pro Max JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 13 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 14 IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 14 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 14 JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 14 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 14 Pro IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 14 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 14 Pro JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 14 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 14 Pro Max IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 14 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 14 Pro Max JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 14 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 15 Pro IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 15 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 15 Pro JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 15 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 15 Pro Max IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 15 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 15 Pro Max JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 15 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone 8+",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone 8+",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone X IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone X IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone X JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone X JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone X OLED",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone X OLED",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone XR IN CELL",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone XR IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Plaquette iPhone XR JH",
+        "categorie": "Plaquette de téléphone",
+        "modele": "iPhone XR JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Antenne Grandstream 7664",
+        "categorie": "Réseau",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Câble RJ45",
+        "categorie": "Réseau",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "MikroTik hAP ax3",
+        "categorie": "Réseau",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Switch Gigabit",
+        "categorie": "Réseau",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Ampoule",
+        "categorie": "Solaire",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Batterie solaire",
+        "categorie": "Solaire",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Fil de panneau solaire",
+        "categorie": "Solaire",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Onduleur 1000W",
+        "categorie": "Solaire",
+        "modele": "1000W",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Onduleur 1500W",
+        "categorie": "Solaire",
+        "modele": "1500W",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Onduleur 2000W",
+        "categorie": "Solaire",
+        "modele": "2000W",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Onduleur 200W",
+        "categorie": "Solaire",
+        "modele": "200W",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Onduleur 300W",
+        "categorie": "Solaire",
+        "modele": "300W",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Onduleur 500W",
+        "categorie": "Solaire",
+        "modele": "500W",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Panneau solaire",
+        "categorie": "Solaire",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur MPPT 100A",
+        "categorie": "Solaire",
+        "modele": "100A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur MPPT 30A",
+        "categorie": "Solaire",
+        "modele": "30A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur MPPT 40A",
+        "categorie": "Solaire",
+        "modele": "40A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur MPPT 50A",
+        "categorie": "Solaire",
+        "modele": "50A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur MPPT 60A",
+        "categorie": "Solaire",
+        "modele": "60A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur MPPT 80A",
+        "categorie": "Solaire",
+        "modele": "80A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur PWM 100A",
+        "categorie": "Solaire",
+        "modele": "100A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur PWM 30A",
+        "categorie": "Solaire",
+        "modele": "30A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur PWM 40A",
+        "categorie": "Solaire",
+        "modele": "40A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur PWM 50A",
+        "categorie": "Solaire",
+        "modele": "50A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur PWM 60A",
+        "categorie": "Solaire",
+        "modele": "60A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Régulateur PWM 80A",
+        "categorie": "Solaire",
+        "modele": "80A",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Anticase",
+        "categorie": "Téléphonie",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Chargeur",
+        "categorie": "Téléphonie",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Câble",
+        "categorie": "Téléphonie",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Protège-téléphone",
+        "categorie": "Téléphonie",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Téléphone",
+        "categorie": "Téléphonie",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écouteurs",
+        "categorie": "Téléphonie",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A03",
+        "categorie": "Écran de téléphone",
+        "modele": "A03",
+        "prix_achat": 85000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A03 Core",
+        "categorie": "Écran de téléphone",
+        "modele": "A03 Core",
+        "prix_achat": 0,
+        "prix_unitaire": 180000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A03CORE",
+        "categorie": "Écran de téléphone",
+        "modele": "A03CORE",
+        "prix_achat": 85000,
+        "prix_unitaire": 90000,
+        "stock": 14,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A03s",
+        "categorie": "Écran de téléphone",
+        "modele": "A03s",
+        "prix_achat": 85000,
+        "prix_unitaire": 90000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A04",
+        "categorie": "Écran de téléphone",
+        "modele": "A04",
+        "prix_achat": 85000,
+        "prix_unitaire": 260000,
+        "stock": 14,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A04E",
+        "categorie": "Écran de téléphone",
+        "modele": "A04E",
+        "prix_achat": 85000,
+        "prix_unitaire": 230000,
+        "stock": 7,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A04s",
+        "categorie": "Écran de téléphone",
+        "modele": "A04s",
+        "prix_achat": 85000,
+        "prix_unitaire": 90000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A05",
+        "categorie": "Écran de téléphone",
+        "modele": "A05",
+        "prix_achat": 85000,
+        "prix_unitaire": 90000,
+        "stock": 25,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A05s",
+        "categorie": "Écran de téléphone",
+        "modele": "A05s",
+        "prix_achat": 85000,
+        "prix_unitaire": 90000,
+        "stock": 18,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A06",
+        "categorie": "Écran de téléphone",
+        "modele": "A06",
+        "prix_achat": 90000,
+        "prix_unitaire": 100000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A07",
+        "categorie": "Écran de téléphone",
+        "modele": "A07",
+        "prix_achat": 90000,
+        "prix_unitaire": 100000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A10",
+        "categorie": "Écran de téléphone",
+        "modele": "A10",
+        "prix_achat": 90000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A10s",
+        "categorie": "Écran de téléphone",
+        "modele": "A10s",
+        "prix_achat": 90000,
+        "prix_unitaire": 260000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A11",
+        "categorie": "Écran de téléphone",
+        "modele": "A11",
+        "prix_achat": 85000,
+        "prix_unitaire": 370000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A12",
+        "categorie": "Écran de téléphone",
+        "modele": "A12",
+        "prix_achat": 80000,
+        "prix_unitaire": 90000,
+        "stock": 39,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A13",
+        "categorie": "Écran de téléphone",
+        "modele": "A13",
+        "prix_achat": 85000,
+        "prix_unitaire": 90000,
+        "stock": 16,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A14 4G",
+        "categorie": "Écran de téléphone",
+        "modele": "A14 4G",
+        "prix_achat": 80000,
+        "prix_unitaire": 90000,
+        "stock": 18,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A14 5G",
+        "categorie": "Écran de téléphone",
+        "modele": "A14 5G",
+        "prix_achat": 85000,
+        "prix_unitaire": 90000,
+        "stock": 26,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A15",
+        "categorie": "Écran de téléphone",
+        "modele": "A15",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 37,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A16",
+        "categorie": "Écran de téléphone",
+        "modele": "A16",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 11,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A16 Simple",
+        "categorie": "Écran de téléphone",
+        "modele": "A16 Simple",
+        "prix_achat": 135000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A17",
+        "categorie": "Écran de téléphone",
+        "modele": "A17",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 39,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A20",
+        "categorie": "Écran de téléphone",
+        "modele": "A20",
+        "prix_achat": 90000,
+        "prix_unitaire": 230000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A20E",
+        "categorie": "Écran de téléphone",
+        "modele": "A20E",
+        "prix_achat": 90000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A20s",
+        "categorie": "Écran de téléphone",
+        "modele": "A20s",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A21",
+        "categorie": "Écran de téléphone",
+        "modele": "A21",
+        "prix_achat": 95000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A22",
+        "categorie": "Écran de téléphone",
+        "modele": "A22",
+        "prix_achat": 140000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A23",
+        "categorie": "Écran de téléphone",
+        "modele": "A23",
+        "prix_achat": 90000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A24",
+        "categorie": "Écran de téléphone",
+        "modele": "A24",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A24  ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "A24  ORIGINAL",
+        "prix_achat": 270000,
+        "prix_unitaire": 300000,
+        "stock": 6,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A24 LOCAL",
+        "categorie": "Écran de téléphone",
+        "modele": "A24 LOCAL",
+        "prix_achat": 150000,
+        "prix_unitaire": 300000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A25",
+        "categorie": "Écran de téléphone",
+        "modele": "A25",
+        "prix_achat": 190000,
+        "prix_unitaire": 300000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A26",
+        "categorie": "Écran de téléphone",
+        "modele": "A26",
+        "prix_achat": 160000,
+        "prix_unitaire": 200000,
+        "stock": 8,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A26 LOCAL",
+        "categorie": "Écran de téléphone",
+        "modele": "A26 LOCAL",
+        "prix_achat": 170000,
+        "prix_unitaire": 750000,
+        "stock": 6,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A30",
+        "categorie": "Écran de téléphone",
+        "modele": "A30",
+        "prix_achat": 130000,
+        "prix_unitaire": 150000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A31",
+        "categorie": "Écran de téléphone",
+        "modele": "A31",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 15,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A32",
+        "categorie": "Écran de téléphone",
+        "modele": "A32",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 16,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A33",
+        "categorie": "Écran de téléphone",
+        "modele": "A33",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A34",
+        "categorie": "Écran de téléphone",
+        "modele": "A34",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A35",
+        "categorie": "Écran de téléphone",
+        "modele": "A35",
+        "prix_achat": 145000,
+        "prix_unitaire": 300000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A42",
+        "categorie": "Écran de téléphone",
+        "modele": "A42",
+        "prix_achat": 145000,
+        "prix_unitaire": 300000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A50",
+        "categorie": "Écran de téléphone",
+        "modele": "A50",
+        "prix_achat": 135000,
+        "prix_unitaire": 230000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A51 4 G",
+        "categorie": "Écran de téléphone",
+        "modele": "A51 4 G",
+        "prix_achat": 140000,
+        "prix_unitaire": 300000,
+        "stock": 17,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A51 4G",
+        "categorie": "Écran de téléphone",
+        "modele": "A51 4G",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A51 5G",
+        "categorie": "Écran de téléphone",
+        "modele": "A51 5G",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A51 5G ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "A51 5G ORIGINAL",
+        "prix_achat": 230000,
+        "prix_unitaire": 300000,
+        "stock": 8,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A52",
+        "categorie": "Écran de téléphone",
+        "modele": "A52",
+        "prix_achat": 140000,
+        "prix_unitaire": 150000,
+        "stock": 21,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A53",
+        "categorie": "Écran de téléphone",
+        "modele": "A53",
+        "prix_achat": 145000,
+        "prix_unitaire": 160000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A54",
+        "categorie": "Écran de téléphone",
+        "modele": "A54",
+        "prix_achat": 145000,
+        "prix_unitaire": 300000,
+        "stock": 15,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A56",
+        "categorie": "Écran de téléphone",
+        "modele": "A56",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A56 LOCAL",
+        "categorie": "Écran de téléphone",
+        "modele": "A56 LOCAL",
+        "prix_achat": 210000,
+        "prix_unitaire": 300000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A58",
+        "categorie": "Écran de téléphone",
+        "modele": "A58",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A58 Lite",
+        "categorie": "Écran de téléphone",
+        "modele": "A58 Lite",
+        "prix_achat": 80000,
+        "prix_unitaire": 90000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A60",
+        "categorie": "Écran de téléphone",
+        "modele": "A60",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A662",
+        "categorie": "Écran de téléphone",
+        "modele": "A662",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A80",
+        "categorie": "Écran de téléphone",
+        "modele": "A80",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A80 ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "A80 ORIGINAL",
+        "prix_achat": 460000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A82",
+        "categorie": "Écran de téléphone",
+        "modele": "A82",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran A82 ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "A82 ORIGINAL",
+        "prix_achat": 780000,
+        "prix_unitaire": 750000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran A90",
+        "categorie": "Écran de téléphone",
+        "modele": "A90",
+        "prix_achat": 460000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BA2",
+        "categorie": "Écran de téléphone",
+        "modele": "BA2",
+        "prix_achat": 70000,
+        "prix_unitaire": 260000,
+        "stock": 6,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BB2",
+        "categorie": "Écran de téléphone",
+        "modele": "BB2",
+        "prix_achat": 70000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BC1",
+        "categorie": "Écran de téléphone",
+        "modele": "BC1",
+        "prix_achat": 70000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BC2",
+        "categorie": "Écran de téléphone",
+        "modele": "BC2",
+        "prix_achat": 70000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BC3",
+        "categorie": "Écran de téléphone",
+        "modele": "BC3",
+        "prix_achat": 70000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BD2",
+        "categorie": "Écran de téléphone",
+        "modele": "BD2",
+        "prix_achat": 70000,
+        "prix_unitaire": 260000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BD3",
+        "categorie": "Écran de téléphone",
+        "modele": "BD3",
+        "prix_achat": 75000,
+        "prix_unitaire": 230000,
+        "stock": 15,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BD4",
+        "categorie": "Écran de téléphone",
+        "modele": "BD4",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BE7",
+        "categorie": "Écran de téléphone",
+        "modele": "BE7",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BE8",
+        "categorie": "Écran de téléphone",
+        "modele": "BE8",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 6,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BF6",
+        "categorie": "Écran de téléphone",
+        "modele": "BF6",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 14,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BF7",
+        "categorie": "Écran de téléphone",
+        "modele": "BF7",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BG6",
+        "categorie": "Écran de téléphone",
+        "modele": "BG6",
+        "prix_achat": 85000,
+        "prix_unitaire": 230000,
+        "stock": 18,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BG6M",
+        "categorie": "Écran de téléphone",
+        "modele": "BG6M",
+        "prix_achat": 85000,
+        "prix_unitaire": 230000,
+        "stock": 17,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran BG7",
+        "categorie": "Écran de téléphone",
+        "modele": "BG7",
+        "prix_achat": 90000,
+        "prix_unitaire": 230000,
+        "stock": 8,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CD6",
+        "categorie": "Écran de téléphone",
+        "modele": "CD6",
+        "prix_achat": 80000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CD7",
+        "categorie": "Écran de téléphone",
+        "modele": "CD7",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 7,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CE8",
+        "categorie": "Écran de téléphone",
+        "modele": "CE8",
+        "prix_achat": 135000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CE9",
+        "categorie": "Écran de téléphone",
+        "modele": "CE9",
+        "prix_achat": 135000,
+        "prix_unitaire": 230000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CG6",
+        "categorie": "Écran de téléphone",
+        "modele": "CG6",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CG8",
+        "categorie": "Écran de téléphone",
+        "modele": "CG8",
+        "prix_achat": 100000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CH6",
+        "categorie": "Écran de téléphone",
+        "modele": "CH6",
+        "prix_achat": 90000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CK6",
+        "categorie": "Écran de téléphone",
+        "modele": "CK6",
+        "prix_achat": 100000,
+        "prix_unitaire": 230000,
+        "stock": 14,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CK7N",
+        "categorie": "Écran de téléphone",
+        "modele": "CK7N",
+        "prix_achat": 10000,
+        "prix_unitaire": 230000,
+        "stock": 17,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CK8N",
+        "categorie": "Écran de téléphone",
+        "modele": "CK8N",
+        "prix_achat": 100000,
+        "prix_unitaire": 230000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CL6",
+        "categorie": "Écran de téléphone",
+        "modele": "CL6",
+        "prix_achat": 140000,
+        "prix_unitaire": 230000,
+        "stock": 37,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CL7K",
+        "categorie": "Écran de téléphone",
+        "modele": "CL7K",
+        "prix_achat": 150000,
+        "prix_unitaire": 260000,
+        "stock": 11,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CM5",
+        "categorie": "Écran de téléphone",
+        "modele": "CM5",
+        "prix_achat": 150000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CM5 ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "CM5 ORIGINAL",
+        "prix_achat": 350000,
+        "prix_unitaire": 370000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran CM6",
+        "categorie": "Écran de téléphone",
+        "modele": "CM6",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran CM6 ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "CM6 ORIGINAL",
+        "prix_achat": 335000,
+        "prix_unitaire": 450000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran Ci6",
+        "categorie": "Écran de téléphone",
+        "modele": "Ci6",
+        "prix_achat": 100000,
+        "prix_unitaire": 230000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran F16",
+        "categorie": "Écran de téléphone",
+        "modele": "F16",
+        "prix_achat": 140000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran HUAWEI P40PRO",
+        "categorie": "Écran de téléphone",
+        "modele": "HUAWEI P40PRO",
+        "prix_achat": 930000,
+        "prix_unitaire": 960000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran HUAWIE P30",
+        "categorie": "Écran de téléphone",
+        "modele": "HUAWIE P30",
+        "prix_achat": 180000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran HUAWIE P30LITE",
+        "categorie": "Écran de téléphone",
+        "modele": "HUAWIE P30LITE",
+        "prix_achat": 170000,
+        "prix_unitaire": 260000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran HUAWIE P30PRO",
+        "categorie": "Écran de téléphone",
+        "modele": "HUAWIE P30PRO",
+        "prix_achat": 180000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran HUAWIE Y9A",
+        "categorie": "Écran de téléphone",
+        "modele": "HUAWIE Y9A",
+        "prix_achat": 170000,
+        "prix_unitaire": 260000,
+        "stock": 6,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran Huawei P30",
+        "categorie": "Écran de téléphone",
+        "modele": "Huawei P30",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Huawei P30 Pro",
+        "categorie": "Écran de téléphone",
+        "modele": "Huawei P30 Pro",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Huawei P30L",
+        "categorie": "Écran de téléphone",
+        "modele": "Huawei P30L",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Huawei P40 Pro",
+        "categorie": "Écran de téléphone",
+        "modele": "Huawei P40 Pro",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran IPHONE 11 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 11 IN CELL",
+        "prix_achat": 170000,
+        "prix_unitaire": 750000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 11 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 11 JH",
+        "prix_achat": 190000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 11PRO IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 11PRO IN CELL",
+        "prix_achat": 170000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 11PRO JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 11PRO JH",
+        "prix_achat": 220000,
+        "prix_unitaire": 750000,
+        "stock": 7,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 11PRO-MAX IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 11PRO-MAX IN CELL",
+        "prix_achat": 205000,
+        "prix_unitaire": 750000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 11PRO-MAX JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 11PRO-MAX JH",
+        "prix_achat": 220000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 12 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 12 IN CELL",
+        "prix_achat": 200000,
+        "prix_unitaire": 750000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 12 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 12 JH",
+        "prix_achat": 230000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 12PRO IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 12PRO IN CELL",
+        "prix_achat": 210000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 12PRO JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 12PRO JH",
+        "prix_achat": 240000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 12PRO-MAX IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 12PRO-MAX IN CELL",
+        "prix_achat": 220000,
+        "prix_unitaire": 750000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 12PRO-MAX JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 12PRO-MAX JH",
+        "prix_achat": 245000,
+        "prix_unitaire": 750000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 13 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 13 IN CELL",
+        "prix_achat": 235000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 13 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 13 JH",
+        "prix_achat": 275000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 13PRO IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 13PRO IN CELL",
+        "prix_achat": 255000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 13PRO JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 13PRO JH",
+        "prix_achat": 305000,
+        "prix_unitaire": 750000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 13PRO-MAX IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 13PRO-MAX IN CELL",
+        "prix_achat": 2850000,
+        "prix_unitaire": 370000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 13PRO-MAX JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 13PRO-MAX JH",
+        "prix_achat": 305000,
+        "prix_unitaire": 370000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 14 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 14 IN CELL",
+        "prix_achat": 265000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 14 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 14 JH",
+        "prix_achat": 325000,
+        "prix_unitaire": 750000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 14 PRO-MAX IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 14 PRO-MAX IN CELL",
+        "prix_achat": 345000,
+        "prix_unitaire": 370000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 14PRO IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 14PRO IN CELL",
+        "prix_achat": 310000,
+        "prix_unitaire": 750000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 14PRO JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 14PRO JH",
+        "prix_achat": 340000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 14PRO-MAX JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 14PRO-MAX JH",
+        "prix_achat": 370000,
+        "prix_unitaire": 750000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 15PRO IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 15PRO IN CELL",
+        "prix_achat": 425000,
+        "prix_unitaire": 750000,
+        "stock": 7,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 15PRO JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 15PRO JH",
+        "prix_achat": 450000,
+        "prix_unitaire": 750000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 15PRO-MAX IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 15PRO-MAX IN CELL",
+        "prix_achat": 485000,
+        "prix_unitaire": 750000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 15PRO-MAX JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 15PRO-MAX JH",
+        "prix_achat": 545000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE 8PLUS",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE 8PLUS",
+        "prix_achat": 145000,
+        "prix_unitaire": 370000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE X IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE X IN CELL",
+        "prix_achat": 155000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE X JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE X JH",
+        "prix_achat": 185000,
+        "prix_unitaire": 750000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE X OLED",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE X OLED",
+        "prix_achat": 220,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE XR IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE XR IN CELL",
+        "prix_achat": 160000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran IPHONE XR JH",
+        "categorie": "Écran de téléphone",
+        "modele": "IPHONE XR JH",
+        "prix_achat": 180000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KC8",
+        "categorie": "Écran de téléphone",
+        "modele": "KC8",
+        "prix_achat": 75000,
+        "prix_unitaire": 230000,
+        "stock": 19,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KD6",
+        "categorie": "Écran de téléphone",
+        "modele": "KD6",
+        "prix_achat": 75000,
+        "prix_unitaire": 230000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KD7",
+        "categorie": "Écran de téléphone",
+        "modele": "KD7",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KE5",
+        "categorie": "Écran de téléphone",
+        "modele": "KE5",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KF6",
+        "categorie": "Écran de téléphone",
+        "modele": "KF6",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KF7",
+        "categorie": "Écran de téléphone",
+        "modele": "KF7",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KF8",
+        "categorie": "Écran de téléphone",
+        "modele": "KF8",
+        "prix_achat": 85000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KG5",
+        "categorie": "Écran de téléphone",
+        "modele": "KG5",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 15,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KG5J",
+        "categorie": "Écran de téléphone",
+        "modele": "KG5J",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 22,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KG6",
+        "categorie": "Écran de téléphone",
+        "modele": "KG6",
+        "prix_achat": 85000,
+        "prix_unitaire": 230000,
+        "stock": 30,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KG7",
+        "categorie": "Écran de téléphone",
+        "modele": "KG7",
+        "prix_achat": 85000,
+        "prix_unitaire": 230000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KH6",
+        "categorie": "Écran de téléphone",
+        "modele": "KH6",
+        "prix_achat": 100000,
+        "prix_unitaire": 230000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KJ5",
+        "categorie": "Écran de téléphone",
+        "modele": "KJ5",
+        "prix_achat": 85000,
+        "prix_unitaire": 370000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KJ6",
+        "categorie": "Écran de téléphone",
+        "modele": "KJ6",
+        "prix_achat": 90000,
+        "prix_unitaire": 95000,
+        "stock": 8,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KJ7",
+        "categorie": "Écran de téléphone",
+        "modele": "KJ7",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran KJ7 LOCAL",
+        "categorie": "Écran de téléphone",
+        "modele": "KJ7 LOCAL",
+        "prix_achat": 185000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KJ7 ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "KJ7 ORIGINAL",
+        "prix_achat": 340000,
+        "prix_unitaire": 450000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KL4",
+        "categorie": "Écran de téléphone",
+        "modele": "KL4",
+        "prix_achat": 90000,
+        "prix_unitaire": 230000,
+        "stock": 30,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KL5",
+        "categorie": "Écran de téléphone",
+        "modele": "KL5",
+        "prix_achat": 90000,
+        "prix_unitaire": 230000,
+        "stock": 18,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KL6",
+        "categorie": "Écran de téléphone",
+        "modele": "KL6",
+        "prix_achat": 125000,
+        "prix_unitaire": 230000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KL7",
+        "categorie": "Écran de téléphone",
+        "modele": "KL7",
+        "prix_achat": 135000,
+        "prix_unitaire": 260000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KM4",
+        "categorie": "Écran de téléphone",
+        "modele": "KM4",
+        "prix_achat": 90000,
+        "prix_unitaire": 230000,
+        "stock": 24,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KM5",
+        "categorie": "Écran de téléphone",
+        "modele": "KM5",
+        "prix_achat": 90000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KM6",
+        "categorie": "Écran de téléphone",
+        "modele": "KM6",
+        "prix_achat": 145000,
+        "prix_unitaire": 260000,
+        "stock": 20,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KN3",
+        "categorie": "Écran de téléphone",
+        "modele": "KN3",
+        "prix_achat": 135000,
+        "prix_unitaire": 230000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KN4",
+        "categorie": "Écran de téléphone",
+        "modele": "KN4",
+        "prix_achat": 135000,
+        "prix_unitaire": 230000,
+        "stock": 7,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran KN8",
+        "categorie": "Écran de téléphone",
+        "modele": "KN8",
+        "prix_achat": 140000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran Ki5",
+        "categorie": "Écran de téléphone",
+        "modele": "Ki5",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran Ki7",
+        "categorie": "Écran de téléphone",
+        "modele": "Ki7",
+        "prix_achat": 100000,
+        "prix_unitaire": 230000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran LC6",
+        "categorie": "Écran de téléphone",
+        "modele": "LC6",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 11,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran M15",
+        "categorie": "Écran de téléphone",
+        "modele": "M15",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran M15 ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "M15 ORIGINAL",
+        "prix_achat": 290000,
+        "prix_unitaire": 310000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran M16",
+        "categorie": "Écran de téléphone",
+        "modele": "M16",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran M16 ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "M16 ORIGINAL",
+        "prix_achat": 290000,
+        "prix_unitaire": 310000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran M20",
+        "categorie": "Écran de téléphone",
+        "modele": "M20",
+        "prix_achat": 85000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran NOTE 9 LOCAL",
+        "categorie": "Écran de téléphone",
+        "modele": "NOTE 9 LOCAL",
+        "prix_achat": 330000,
+        "prix_unitaire": 310000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran Note 9",
+        "categorie": "Écran de téléphone",
+        "modele": "Note 9",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran REDMI 12",
+        "categorie": "Écran de téléphone",
+        "modele": "REDMI 12",
+        "prix_achat": 175000,
+        "prix_unitaire": 230000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran REDMI 13C",
+        "categorie": "Écran de téléphone",
+        "modele": "REDMI 13C",
+        "prix_achat": 190000,
+        "prix_unitaire": 260000,
+        "stock": 7,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran REDMI 14C",
+        "categorie": "Écran de téléphone",
+        "modele": "REDMI 14C",
+        "prix_achat": 180000,
+        "prix_unitaire": 170000,
+        "stock": 7,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran REDMI 15C",
+        "categorie": "Écran de téléphone",
+        "modele": "REDMI 15C",
+        "prix_achat": 190000,
+        "prix_unitaire": 260000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran REDMI A2",
+        "categorie": "Écran de téléphone",
+        "modele": "REDMI A2",
+        "prix_achat": 170000,
+        "prix_unitaire": 750000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran REDMI A3",
+        "categorie": "Écran de téléphone",
+        "modele": "REDMI A3",
+        "prix_achat": 170000,
+        "prix_unitaire": 750000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran REDMI A5",
+        "categorie": "Écran de téléphone",
+        "modele": "REDMI A5",
+        "prix_achat": 170000,
+        "prix_unitaire": 750000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran Redmi 12",
+        "categorie": "Écran de téléphone",
+        "modele": "Redmi 12",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Redmi 13C",
+        "categorie": "Écran de téléphone",
+        "modele": "Redmi 13C",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Redmi 14C",
+        "categorie": "Écran de téléphone",
+        "modele": "Redmi 14C",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Redmi 15C",
+        "categorie": "Écran de téléphone",
+        "modele": "Redmi 15C",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Redmi A03",
+        "categorie": "Écran de téléphone",
+        "modele": "Redmi A03",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Redmi A2",
+        "categorie": "Écran de téléphone",
+        "modele": "Redmi A2",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran Redmi A5",
+        "categorie": "Écran de téléphone",
+        "modele": "Redmi A5",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran S17",
+        "categorie": "Écran de téléphone",
+        "modele": "S17",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 9,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran S8",
+        "categorie": "Écran de téléphone",
+        "modele": "S8",
+        "prix_achat": 680000,
+        "prix_unitaire": 900000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran S8+",
+        "categorie": "Écran de téléphone",
+        "modele": "S8+",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran S8+ ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "S8+ ORIGINAL",
+        "prix_achat": 840000,
+        "prix_unitaire": 900000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran S9+",
+        "categorie": "Écran de téléphone",
+        "modele": "S9+",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran S9+ ORIGINAL",
+        "categorie": "Écran de téléphone",
+        "modele": "S9+ ORIGINAL",
+        "prix_achat": 860000,
+        "prix_unitaire": 900000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X612",
+        "categorie": "Écran de téléphone",
+        "modele": "X612",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X624",
+        "categorie": "Écran de téléphone",
+        "modele": "X624",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6517",
+        "categorie": "Écran de téléphone",
+        "modele": "X6517",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 19,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6525",
+        "categorie": "Écran de téléphone",
+        "modele": "X6525",
+        "prix_achat": 85000,
+        "prix_unitaire": 260000,
+        "stock": 23,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X653",
+        "categorie": "Écran de téléphone",
+        "modele": "X653",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 3,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6532",
+        "categorie": "Écran de téléphone",
+        "modele": "X6532",
+        "prix_achat": 90000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X657",
+        "categorie": "Écran de téléphone",
+        "modele": "X657",
+        "prix_achat": 75000,
+        "prix_unitaire": 230000,
+        "stock": 21,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X665",
+        "categorie": "Écran de téléphone",
+        "modele": "X665",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 12,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6725",
+        "categorie": "Écran de téléphone",
+        "modele": "X6725",
+        "prix_achat": 90000,
+        "prix_unitaire": 750000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X680",
+        "categorie": "Écran de téléphone",
+        "modele": "X680",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 6,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6816",
+        "categorie": "Écran de téléphone",
+        "modele": "X6816",
+        "prix_achat": 90000,
+        "prix_unitaire": 230000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X682",
+        "categorie": "Écran de téléphone",
+        "modele": "X682",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran X6823",
+        "categorie": "Écran de téléphone",
+        "modele": "X6823",
+        "prix_achat": 85000,
+        "prix_unitaire": 260000,
+        "stock": 2,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6825",
+        "categorie": "Écran de téléphone",
+        "modele": "X6825",
+        "prix_achat": 90000,
+        "prix_unitaire": 750000,
+        "stock": 5,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X683",
+        "categorie": "Écran de téléphone",
+        "modele": "X683",
+        "prix_achat": 85000,
+        "prix_unitaire": 230000,
+        "stock": 8,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6840",
+        "categorie": "Écran de téléphone",
+        "modele": "X6840",
+        "prix_achat": 95000,
+        "prix_unitaire": 260000,
+        "stock": 4,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X688",
+        "categorie": "Écran de téléphone",
+        "modele": "X688",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 8,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X6886",
+        "categorie": "Écran de téléphone",
+        "modele": "X6886",
+        "prix_achat": 145000,
+        "prix_unitaire": 120000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran X882",
+        "categorie": "Écran de téléphone",
+        "modele": "X882",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 17,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran iPhone 11 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 11 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 11 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 11 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 11 Pro IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 11 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 11 Pro JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 11 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 11 Pro Max IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 11 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 11 Pro Max JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 11 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 12 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 12 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 12 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 12 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 12 Pro IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 12 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 12 Pro JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 12 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 12 Pro Max IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 12 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 12 Pro Max JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 12 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 13 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 13 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 13 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 13 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 13 Pro IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 13 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 13 Pro JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 13 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 13 Pro Max IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 13 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 13 Pro Max JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 13 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 14 IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 14 IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 14 JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 14 JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 14 Pro IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 14 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 14 Pro JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 14 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 14 Pro Max IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 14 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 14 Pro Max JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 14 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 15 Pro IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 15 Pro IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 15 Pro JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 15 Pro JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 15 Pro Max IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 15 Pro Max IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 15 Pro Max JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 15 Pro Max JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone 8+",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone 8+",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone X IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone X IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone X JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone X JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone X OLED",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone X OLED",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone XR IN CELL",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone XR IN CELL",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran iPhone XR JH",
+        "categorie": "Écran de téléphone",
+        "modele": "iPhone XR JH",
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Écran itel A06",
+        "categorie": "Écran de téléphone",
+        "modele": "itel A06",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 16,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran itel A52",
+        "categorie": "Écran de téléphone",
+        "modele": "itel A52",
+        "prix_achat": 80000,
+        "prix_unitaire": 260000,
+        "stock": 1,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran itel A58",
+        "categorie": "Écran de téléphone",
+        "modele": "itel A58",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 10,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Écran itel A60",
+        "categorie": "Écran de téléphone",
+        "modele": "itel A60",
+        "prix_achat": 80000,
+        "prix_unitaire": 230000,
+        "stock": 13,
+        "seuil_alerte": 5,
+        "actif": true
+    },
+    {
+        "nom": "Caméra de surveillance",
+        "categorie": "Électronique et électroménager",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Congélateur",
+        "categorie": "Électronique et électroménager",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Radio",
+        "categorie": "Électronique et électroménager",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Rallonge",
+        "categorie": "Électronique et électroménager",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Télécommande",
+        "categorie": "Électronique et électroménager",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    },
+    {
+        "nom": "Télévision",
+        "categorie": "Électronique et électroménager",
+        "modele": null,
+        "prix_achat": 0,
+        "prix_unitaire": 0,
+        "stock": 0,
+        "seuil_alerte": 5,
+        "actif": false
+    }
+]
