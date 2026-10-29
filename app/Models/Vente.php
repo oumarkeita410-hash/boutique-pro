@@ -13,7 +13,7 @@ class Vente extends Model
     protected $table = 'ventes';
 
     protected $fillable = [
-        'reference', 'uuid_client', 'vendeur_id', 'client_id',
+        'reference', 'uuid_client', 'vendeur_id', 'client_id', 'client_nom', 'client_tel',
         'mode_paiement', 'reference_paiement', 'statut', 'montant_total', 'montant_paye',
     ];
 

@@ -182,7 +182,9 @@ function ajouterAuPanier(p) {
   sauverPanier(); toast(p.nom + ' ajouté (' + nbPanier() + ')');
 }
 function totalPanier() { return panier.reduce((s, l) => s + (l.prix || 0) * l.quantite, 0); }
-let venteClient = null; // client choisi pour la vente en cours (facultatif, pour la facture)
+let venteClient = null;      // client enregistré choisi (facultatif)
+let venteClientNom = '';     // nom tapé à la main (facultatif)
+let venteClientTel = '';     // téléphone tapé à la main (facultatif)
 
 async function vendeurCatalogue() {
   cadre('Catalogue', `
@@ -231,11 +233,12 @@ function vendeurPanier() {
           </div>
         </div>`).join('')}
         <div class="info-row" style="padding-top:12px"><span class="lbl">Total à encaisser</span><span class="val">${gnf(totalPanier())}</span></div></div>
-      <div class="card">
-        <div class="field"><label>Client (facultatif — pour la facture)</label>
-          ${venteClient ? `<div class="list-item"><div class="main"><div class="name">${esc(venteClient.nom)}</div><div class="sub">${esc(venteClient.tel || '')}</div></div><button class="icon-btn" id="vcl-clear" style="color:var(--danger)">✕</button></div>`
-            : `<input id="vcl-search" placeholder="Rechercher un client (nom, téléphone)…">`}</div>
-        <div id="vcl-res"></div>
+      <div class="card"><h3>Client (facultatif — pour la facture)</h3>
+        ${venteClient ? `<div class="list-item"><div class="main"><div class="name">${esc(venteClient.nom)}</div><div class="sub">${esc(venteClient.tel || '')} · client enregistré</div></div><button class="icon-btn" id="vcl-clear" style="color:var(--danger)">✕</button></div>`
+          : `<div class="field"><label>Nom complet du client</label><input id="vcl-nom" value="${esc(venteClientNom)}" placeholder="Prénom et nom"></div>
+             <div class="field"><label>Numéro de téléphone</label><input id="vcl-tel" value="${esc(venteClientTel)}" inputmode="tel" placeholder="+224…"></div>
+             <div class="field"><label>…ou choisir un client déjà enregistré</label><input id="vcl-search" placeholder="Rechercher par nom ou téléphone"></div>
+             <div id="vcl-res"></div>`}
       </div>
       <div class="card">
         <div class="field"><label>Mode de paiement</label>
@@ -249,6 +252,8 @@ function vendeurPanier() {
     $('#valider').onclick = validerVente;
     if (venteClient) { $('#vcl-clear').onclick = () => { venteClient = null; rendre(); }; }
     else {
+      $('#vcl-nom').oninput = e => { venteClientNom = e.target.value; };
+      $('#vcl-tel').oninput = e => { venteClientTel = e.target.value; };
       let tc; $('#vcl-search').addEventListener('input', async e => {
         clearTimeout(tc); const q = e.target.value.trim();
         tc = setTimeout(async () => {
@@ -256,7 +261,7 @@ function vendeurPanier() {
           try {
             const d = await api('GET', '/clients?recherche=' + encodeURIComponent(q));
             const items = (d.data || []).slice(0, 6);
-            $('#vcl-res').innerHTML = items.length ? `<div class="card" style="margin:6px 0">${items.map(c => `<div class="list-item tap" data-id="${c.id}" data-nom="${esc(c.prenom + ' ' + c.nom)}" data-tel="${esc(c.telephone || '')}" role="button"><div class="main"><div class="name">${esc(c.prenom)} ${esc(c.nom)}</div><div class="sub">${esc(c.telephone || '')}</div></div><span class="badge cat">Choisir</span></div>`).join('')}</div>` : '<p class="muted" style="font-size:.85rem">Aucun client. Le conseiller peut l\'enregistrer.</p>';
+            $('#vcl-res').innerHTML = items.length ? `<div class="card" style="margin:6px 0">${items.map(c => `<div class="list-item tap" data-id="${c.id}" data-nom="${esc(c.prenom + ' ' + c.nom)}" data-tel="${esc(c.telephone || '')}" role="button"><div class="main"><div class="name">${esc(c.prenom)} ${esc(c.nom)}</div><div class="sub">${esc(c.telephone || '')}</div></div><span class="badge cat">Choisir</span></div>`).join('')}</div>` : '<p class="muted" style="font-size:.85rem">Aucun client enregistré. Tapez le nom et le téléphone ci-dessus.</p>';
             $('#vcl-res').querySelectorAll('.tap').forEach(x => x.onclick = () => { venteClient = { id: +x.dataset.id, nom: x.dataset.nom, tel: x.dataset.tel }; rendre(); });
           } catch (ex) { $('#vcl-res').innerHTML = `<p class="muted">${esc(ex.message)}</p>`; }
         }, 300);
@@ -270,14 +275,22 @@ async function validerVente() {
   if (!panier.length) return;
   btn.disabled = true; btn.textContent = 'Enregistrement…';
   const pos = await position();
-  const vente = { uuid_client: uuid(), lignes: panier.map(l => ({ produit_id: l.produit_id, quantite: l.quantite })), mode_paiement: $('#mode').value, client_id: venteClient?.id || null, ...(pos || {}) };
+  const vente = {
+    uuid_client: uuid(),
+    lignes: panier.map(l => ({ produit_id: l.produit_id, quantite: l.quantite })),
+    mode_paiement: $('#mode').value,
+    client_id: venteClient?.id || null,
+    client_nom: venteClient ? null : (venteClientNom.trim() || null),
+    client_tel: venteClient ? null : (venteClientTel.trim() || null),
+    ...(pos || {}),
+  };
 
   // Hors ligne : on garde la vente tout de suite, elle partira seule au retour d'internet.
   if (!navigator.onLine) { return mettreEnAttente(vente); }
 
   try {
     const res = await api('POST', '/ventes', vente);
-    panier = []; sauverPanier(); venteClient = null;
+    panier = []; sauverPanier(); venteClient = null; venteClientNom = ''; venteClientTel = '';
     if (res.data.mode_paiement === 'especes') {
       venteConfirmee(res.data);
     } else {
@@ -313,7 +326,7 @@ function venteConfirmee(v) {
 /* Garde la vente dans la file locale (survit à une coupure d'électricité : stockée sur l'appareil). */
 function mettreEnAttente(vente) {
   fileAttente.push(vente); sauverFile();
-  panier = []; sauverPanier(); venteClient = null;
+  panier = []; sauverPanier(); venteClient = null; venteClientNom = ''; venteClientTel = '';
   const om = vente.mode_paiement === 'orange_money' ? ' Faites payer au 621952252.' : '';
   toast('Vente gardée. Elle sera enregistrée automatiquement dès le retour d\'internet.' + om);
   vendeurCatalogue();

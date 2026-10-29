@@ -31,6 +31,8 @@ class VenteController extends Controller
                 'ville' => $request->validated('ville'),
                 'ip' => $request->ip(),
             ],
+            $request->validated('client_nom'),
+            $request->validated('client_tel'),
         );
 
         return (new VenteVendeurResource($vente))

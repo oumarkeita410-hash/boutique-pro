@@ -61,6 +61,8 @@ class VenteService
         ?int $clientId = null,
         ?string $uuidClient = null,
         ?array $position = null,
+        ?string $clientNom = null,
+        ?string $clientTel = null,
     ): Vente {
         if ($vendeur->est_verrouille) {
             throw new CompteVerrouilleException();
@@ -91,7 +93,7 @@ class VenteService
         $quantites = $this->regrouperQuantites($lignes);
 
         try {
-            return DB::transaction(function () use ($vendeur, $quantites, $modePaiement, $clientId, $uuidClient, $position) {
+            return DB::transaction(function () use ($vendeur, $quantites, $modePaiement, $clientId, $uuidClient, $position, $clientNom, $clientTel) {
                 // Verrouille les lignes produits jusqu'à la fin de la transaction :
                 // deux vendeurs ne peuvent pas vendre le même dernier article.
                 $produits = Produit::whereIn('id', array_keys($quantites))
@@ -115,6 +117,8 @@ class VenteService
                     'uuid_client' => $uuidClient,
                     'vendeur_id' => $vendeur->id,
                     'client_id' => $clientId,
+                    'client_nom' => $clientNom,
+                    'client_tel' => $clientTel,
                     'mode_paiement' => $modePaiement,
                     // Espèces : payée tout de suite. Crédit : à rembourser.
                     // Orange Money / carte : confirmée plus tard par le retour de l'opérateur.
