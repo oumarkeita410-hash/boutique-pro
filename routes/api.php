@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CreditClientController;
+use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\LocalisationController;
 use App\Http\Controllers\Admin\PaieController;
 use App\Http\Controllers\Admin\ProduitController;
@@ -95,6 +96,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Historique d'achats d'un client.
         Route::get('clients/{client}/historique', [ClientController::class, 'historique']);
+
+        // Journal des activités (trace de qui a fait quoi).
+        Route::get('journal', [JournalController::class, 'index']);
 
         Route::apiResource('utilisateurs', UtilisateurController::class)->except('destroy');
         Route::post('utilisateurs/{utilisateur}/verrouiller', [UtilisateurController::class, 'verrouiller']);

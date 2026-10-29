@@ -414,7 +414,64 @@ function menuAdmin() {
     ['confirm', '✅', 'Paiements', adminPaiementsConfirmer],
     ['messages', '💬', 'Messages', adminMessages],
     ['alertes', '🔔', 'Alertes', adminAlertes],
+    ['journal', '📝', 'Journal', adminJournal],
   ];
+}
+
+/* Journal : libellés lisibles des actions + mise en forme des détails. */
+const ACTIONS_LBL = {
+  connexion: 'Connexion', compte_cree: 'Compte créé', compte_modifie: 'Compte modifié',
+  compte_verrouille: 'Compte verrouillé', compte_deverrouille: 'Compte réactivé',
+  mot_de_passe_reinitialise: 'Mot de passe réinitialisé', client_cree: 'Client créé', client_modifie: 'Client modifié',
+  produit_cree: 'Produit créé', produit_modifie: 'Produit modifié', reparateur_cree: 'Réparateur créé', reparateur_modifie: 'Réparateur modifié',
+  vendeur_paye: 'Vendeur payé', tentative_intrusion: "Tentative d'intrusion", vente_modifiee: 'Vente modifiée',
+  modification_refusee: 'Modification refusée', paiement_confirme: 'Paiement confirmé', remboursement_client: 'Remboursement client',
+  dette_reparateur_ajoutee: 'Dette réparateur ajoutée', dette_reparateur_modifiee: 'Dette réparateur modifiée', dette_reparateur_supprimee: 'Dette réparateur supprimée',
+  devis_cree: 'Devis créé', devis_converti: 'Devis converti en vente', vente_annulee: 'Vente annulée', horaires_modifies: 'Horaires modifiés',
+};
+function formatDetails(d) {
+  if (!d) return '';
+  const p = [];
+  if (d.reference) p.push('réf ' + d.reference);
+  if (d.motif) p.push('raison : ' + d.motif);
+  if (d.montant != null) p.push('montant ' + gnf(d.montant));
+  if (d.mode) p.push('mode ' + d.mode);
+  if (d.periode) p.push('période ' + d.periode);
+  if (d.demande_par) p.push('demandé par ' + d.demande_par);
+  if (d.avant && d.apres) p.push('changement : ' + JSON.stringify(d.avant) + ' → ' + JSON.stringify(d.apres));
+  if (d.champs) p.push('champs : ' + (Array.isArray(d.champs) ? d.champs.join(', ') : d.champs));
+  if (d.chemin) p.push('page ' + d.chemin);
+  if (d.tentative) p.push('tentative n°' + d.tentative);
+  if (d.compte_bloque) p.push('→ compte bloqué');
+  if (d.vente) p.push('vente ' + d.vente);
+  return p.join(' · ');
+}
+async function adminJournal() {
+  adminShell('journal', 'Journal des activités', `
+    <div class="field"><label>Filtrer</label><select id="jf">
+      <option value="">Toutes les actions</option>
+      <option value="vente_annulee">Ventes annulées</option>
+      <option value="vente_modifiee">Ventes modifiées</option>
+      <option value="tentative_intrusion">Tentatives d'intrusion</option>
+      <option value="vendeur_paye">Paies des vendeurs</option>
+      <option value="paiement_confirme">Paiements confirmés</option>
+      <option value="connexion">Connexions</option>
+    </select></div>
+    <div id="liste"><div class="spinner"></div></div>`);
+  const rendre = async () => {
+    const f = $('#jf').value;
+    try {
+      const d = await api('GET', '/admin/journal' + (f ? '?action=' + f : ''));
+      const items = d.data || [];
+      $('#liste').innerHTML = items.length ? `<div class="card">${items.map(j => `
+        <div class="list-item"><div class="main">
+          <div class="name">${esc(ACTIONS_LBL[j.action] || j.action)}</div>
+          <div class="sub">${esc(j.auteur)}${j.role ? ' (' + esc(j.role) + ')' : ''} · ${esc(j.date)}</div>
+          ${j.details ? `<div class="sub">${esc(formatDetails(j.details))}</div>` : ''}
+        </div></div>`).join('')}</div>` : '<p class="muted center mt">Aucune activité.</p>';
+    } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+  };
+  $('#jf').onchange = rendre; rendre();
 }
 
 /* Coquille admin : barre latérale + barre du haut + zone de contenu #vue. */
@@ -1164,8 +1221,9 @@ async function adminVentes() {
       $('#liste').querySelectorAll('[data-lat]').forEach(b => b.onclick = () => window.open('https://www.google.com/maps?q=' + b.dataset.lat + ',' + b.dataset.lng, '_blank'));
       $('#liste').querySelectorAll('[data-fact]').forEach(b => b.onclick = () => voirFacture(+b.dataset.fact, adminVentes));
       $('#liste').querySelectorAll('[data-annuler]').forEach(b => b.onclick = async () => {
-        if (!confirm('Annuler cette vente ? Les articles reviennent en stock.')) return;
-        try { await api('POST', '/admin/ventes/' + b.dataset.annuler + '/annuler'); toast('Vente annulée, stock remis.'); rendre(); }
+        const motif = prompt('Annuler cette vente ? Indiquez la raison (les articles reviennent en stock) :');
+        if (motif === null) return; // l'administrateur a annulé l'action
+        try { await api('POST', '/admin/ventes/' + b.dataset.annuler + '/annuler', { motif }); toast('Vente annulée, stock remis.'); rendre(); }
         catch (ex) { toast(ex.premierDetail()); }
       });
     } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
