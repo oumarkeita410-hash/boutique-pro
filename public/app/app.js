@@ -182,6 +182,7 @@ function ajouterAuPanier(p) {
   sauverPanier(); toast(p.nom + ' ajouté (' + nbPanier() + ')');
 }
 function totalPanier() { return panier.reduce((s, l) => s + (l.prix || 0) * l.quantite, 0); }
+let venteClient = null; // client choisi pour la vente en cours (facultatif, pour la facture)
 
 async function vendeurCatalogue() {
   cadre('Catalogue', `
@@ -231,6 +232,12 @@ function vendeurPanier() {
         </div>`).join('')}
         <div class="info-row" style="padding-top:12px"><span class="lbl">Total à encaisser</span><span class="val">${gnf(totalPanier())}</span></div></div>
       <div class="card">
+        <div class="field"><label>Client (facultatif — pour la facture)</label>
+          ${venteClient ? `<div class="list-item"><div class="main"><div class="name">${esc(venteClient.nom)}</div><div class="sub">${esc(venteClient.tel || '')}</div></div><button class="icon-btn" id="vcl-clear" style="color:var(--danger)">✕</button></div>`
+            : `<input id="vcl-search" placeholder="Rechercher un client (nom, téléphone)…">`}</div>
+        <div id="vcl-res"></div>
+      </div>
+      <div class="card">
         <div class="field"><label>Mode de paiement</label>
           <select id="mode"><option value="especes">Espèces</option><option value="orange_money">Orange Money</option><option value="carte">Carte bancaire</option></select></div>
         <div class="error-msg" id="p-err"></div>
@@ -240,6 +247,21 @@ function vendeurPanier() {
     $('#vue').querySelectorAll('[data-moins]').forEach(b => b.onclick = () => { const l = panier[+b.dataset.moins]; if (--l.quantite < 1) panier.splice(+b.dataset.moins, 1); sauverPanier(); rendre(); });
     $('#vue').querySelectorAll('[data-sup]').forEach(b => b.onclick = () => { panier.splice(+b.dataset.sup, 1); sauverPanier(); rendre(); });
     $('#valider').onclick = validerVente;
+    if (venteClient) { $('#vcl-clear').onclick = () => { venteClient = null; rendre(); }; }
+    else {
+      let tc; $('#vcl-search').addEventListener('input', async e => {
+        clearTimeout(tc); const q = e.target.value.trim();
+        tc = setTimeout(async () => {
+          if (!q) { $('#vcl-res').innerHTML = ''; return; }
+          try {
+            const d = await api('GET', '/clients?recherche=' + encodeURIComponent(q));
+            const items = (d.data || []).slice(0, 6);
+            $('#vcl-res').innerHTML = items.length ? `<div class="card" style="margin:6px 0">${items.map(c => `<div class="list-item tap" data-id="${c.id}" data-nom="${esc(c.prenom + ' ' + c.nom)}" data-tel="${esc(c.telephone || '')}" role="button"><div class="main"><div class="name">${esc(c.prenom)} ${esc(c.nom)}</div><div class="sub">${esc(c.telephone || '')}</div></div><span class="badge cat">Choisir</span></div>`).join('')}</div>` : '<p class="muted" style="font-size:.85rem">Aucun client. Le conseiller peut l\'enregistrer.</p>';
+            $('#vcl-res').querySelectorAll('.tap').forEach(x => x.onclick = () => { venteClient = { id: +x.dataset.id, nom: x.dataset.nom, tel: x.dataset.tel }; rendre(); });
+          } catch (ex) { $('#vcl-res').innerHTML = `<p class="muted">${esc(ex.message)}</p>`; }
+        }, 300);
+      });
+    }
   };
   rendre();
 }
@@ -248,14 +270,14 @@ async function validerVente() {
   if (!panier.length) return;
   btn.disabled = true; btn.textContent = 'Enregistrement…';
   const pos = await position();
-  const vente = { uuid_client: uuid(), lignes: panier.map(l => ({ produit_id: l.produit_id, quantite: l.quantite })), mode_paiement: $('#mode').value, ...(pos || {}) };
+  const vente = { uuid_client: uuid(), lignes: panier.map(l => ({ produit_id: l.produit_id, quantite: l.quantite })), mode_paiement: $('#mode').value, client_id: venteClient?.id || null, ...(pos || {}) };
 
   // Hors ligne : on garde la vente tout de suite, elle partira seule au retour d'internet.
   if (!navigator.onLine) { return mettreEnAttente(vente); }
 
   try {
     const res = await api('POST', '/ventes', vente);
-    panier = []; sauverPanier();
+    panier = []; sauverPanier(); venteClient = null;
     if (res.data.mode_paiement === 'especes') {
       venteConfirmee(res.data);
     } else {
@@ -291,7 +313,7 @@ function venteConfirmee(v) {
 /* Garde la vente dans la file locale (survit à une coupure d'électricité : stockée sur l'appareil). */
 function mettreEnAttente(vente) {
   fileAttente.push(vente); sauverFile();
-  panier = []; sauverPanier();
+  panier = []; sauverPanier(); venteClient = null;
   const om = vente.mode_paiement === 'orange_money' ? ' Faites payer au 621952252.' : '';
   toast('Vente gardée. Elle sera enregistrée automatiquement dès le retour d\'internet.' + om);
   vendeurCatalogue();
@@ -1316,7 +1338,7 @@ function docImprimable(data, estDevis) {
       <div class="doc-meta"><div class="doc-type">${estDevis ? 'DEVIS' : 'FACTURE'}</div>
         <div>N° ${esc(data.reference)}</div><div>${esc((data.date || '').slice(0, 10))}</div></div>
     </div>
-    <div class="doc-client"><b>Client :</b> ${esc(data.client || '')}${data.client_tel ? ' · ' + esc(data.client_tel) : ''}</div>
+    <div class="doc-client"><b>Client :</b> ${esc(data.client || '')}${data.client_tel ? '<br>Tél : ' + esc(data.client_tel) : ''}${data.client_email ? '<br>Email : ' + esc(data.client_email) : ''}${data.client_ville ? '<br>Ville : ' + esc(data.client_ville) : ''}</div>
     <table class="doc-table">
       <thead><tr><th>Désignation</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
       <tbody>${(data.lignes || []).map(l => `<tr><td>${esc(l.designation)}</td><td>${l.quantite}</td><td>${gnf(l.prix_unitaire)}</td><td>${gnf(l.sous_total)}</td></tr>`).join('')}</tbody>

@@ -19,15 +19,17 @@ class FactureController extends Controller
             abort(403);
         }
 
-        $vente->load('lignes.produit:id,nom', 'client:id,nom,prenom,telephone', 'vendeur:id,name,prenom');
+        $vente->load('lignes.produit:id,nom', 'client:id,nom,prenom,telephone,email,ville,pays', 'vendeur:id,name,prenom');
 
         return response()->json([
             'reference' => $vente->reference,
             'date' => $vente->created_at->toDateTimeString(),
             'statut' => $vente->statut->value,
             'mode_paiement' => $vente->mode_paiement->value,
-            'client' => $vente->client ? trim($vente->client->prenom.' '.$vente->client->nom) : 'Client',
+            'client' => $vente->client ? trim($vente->client->prenom.' '.$vente->client->nom) : 'Client (non enregistré)',
             'client_tel' => $vente->client?->telephone,
+            'client_email' => $vente->client?->email,
+            'client_ville' => $vente->client?->ville,
             'vendeur' => $vente->vendeur ? trim($vente->vendeur->prenom.' '.$vente->vendeur->name) : null,
             'montant_total' => $vente->montant_total,
             'montant_paye' => $vente->montant_paye,
