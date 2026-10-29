@@ -201,11 +201,19 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); b
 .doc-note { margin: 10px 0; font-style: italic; color: #333; }
 .doc-foot { text-align: center; margin-top: 16px; font-size: .85rem; color: #444; }
 
+/* Ticket court (petit reçu ~80 mm) */
+.doc.ticket { max-width: 300px; margin: 0 auto; font-size: .82rem; }
+.doc.ticket .doc-emblem { width: 40px; height: 40px; }
+.doc.ticket .doc-shop { font-size: 1.05rem; }
+.doc.ticket .doc-table { font-size: .78rem; }
+.doc.ticket .doc-table th, .doc.ticket .doc-table td { padding: 3px 4px; }
+
 @media print {
   body { background: #fff; }
   #barre, .topbar, .tabbar, .wp-side, .wp-top, .wp-backdrop, .no-print, #toast { display: none !important; }
   #app, .wp-body, .wp-main, .content, #vue { margin: 0 !important; padding: 0 !important; max-width: none !important; }
   .doc { border: none; border-radius: 0; padding: 0; }
+  .doc.ticket { max-width: 80mm; }
 }
 
 /* Tableau de bord enrichi */

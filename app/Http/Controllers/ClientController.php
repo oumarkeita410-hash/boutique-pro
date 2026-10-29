@@ -34,6 +34,32 @@ class ClientController extends Controller
         return response()->json($client);
     }
 
+    /**
+     * Admin : GET /api/admin/clients/{client}/historique
+     * Le client + la liste de ses achats (ventes).
+     */
+    public function historique(Client $client)
+    {
+        $ventes = \App\Models\Vente::where('client_id', $client->id)
+            ->with('lignes.produit:id,nom')
+            ->latest()
+            ->limit(200)
+            ->get();
+
+        return response()->json([
+            'client' => $client,
+            'total_achats' => (int) $ventes->where('statut', '!=', \App\Enums\StatutVente::Annulee)->sum('montant_total'),
+            'nombre_achats' => $ventes->count(),
+            'ventes' => $ventes->map(fn ($v) => [
+                'reference' => $v->reference,
+                'date' => $v->created_at->toDateTimeString(),
+                'montant_total' => $v->montant_total,
+                'statut' => $v->statut->value,
+                'articles' => $v->lignes->map(fn ($l) => ($l->produit?->nom ?? 'Article').' ×'.$l->quantite),
+            ]),
+        ]);
+    }
+
     public function store(Request $request)
     {
         $donnees = $request->validate($this->regles());

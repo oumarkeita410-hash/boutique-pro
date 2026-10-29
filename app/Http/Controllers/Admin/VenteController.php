@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\StatutVente;
 use App\Http\Controllers\Controller;
+use App\Models\JournalActivite;
+use App\Models\MouvementStock;
+use App\Models\Produit;
 use App\Models\Vente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * L'administrateur voit TOUTES les ventes (tous les vendeurs), avec filtres.
@@ -59,5 +65,79 @@ class VenteController extends Controller
             'a_credit' => Vente::where('statut', StatutVente::ACredit)->count(),
             'en_attente' => Vente::where('statut', StatutVente::EnAttentePaiement)->count(),
         ]);
+    }
+
+    /**
+     * GET /api/admin/ventes/export?periode=mois : télécharge les ventes en CSV (ouvert par Excel).
+     */
+    public function export(Request $request): StreamedResponse
+    {
+        $query = Vente::query()
+            ->when($request->query('periode') === 'jour', fn ($q) => $q->where('created_at', '>=', now()->startOfDay()))
+            ->when($request->query('periode') === 'semaine', fn ($q) => $q->where('created_at', '>=', now()->startOfWeek()))
+            ->when($request->query('periode') === 'mois', fn ($q) => $q->where('created_at', '>=', now()->startOfMonth()))
+            ->with(['vendeur:id,name,prenom', 'client:id,nom,prenom'])
+            ->latest();
+
+        $nom = 'ventes-'.now()->format('Y-m-d').'.csv';
+
+        return response()->streamDownload(function () use ($query) {
+            $out = fopen('php://output', 'w');
+            fprintf($out, "\xEF\xBB\xBF"); // BOM UTF-8 pour Excel
+            fputcsv($out, ['Référence', 'Date', 'Vendeur', 'Client', 'Mode', 'Statut', 'Montant total', 'Payé', 'Reste'], ';');
+            $query->chunk(500, function ($ventes) use ($out) {
+                foreach ($ventes as $v) {
+                    fputcsv($out, [
+                        $v->reference,
+                        $v->created_at->toDateTimeString(),
+                        $v->vendeur ? trim($v->vendeur->prenom.' '.$v->vendeur->name) : '',
+                        $v->client ? trim($v->client->prenom.' '.$v->client->nom) : '',
+                        $v->mode_paiement->value,
+                        $v->statut->value,
+                        $v->montant_total,
+                        $v->montant_paye,
+                        $v->reste(),
+                    ], ';');
+                }
+            });
+            fclose($out);
+        }, $nom, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    /**
+     * POST /api/admin/ventes/{vente}/annuler : annule une vente (retour).
+     * Remet les articles en stock et marque la vente « annulée ».
+     */
+    public function annuler(Request $request, Vente $vente)
+    {
+        if ($vente->statut === StatutVente::Annulee) {
+            throw ValidationException::withMessages(['vente' => 'Cette vente est déjà annulée.']);
+        }
+
+        $motif = $request->validate(['motif' => ['nullable', 'string', 'max:255']])['motif'] ?? null;
+
+        DB::transaction(function () use ($vente, $request, $motif) {
+            foreach ($vente->lignes()->get() as $ligne) {
+                $produit = Produit::whereKey($ligne->produit_id)->lockForUpdate()->first();
+                if ($produit) {
+                    $avant = $produit->stock;
+                    $produit->increment('stock', $ligne->quantite);
+                    MouvementStock::create([
+                        'produit_id' => $produit->id,
+                        'user_id' => $request->user()->id,
+                        'vente_id' => $vente->id,
+                        'type' => 'annulation',
+                        'quantite' => $ligne->quantite, // positif = retour au stock
+                        'stock_avant' => $avant,
+                        'stock_apres' => $produit->stock,
+                    ]);
+                }
+            }
+
+            $vente->update(['statut' => StatutVente::Annulee]);
+            JournalActivite::noter($request->user(), 'vente_annulee', $vente, ['reference' => $vente->reference, 'motif' => $motif]);
+        });
+
+        return response()->json(['message' => 'Vente annulée, articles remis en stock.', 'statut' => $vente->statut->value]);
     }
 }

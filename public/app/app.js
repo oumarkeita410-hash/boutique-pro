@@ -408,6 +408,7 @@ function menuAdmin() {
     ['reparateurs', '🔧', 'Réparateurs', adminReparateurs],
     ['ventes', '📒', 'Ventes', adminVentes],
     ['devis', '📄', 'Devis', adminDevis],
+    ['clients', '👤', 'Clients', adminClients],
     ['credits', '💳', 'Crédits clients', adminCreditsClients],
     ['paie', '💵', 'Paie', adminPaie],
     ['confirm', '✅', 'Paiements', adminPaiementsConfirmer],
@@ -672,9 +673,11 @@ async function adminDetailCompte(id) {
 async function adminProduits() {
   adminShell('produits', 'Produits', `
     <button class="btn block" id="nouveau">➕ Nouveau produit</button>
+    <button class="btn block secondary" id="stockbas">⚠️ Stock bas (à recommander)</button>
     <div class="field mt"><input id="q" placeholder="Rechercher un produit…"></div>
     <div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = adminFormProduit;
+  $('#stockbas').onclick = adminStockBas;
   const rendre = async (q = '') => {
     try {
       const d = await api('GET', '/admin/produits' + (q ? '?recherche=' + encodeURIComponent(q) : ''));
@@ -1098,15 +1101,50 @@ async function whatsAppBoutique(texte = '') {
   try { const d = await api('GET', '/whatsapp/contact'); ouvrirWhatsApp(d.numero, texte); }
   catch { ouvrirWhatsApp('224621952252', texte); }
 }
+/* Ouvre WhatsApp avec un message, en laissant choisir le destinataire (ex. DL-Service). */
+function partagerWhatsApp(texte) { window.open('https://wa.me/?text=' + encodeURIComponent(texte), '_blank'); }
+
+/* ---- Admin : stock bas à recommander (chez DL-Service) ---- */
+async function adminStockBas() {
+  adminShell('produits', 'Stock bas — à recommander', `<div id="sb"><div class="spinner"></div></div>`);
+  try {
+    const d = await api('GET', '/admin/produits?stock_bas=1');
+    const items = d.data || [];
+    const liste = items.map(p => '- ' + p.nom + ' (reste ' + p.stock + ')').join('\n');
+    $('#sb').innerHTML = `
+      <button class="btn block secondary" id="retour-prod">← Retour aux produits</button>
+      <p class="muted" style="font-size:.85rem">Articles dont le stock est bas — à recommander chez DL-Service (Bamako).</p>
+      <button class="btn block" id="wa">💬 Envoyer la liste sur WhatsApp</button>
+      <div class="card">${items.length ? items.map(p => `<div class="list-item"><div class="main"><div class="name">${esc(p.nom)}</div><div class="sub">${esc(p.categorie || '')} · reste ${p.stock} (seuil ${p.seuil_alerte})</div></div><button class="btn" style="width:auto;padding:6px 10px" data-appro="${p.id}">＋ stock</button></div>`).join('') : '<p class="muted">Aucun produit en stock bas. 👍</p>'}</div>`;
+    $('#retour-prod').onclick = adminProduits;
+    $('#wa').onclick = () => partagerWhatsApp('Bonjour DL-Service, commande MOK-Business :\n' + (liste || '(liste vide)'));
+    $('#sb').querySelectorAll('[data-appro]').forEach(b => b.onclick = () => adminApprovisionner(+b.dataset.appro));
+  } catch (ex) { $('#sb').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
+
+/* Télécharge un fichier (CSV/Excel) en passant le jeton d'authentification. */
+async function telechargerCSV(chemin, nomFichier) {
+  try {
+    const res = await fetch(API + chemin, { headers: { 'Authorization': 'Bearer ' + store.token } });
+    if (!res.ok) throw new Error('Export impossible.');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = nomFichier; document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    toast('Export téléchargé.');
+  } catch (ex) { toast(ex.message); }
+}
 
 /* ---- Admin : toutes les ventes ---- */
 async function adminVentes() {
   adminShell('ventes', 'Toutes les ventes', `
     <div class="card">
       <div class="field"><label>Période</label><select id="periode"><option value="jour">Aujourd'hui</option><option value="semaine">Cette semaine</option><option value="mois">Ce mois</option><option value="">Toutes</option></select></div>
-      <div class="field"><label>Statut</label><select id="statut"><option value="">Tous</option><option value="payee">Payées</option><option value="a_credit">À crédit</option><option value="en_attente_paiement">En attente</option></select></div>
+      <div class="field"><label>Statut</label><select id="statut"><option value="">Tous</option><option value="payee">Payées</option><option value="a_credit">À crédit</option><option value="en_attente_paiement">En attente</option><option value="annulee">Annulées</option></select></div>
+      <button class="btn secondary block" id="export">⬇️ Exporter en Excel</button>
     </div>
     <div id="liste"><div class="spinner"></div></div>`);
+  $('#export').onclick = () => telechargerCSV('/admin/ventes/export?periode=' + $('#periode').value, 'ventes.csv');
   const rendre = async () => {
     const p = $('#periode').value, s = $('#statut').value;
     try {
@@ -1119,14 +1157,52 @@ async function adminVentes() {
           <div class="sub">${esc(v.articles.join(', '))}</div></div>
           <div class="btn-row" style="width:auto">
             <button class="icon-btn" title="Facture" data-fact="${v.id}">🧾</button>
+            ${v.statut !== 'annulee' ? `<button class="icon-btn" title="Annuler (retour)" data-annuler="${v.id}" style="color:var(--danger)">↩️</button>` : ''}
             ${v.latitude ? `<button class="icon-btn" title="Voir sur la carte" data-lat="${v.latitude}" data-lng="${v.longitude}">📍</button>` : ''}
           </div>
         </div>`).join('')}</div>` : `<p class="muted center mt">Aucune vente.</p>`;
       $('#liste').querySelectorAll('[data-lat]').forEach(b => b.onclick = () => window.open('https://www.google.com/maps?q=' + b.dataset.lat + ',' + b.dataset.lng, '_blank'));
       $('#liste').querySelectorAll('[data-fact]').forEach(b => b.onclick = () => voirFacture(+b.dataset.fact, adminVentes));
+      $('#liste').querySelectorAll('[data-annuler]').forEach(b => b.onclick = async () => {
+        if (!confirm('Annuler cette vente ? Les articles reviennent en stock.')) return;
+        try { await api('POST', '/admin/ventes/' + b.dataset.annuler + '/annuler'); toast('Vente annulée, stock remis.'); rendre(); }
+        catch (ex) { toast(ex.premierDetail()); }
+      });
     } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
   };
   $('#periode').onchange = rendre; $('#statut').onchange = rendre; rendre();
+}
+
+/* ---- Admin : clients + historique d'achats ---- */
+async function adminClients() {
+  adminShell('clients', 'Clients', `<div class="field"><input id="q" placeholder="Rechercher un client (nom, téléphone)…"></div><div id="liste"><div class="spinner"></div></div>`);
+  const rendre = async (q = '') => {
+    try {
+      const d = await api('GET', '/clients' + (q ? '?recherche=' + encodeURIComponent(q) : ''));
+      const items = d.data || [];
+      $('#liste').innerHTML = items.length ? `<div class="card">${items.map(c => `
+        <div class="list-item tap" data-id="${c.id}" role="button" tabindex="0"><div class="main"><div class="name">${esc(c.prenom)} ${esc(c.nom)}</div><div class="sub">${esc(c.telephone)}${c.ville ? ' · ' + esc(c.ville) : ''}</div></div><span class="badge cat">Voir</span></div>`).join('')}</div>` : '<p class="muted center mt">Aucun client. Les vendeurs et conseillers les enregistrent.</p>';
+      $('#liste').querySelectorAll('.tap').forEach(el => el.onclick = () => adminClientHistorique(+el.dataset.id));
+    } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+  };
+  let t; $('#q').addEventListener('input', e => { clearTimeout(t); t = setTimeout(() => rendre(e.target.value.trim()), 300); });
+  rendre();
+}
+async function adminClientHistorique(id) {
+  cadre('Client', `<div id="h"><div class="spinner"></div></div>`, null, null, { retour: adminClients });
+  try {
+    const d = await api('GET', '/admin/clients/' + id + '/historique');
+    const c = d.client;
+    $('#h').innerHTML = `
+      <div class="card"><h3>${esc(c.prenom)} ${esc(c.nom)}</h3>
+        <p class="muted">${esc(c.telephone || '')}${c.email ? ' · ' + esc(c.email) : ''}<br>${esc(c.ville || '')} ${esc(c.pays || '')}</p>
+        <div class="row-between"><span>Achats : <b>${d.nombre_achats}</b></span><span>Total : <b>${gnf(d.total_achats)}</b></span></div></div>
+      ${c.telephone ? `<button class="btn block secondary" id="wa">💬 WhatsApp</button>` : ''}
+      <div class="card"><h3>Historique d'achats</h3>${d.ventes.length ? d.ventes.map(v => `
+        <div class="list-item"><div class="main"><div class="name">${esc(v.reference)} — ${gnf(v.montant_total)}</div>
+          <div class="sub">${esc(v.date)} · ${esc(v.statut)}<br>${esc(v.articles.join(', '))}</div></div></div>`).join('') : '<p class="muted">Aucun achat.</p>'}</div>`;
+    if (c.telephone) $('#wa').onclick = () => ouvrirWhatsApp(c.telephone, 'Bonjour ' + c.prenom + ', ');
+  } catch (ex) { $('#h').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
 }
 
 /* ---- Admin : horaires d'un vendeur ---- */
@@ -1198,11 +1274,13 @@ function docImprimable(data, estDevis) {
 function afficherDocument(titre, data, estDevis, retour, actionsHTML = '') {
   cadre(titre, `
     <div class="no-print toolbar-doc">
-      <button class="btn" id="imprimer">🖨️ Imprimer</button>
+      <button class="btn" id="imprimer">🖨️ Imprimer (A4)</button>
+      <button class="btn secondary" id="ticket">🧾 Ticket court</button>
       ${actionsHTML}
     </div>
     ${docImprimable(data, estDevis)}`, null, null, { retour });
-  $('#imprimer').onclick = () => window.print();
+  $('#imprimer').onclick = () => { $('#doc').classList.remove('ticket'); window.print(); };
+  $('#ticket').onclick = () => { $('#doc').classList.add('ticket'); window.print(); setTimeout(() => $('#doc').classList.remove('ticket'), 800); };
 }
 
 /* ---- Admin : liste des devis ---- */

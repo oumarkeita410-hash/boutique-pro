@@ -90,6 +90,11 @@ Route::middleware('auth:sanctum')->group(function () {
         // Toutes les ventes (admin voit tout).
         Route::get('ventes', [AdminVenteController::class, 'index']);
         Route::get('ventes-resume', [AdminVenteController::class, 'resume']);
+        Route::get('ventes/export', [AdminVenteController::class, 'export']);
+        Route::post('ventes/{vente}/annuler', [AdminVenteController::class, 'annuler']);
+
+        // Historique d'achats d'un client.
+        Route::get('clients/{client}/historique', [ClientController::class, 'historique']);
 
         Route::apiResource('utilisateurs', UtilisateurController::class)->except('destroy');
         Route::post('utilisateurs/{utilisateur}/verrouiller', [UtilisateurController::class, 'verrouiller']);
