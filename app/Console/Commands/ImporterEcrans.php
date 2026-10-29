@@ -11,8 +11,8 @@ use ZipArchive;
  * Colonnes attendues : Modele, Marque, prix min, Quantite, prix max, categorie.
  *
  * Choix de correspondance (modifiable) :
- *   - prix de vente (prix_unitaire) = "prix max"
- *   - prix d'achat (prix_achat)     = "prix min"
+ *   - prix de vente (prix_unitaire) = "prix min"
+ *   - prix d'achat (prix_achat)     = colonne "prix achat" si présente, sinon 0
  *   - stock                          = "Quantite"
  *   - catégorie                      = "Écran de téléphone"
  *   - produit activé                 = oui
@@ -43,9 +43,9 @@ class ImporterEcrans extends Command
         $col = fn (array $noms) => $this->trouverColonne($entetes, $noms);
 
         $cModele = $col(['modele', 'modèle', 'petit ecran', 'petit écran', 'nom', 'article', 'designation', 'désignation']);
-        $cMin = $col(['prix min', 'prix minimum', 'prix achat', "prix d'achat"]);
+        $cMin = $col(['prix min', 'prix minimum', 'prix vente', 'prix de vente', 'prix']);
+        $cAchat = $col(['prix achat', "prix d'achat", 'achat', 'cout', 'coût', 'prix revient']);
         $cQte = $col(['quantite', 'quantité', 'quanrite', 'qte', 'stock']);
-        $cMax = $col(['prix max', 'prix maximum', 'prix vente', 'prix de vente', 'prix']);
 
         if ($cModele === null) {
             $this->error('Colonne "Modele" (ou équivalent) introuvable dans le fichier.');
@@ -60,14 +60,17 @@ class ImporterEcrans extends Command
             $modele = trim($l[$cModele] ?? '');
             if ($modele === '') { $ignores++; continue; }
 
-            $prixVente = $cMax !== null ? $this->entier($l[$cMax] ?? 0) : 0;
-            $prixAchat = $cMin !== null ? $this->entier($l[$cMin] ?? 0) : 0;
+            // Prix de vente = "prix min". Prix d'achat = colonne "prix achat" si présente, sinon 0.
+            $prixVente = $cMin !== null ? $this->entier($l[$cMin] ?? 0) : 0;
+            $prixAchat = $cAchat !== null ? $this->entier($l[$cAchat] ?? 0) : 0;
             $stock = $cQte !== null ? $this->entier($l[$cQte] ?? 0) : 0;
+
+            $nom = trim($prefixe) === '' ? $modele : rtrim($prefixe).' '.$modele;
 
             $produit = Produit::updateOrCreate(
                 ['categorie' => $categorie, 'modele' => $modele],
                 [
-                    'nom' => trim($prefixe.$modele),
+                    'nom' => $nom,
                     'prix_unitaire' => $prixVente,
                     'prix_achat' => $prixAchat,
                     'stock' => $stock,

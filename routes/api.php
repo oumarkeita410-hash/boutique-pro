@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\VenteController as AdminVenteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DevisController;
+use App\Http\Controllers\FactureController;
 use App\Http\Controllers\HoraireController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ModificationVenteController;
@@ -65,12 +67,22 @@ Route::middleware('auth:sanctum')->group(function () {
         // Modifier une vente = demande soumise à l'accord de l'administrateur.
         Route::post('/ventes/{vente}/demande-modification', [ModificationVenteController::class, 'demander']);
 
+        // Facture imprimable d'une vente.
+        Route::get('/ventes/{vente}/facture', [FactureController::class, 'facture']);
+
+        // Devis (proposition de prix). Créés par vendeur ou admin.
+        Route::get('/devis', [DevisController::class, 'index']);
+        Route::post('/devis', [DevisController::class, 'store']);
+        Route::get('/devis/{devis}', [DevisController::class, 'show']);
+        Route::post('/devis/{devis}/convertir', [DevisController::class, 'convertir']);
+        Route::post('/devis/{devis}/statut', [DevisController::class, 'changerStatut']);
+
         Route::get('/reparateurs', [ReparateurOperationController::class, 'index']);
         Route::post('/reparateurs/{reparateur}/prises', [ReparateurOperationController::class, 'prise']);
         Route::post('/reparateurs/{reparateur}/paiements', [ReparateurOperationController::class, 'paiement']);
     });
 
-    Route::get('/ma-paie', [PaieController::class, 'mesPaiements'])->middleware('role:vendeur');
+    // La paie des vendeurs est entièrement réservée à l'administrateur (aucun accès vendeur).
 
     Route::middleware('role:admin')->prefix('admin')->group(function () {
         Route::get('tableau-de-bord', TableauDeBordController::class);
@@ -119,5 +131,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('produits/{produit}/approvisionner', [ProduitController::class, 'approvisionner']);
 
         Route::apiResource('reparateurs', ReparateurController::class)->except('destroy');
+        // Modifier la dette d'un réparateur (ajouter / modifier / supprimer une ligne).
+        Route::post('reparateurs/{reparateur}/dette', [ReparateurController::class, 'ajouterDette']);
+        Route::put('prises/{prise}', [ReparateurController::class, 'modifierDette']);
+        Route::delete('prises/{prise}', [ReparateurController::class, 'supprimerDette']);
     });
 });

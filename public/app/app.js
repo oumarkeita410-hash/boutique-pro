@@ -107,6 +107,7 @@ function deconnexion() { api('POST', '/deconnexion').catch(() => {}); store.toke
 
 /* ================================================================  CADRE  */
 function cadre(titre, contenuHTML, onglets, actifIdx, opts = {}) {
+  document.body.classList.remove('admin-mode'); // écrans vendeur/conseiller/connexion : pas de menu latéral
   app.innerHTML = `
     <div id="barre"></div>
     <div class="topbar">
@@ -156,7 +157,19 @@ const ongletsVendeur = () => [
   { nom: 'Panier', emoji: '🧺', aller: vendeurPanier },
   { nom: 'Messages', emoji: '💬', aller: vendeurMessages },
   { nom: 'Mon jour', emoji: '🕗', aller: vendeurHoraire },
+  { nom: 'Devis', emoji: '📄', aller: vendeurDevis },
 ];
+async function vendeurDevis() {
+  cadre('Devis', `<button class="btn block" id="nouveau">➕ Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`, ongletsVendeur(), 4);
+  $('#nouveau').onclick = () => formDevis(vendeurDevis);
+  try {
+    const d = await api('GET', '/devis');
+    const items = d.data || [];
+    $('#liste').innerHTML = items.length ? `<div class="card">${items.map(x => `
+      <div class="list-item tap" data-id="${x.id}" role="button" tabindex="0"><div class="main"><div class="name">${esc(x.reference)} — ${gnf(x.montant_total)}</div><div class="sub">${esc(x.client)} · ${esc(x.date)} · ${esc(x.statut)}</div></div><span class="badge cat">Voir</span></div>`).join('')}</div>` : '<p class="muted center mt">Aucun devis.</p>';
+    $('#liste').querySelectorAll('.tap').forEach(el => el.onclick = () => voirDevis(+el.dataset.id, vendeurDevis));
+  } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
 
 /* Panier en mémoire du navigateur */
 let panier = [];
@@ -165,9 +178,10 @@ function sauverPanier() { localStorage.setItem('mok_panier', JSON.stringify(pani
 function nbPanier() { return panier.reduce((n, l) => n + l.quantite, 0); }
 function ajouterAuPanier(p) {
   const l = panier.find(x => x.produit_id === p.id);
-  if (l) l.quantite++; else panier.push({ produit_id: p.id, nom: p.nom, quantite: 1 });
+  if (l) l.quantite++; else panier.push({ produit_id: p.id, nom: p.nom, prix: p.prix || 0, quantite: 1 });
   sauverPanier(); toast(p.nom + ' ajouté (' + nbPanier() + ')');
 }
+function totalPanier() { return panier.reduce((s, l) => s + (l.prix || 0) * l.quantite, 0); }
 
 async function vendeurCatalogue() {
   cadre('Catalogue', `
@@ -179,12 +193,13 @@ async function vendeurCatalogue() {
       const data = await api('GET', '/catalogue' + (q ? '?recherche=' + encodeURIComponent(q) : ''));
       const items = data.data || [];
       $('#liste').innerHTML = items.length ? `<div class="card">${items.map(p => `
-        <div class="list-item tap" data-id="${p.id}" data-nom="${esc(p.nom)}" role="button" tabindex="0">
-          <div class="main"><div class="name">${esc(p.nom)}</div><div class="sub">${esc(p.modele || p.categorie || '')}</div></div>
+        <div class="list-item tap" data-id="${p.id}" data-nom="${esc(p.nom)}" data-prix="${p.prix_unitaire || 0}" role="button" tabindex="0">
+          <div class="main"><div class="name">${esc(p.nom)}</div>
+            <div class="sub">${esc(p.modele || p.categorie || '')} · <b>${gnf(p.prix_unitaire)}</b> · stock ${p.stock}${p.stock <= 0 ? ' ⚠️' : ''}</div></div>
           <span class="badge cat">+ Ajouter</span>
         </div>`).join('')}</div>` : `<p class="muted center mt">Aucun article trouvé.</p>`;
       $('#liste').querySelectorAll('.tap').forEach(el => el.addEventListener('click', () => {
-        ajouterAuPanier({ id: +el.dataset.id, nom: el.dataset.nom });
+        ajouterAuPanier({ id: +el.dataset.id, nom: el.dataset.nom, prix: +el.dataset.prix });
         majBadgePanier();
       }));
     } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${navigator.onLine ? esc(ex.message) : 'Hors ligne — catalogue indisponible.'}</p>`; }
@@ -205,19 +220,21 @@ function vendeurPanier() {
     $('#vue').innerHTML = `
       <div class="card">${panier.map((l, i) => `
         <div class="list-item">
-          <div class="main"><div class="name">${esc(l.nom)}</div></div>
+          <div class="main"><div class="name">${esc(l.nom)}</div>
+            <div class="sub">${gnf(l.prix)} × ${l.quantite} = <b>${gnf((l.prix || 0) * l.quantite)}</b></div></div>
           <div class="btn-row" style="width:auto">
             <button class="icon-btn" data-moins="${i}">−</button>
             <span style="min-width:28px;text-align:center;align-self:center">${l.quantite}</span>
             <button class="icon-btn" data-plus="${i}">+</button>
             <button class="icon-btn" data-sup="${i}" style="color:var(--danger)">🗑</button>
           </div>
-        </div>`).join('')}</div>
+        </div>`).join('')}
+        <div class="info-row" style="padding-top:12px"><span class="lbl">Total à encaisser</span><span class="val">${gnf(totalPanier())}</span></div></div>
       <div class="card">
         <div class="field"><label>Mode de paiement</label>
           <select id="mode"><option value="especes">Espèces</option><option value="orange_money">Orange Money</option><option value="carte">Carte bancaire</option></select></div>
         <div class="error-msg" id="p-err"></div>
-        <button class="btn" id="valider">Valider la vente (${nbPanier()} article(s))</button>
+        <button class="btn" id="valider">Valider la vente · ${gnf(totalPanier())}</button>
       </div>`;
     $('#vue').querySelectorAll('[data-plus]').forEach(b => b.onclick = () => { panier[+b.dataset.plus].quantite++; sauverPanier(); rendre(); });
     $('#vue').querySelectorAll('[data-moins]').forEach(b => b.onclick = () => { const l = panier[+b.dataset.moins]; if (--l.quantite < 1) panier.splice(+b.dataset.moins, 1); sauverPanier(); rendre(); });
@@ -240,8 +257,7 @@ async function validerVente() {
     const res = await api('POST', '/ventes', vente);
     panier = []; sauverPanier();
     if (res.data.mode_paiement === 'especes') {
-      toast('Vente ' + res.data.reference + ' — encaissé : ' + gnf(res.data.montant_a_encaisser));
-      vendeurCatalogue();
+      venteConfirmee(res.data);
     } else {
       vendeurPaiement(res.data); // Orange Money / carte : instructions + référence
     }
@@ -255,6 +271,21 @@ async function validerVente() {
     err.textContent = ex.premierDetail();
     btn.disabled = false; btn.textContent = 'Valider la vente';
   }
+}
+
+/* Confirmation après une vente en espèces : montant encaissé + bouton Facture. */
+function venteConfirmee(v) {
+  cadre('Vente enregistrée', `
+    <div class="card center">
+      <div style="font-size:2rem">✅</div>
+      <h3 style="margin:.3rem 0">${esc(v.reference)}</h3>
+      <div class="value" style="font-size:1.6rem">${gnf(v.montant_a_encaisser)}</div>
+      <p class="muted">Encaissé en espèces</p>
+      <button class="btn block" id="vf-fact">🧾 Voir / imprimer la facture</button>
+      <button class="btn secondary block" id="vf-new">Nouvelle vente</button>
+    </div>`, ongletsVendeur(), 0);
+  $('#vf-fact').onclick = () => voirFacture(v.id, () => venteConfirmee(v));
+  $('#vf-new').onclick = vendeurCatalogue;
 }
 
 /* Garde la vente dans la file locale (survit à une coupure d'électricité : stockée sur l'appareil). */
@@ -282,9 +313,11 @@ async function vendeurPaiement(v) {
         <div class="field"><label>Référence de la transaction (donnée par le client)</label><input id="ref" placeholder="ex. PP24..."></div>
         <div class="error-msg" id="ref-err"></div>
         <button class="btn" id="ref-btn">Enregistrer la référence</button>
+        <button class="btn secondary block" id="fact">🧾 Facture</button>
         <button class="btn secondary block" id="skip">Plus tard</button>
         <p class="notice">Le paiement sera confirmé par l'administrateur après vérification sur le compte.</p>
       </div>`;
+    $('#fact').onclick = () => voirFacture(v.id, () => vendeurPaiement(v));
     $('#ref-btn').onclick = async () => {
       const err = $('#ref-err'); err.textContent = '';
       const reference_paiement = $('#ref').value.trim();
@@ -363,36 +396,62 @@ async function vendeurHoraire() {
   } catch (ex) { $('#h').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
 }
 
-/* ================================================================  ADMINISTRATEUR  */
-const ongletsAdmin = () => [
-  { nom: 'Accueil', emoji: '📊', aller: adminTableau },
-  { nom: 'Comptes', emoji: '👥', aller: adminComptes },
-  { nom: 'Produits', emoji: '📦', aller: adminProduits },
-  { nom: 'Réparateurs', emoji: '🔧', aller: adminReparateurs },
-  { nom: 'Plus', emoji: '≡', aller: adminPlus },
-];
+/* ================================================================  ADMINISTRATEUR
+   Présentation type « tableau de bord » : menu latéral à gauche (replié en ☰ sur
+   téléphone) + barre du haut + contenu en cartes. */
 
-/* « Plus » : accès à Paie, Messages, Alertes */
-function adminPlus() {
-  cadre('Plus', `
-    <button class="btn block" id="m-ventes">📒 Toutes les ventes</button>
-    <button class="btn block secondary" id="m-vcredit">🧾 Vente à crédit (client)</button>
-    <button class="btn block secondary" id="m-credits">💳 Crédits clients</button>
-    <button class="btn block secondary" id="m-conf">✅ Paiements à confirmer</button>
-    <button class="btn block secondary" id="m-paie">💵 Paie des vendeurs</button>
-    <button class="btn block secondary" id="m-msg">💬 Messages des vendeurs</button>
-    <button class="btn block secondary" id="m-alertes">🔔 Alertes et demandes</button>`, ongletsAdmin(), 4);
-  $('#m-ventes').onclick = adminVentes;
-  $('#m-vcredit').onclick = adminVenteCredit;
-  $('#m-credits').onclick = adminCreditsClients;
-  $('#m-conf').onclick = adminPaiementsConfirmer;
-  $('#m-paie').onclick = adminPaie;
-  $('#m-msg').onclick = adminMessages;
-  $('#m-alertes').onclick = adminAlertes;
+function menuAdmin() {
+  return [
+    ['tableau', '📊', 'Tableau de bord', adminTableau],
+    ['comptes', '👥', 'Comptes vendeurs', adminComptes],
+    ['produits', '📦', 'Produits', adminProduits],
+    ['reparateurs', '🔧', 'Réparateurs', adminReparateurs],
+    ['ventes', '📒', 'Ventes', adminVentes],
+    ['devis', '📄', 'Devis', adminDevis],
+    ['credits', '💳', 'Crédits clients', adminCreditsClients],
+    ['paie', '💵', 'Paie', adminPaie],
+    ['confirm', '✅', 'Paiements', adminPaiementsConfirmer],
+    ['messages', '💬', 'Messages', adminMessages],
+    ['alertes', '🔔', 'Alertes', adminAlertes],
+  ];
+}
+
+/* Coquille admin : barre latérale + barre du haut + zone de contenu #vue. */
+function adminShell(actif, titre, contenuHTML) {
+  document.body.classList.add('admin-mode'); // menu latéral toujours visible sur ordinateur
+  const menu = menuAdmin();
+  const nom = store.user ? ((store.user.prenom || '') + ' ' + (store.user.nom || '')).trim() : '';
+  app.innerHTML = `
+    <div class="wp">
+      <aside class="wp-side" id="wp-side">
+        <div class="wp-brand">MOK<span>-Business</span></div>
+        <nav>${menu.map(m => `<button class="wp-item ${m[0] === actif ? 'on' : ''}" data-k="${m[0]}"><span class="emoji">${m[1]}</span>${m[2]}</button>`).join('')}</nav>
+      </aside>
+      <div class="wp-backdrop" id="wp-bd"></div>
+      <div class="wp-body">
+        <header class="wp-top">
+          <button class="icon-btn wp-burger" id="wp-burger" title="Menu">☰</button>
+          <div class="wp-ttl">${esc(titre)}</div>
+          <div class="spacer"></div>
+          <span class="wp-hello">Bonjour, ${esc(nom)}</span>
+          <button class="icon-btn" id="wp-theme" title="Thème">🌓</button>
+          <button class="icon-btn" id="wp-logout" title="Se déconnecter">⎋</button>
+        </header>
+        <main class="wp-main"><div id="vue">${contenuHTML}</div></main>
+      </div>
+    </div>`;
+  const side = $('#wp-side'), bd = $('#wp-bd');
+  const fermer = () => { side.classList.remove('open'); bd.classList.remove('show'); };
+  $('#wp-burger').onclick = () => { side.classList.toggle('open'); bd.classList.toggle('show'); };
+  bd.onclick = fermer;
+  $('#wp-theme').onclick = basculerTheme;
+  $('#wp-logout').onclick = deconnexion;
+  const map = Object.fromEntries(menu.map(m => [m[0], m[3]]));
+  app.querySelectorAll('.wp-item').forEach(b => b.onclick = () => { fermer(); map[b.dataset.k](); });
 }
 
 async function adminPaiementsConfirmer() {
-  cadre('Paiements à confirmer', `<div id="pc"><div class="spinner"></div></div>`, null, null, { retour: adminPlus });
+  adminShell('confirm', 'Paiements à confirmer', `<div id="pc"><div class="spinner"></div></div>`);
   try {
     const d = await api('GET', '/admin/paiements-a-confirmer');
     const items = d.data || [];
@@ -411,39 +470,54 @@ async function adminPaiementsConfirmer() {
 }
 
 async function adminTableau() {
-  cadre('Tableau de bord', `<div id="tb"><div class="spinner"></div></div>`, ongletsAdmin(), 0);
+  adminShell('tableau', 'Tableau de bord', `<div id="tb"><div class="spinner"></div></div>`);
   try {
-    const d = await api('GET', '/admin/tableau-de-bord'); const ca = d.chiffre_affaires || {};
-    const jours = (d.ventes_par_jour || []).map(x => ({ label: x.jour, value: Number(x.montant), n: x.nombre }));
-    const vendeurs = (d.top_vendeurs_mois || []).map(v => ({ nom: v.vendeur ? `${v.vendeur.prenom} ${v.vendeur.name}` : '—', value: Number(v.montant) }));
-    const produits = (d.top_produits_mois || []).map(p => ({ nom: p.produit ? p.produit.nom : '—', value: Number(p.quantite), suffix: ' u.' }));
-    const regions = (d.ca_par_region_mois || []).map(r => ({ nom: r.region, value: Number(r.montant) }));
+    const [d, vd] = await Promise.all([
+      api('GET', '/admin/tableau-de-bord'),
+      api('GET', '/admin/utilisateurs?role=vendeur').catch(() => ({ data: [] })),
+    ]);
+    const ca = d.chiffre_affaires || {};
+    // Ventes du mois par vendeur (depuis le classement du tableau de bord).
+    const ventesParVendeur = {};
+    (d.top_vendeurs_mois || []).forEach(v => { ventesParVendeur[v.vendeur_id] = Number(v.montant); });
+    const vendeurs = vd.data || [];
+
+    const glance = (emoji, val, lbl, go, alerte) =>
+      `<div class="glance ${go ? 'lien' : ''} ${alerte ? 'alerte' : ''}" ${go ? `data-go="${go}"` : ''}>
+        <span class="g-emoji">${emoji}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
 
     $('#tb').innerHTML = `
-      <div class="hero-card">
-        <div class="hero-label">Chiffre d'affaires du mois</div>
-        <div class="hero-value">${gnf(ca.mois)}</div>
-        <div class="hero-sub">Aujourd'hui : ${gnf(ca.aujourdhui)} · ${d.ventes_aujourdhui ?? 0} vente(s) · Marge du mois : ${gnf(d.marge_mois)}</div>
+      <div class="card">
+        <h3>D'un coup d'œil</h3>
+        <div class="glance-grid">
+          ${glance('💰', gnf(ca.mois), "CA du mois")}
+          ${glance('🧾', gnf(ca.aujourdhui), "CA aujourd'hui")}
+          ${glance('🛒', d.ventes_aujourdhui ?? 0, "Ventes aujourd'hui", 'ventes')}
+          ${glance('📈', gnf(d.marge_mois), "Marge du mois")}
+          ${glance('📦', d.stock?.en_rupture ?? 0, "En rupture", 'produits', d.stock?.en_rupture)}
+          ${glance('📉', d.stock?.stock_bas ?? 0, "Stock bas", 'produits')}
+          ${glance('🔧', d.reparateurs?.en_alerte ?? 0, "Réparateurs en alerte", 'reparateurs', d.reparateurs?.en_alerte)}
+          ${glance('💳', gnf(d.reparateurs?.dette_totale), "Dette réparateurs", 'reparateurs')}
+          ${glance('✅', d.paiements_en_attente ?? 0, "Paiements à confirmer", 'confirm', d.paiements_en_attente)}
+          ${glance('💬', d.messages_non_lus ?? 0, "Messages non lus", 'messages', d.messages_non_lus)}
+          ${glance('👤', d.clients?.total ?? 0, "Clients")}
+          ${glance('👥', (d.comptes?.verrouilles ?? 0), "Vendeurs verrouillés", 'comptes')}
+        </div>
       </div>
 
-      <div class="card"><h3>Ventes des 30 derniers jours</h3>${chartCourbe(jours)}</div>
-
-      ${blocTop('Meilleurs vendeurs du mois', vendeurs, 'c1')}
-      ${blocTop('Produits les plus vendus', produits, 'c2')}
-      ${blocTop('Ventes par région / préfecture', regions, 'c3')}
-
-      <div class="card"><h3>À surveiller</h3>
-        <div class="stat-row">
-          <div class="stat-chip ${d.stock?.en_rupture ? 'alerte' : ''}"><b>${d.stock?.en_rupture ?? 0}</b>En rupture de stock</div>
-          <div class="stat-chip"><b>${d.stock?.stock_bas ?? 0}</b>Stock bas</div>
-          <div class="stat-chip ${d.reparateurs?.en_alerte ? 'alerte' : ''}"><b>${d.reparateurs?.en_alerte ?? 0}</b>Réparateurs en alerte</div>
-          <div class="stat-chip"><b style="font-size:.95rem">${gnf(d.reparateurs?.dette_totale)}</b>Dette réparateurs</div>
-          <div class="stat-chip ${d.messages_non_lus ? 'alerte' : ''}"><b>${d.messages_non_lus ?? 0}</b>Messages non lus</div>
-          <div class="stat-chip"><b>${d.comptes?.verrouilles ?? 0}</b>Comptes verrouillés</div>
-          <div class="stat-chip"><b>${d.paiements_en_attente ?? 0}</b>Paiements à confirmer</div>
-          <div class="stat-chip"><b>${d.clients?.total ?? 0}</b>Clients enregistrés</div>
-        </div>
+      <div class="card">
+        <div class="row-between"><h3>Vendeurs</h3><span class="badge">${vendeurs.length}</span></div>
+        ${vendeurs.length ? vendeurs.map(v => `
+          <div class="list-item tap" data-uid="${v.id}" role="button" tabindex="0">
+            <div class="main"><div class="name">${esc(v.prenom)} ${esc(v.nom)}</div>
+              <div class="sub">${esc(v.identifiant)}${v.region ? ' · ' + esc(v.region) : ''} · ventes du mois : ${gnf(ventesParVendeur[v.id] || 0)}</div></div>
+            <span class="badge" style="color:${v.est_verrouille ? 'var(--danger)' : 'var(--success)'}">${v.est_verrouille ? 'Verrouillé' : 'Actif'}</span>
+          </div>`).join('') : '<p class="muted">Aucun vendeur. Créez-en dans « Comptes ».</p>'}
       </div>`;
+
+    const aller = { ventes: adminVentes, produits: adminProduits, reparateurs: adminReparateurs, confirm: adminPaiementsConfirmer, messages: adminMessages, comptes: adminComptes };
+    $('#tb').querySelectorAll('[data-go]').forEach(b => b.onclick = () => aller[b.dataset.go]());
+    $('#tb').querySelectorAll('[data-uid]').forEach(b => b.onclick = () => adminDetailCompte(+b.dataset.uid));
   } catch (ex) { $('#tb').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
 }
 
@@ -484,10 +558,10 @@ function blocTop(titre, items, cls = 'c1') {
 
 /* ---- Comptes : liste + création + modification ---- */
 async function adminComptes() {
-  cadre('Comptes', `
+  adminShell('comptes', 'Comptes vendeurs', `
     <button class="btn block" id="nouveau">➕ Nouveau compte</button>
     <div class="field mt"><input id="q" placeholder="Rechercher (nom, identifiant, téléphone)…"></div>
-    <div id="liste"><div class="spinner"></div></div>`, ongletsAdmin(), 1);
+    <div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = () => adminFormCompte();
   const rendre = async (q = '') => {
     try {
@@ -596,10 +670,10 @@ async function adminDetailCompte(id) {
 
 /* ---- Produits ---- */
 async function adminProduits() {
-  cadre('Produits', `
+  adminShell('produits', 'Produits', `
     <button class="btn block" id="nouveau">➕ Nouveau produit</button>
     <div class="field mt"><input id="q" placeholder="Rechercher un produit…"></div>
-    <div id="liste"><div class="spinner"></div></div>`, ongletsAdmin(), 2);
+    <div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = adminFormProduit;
   const rendre = async (q = '') => {
     try {
@@ -651,12 +725,12 @@ function adminApprovisionner(id) {
 
 /* ---- Paie ---- */
 async function adminPaie() {
-  cadre('Paie des vendeurs', `
+  adminShell('paie', 'Paie des vendeurs', `
     <div class="card">
       <div class="field"><label>Fréquence</label><select id="freq"><option value="mois">Mensuelle</option><option value="semaine">Hebdomadaire</option><option value="jour">Journalière</option></select></div>
       <div class="field"><label>Mode de paiement</label><select id="mode"><option value="orange_money">Orange Money</option><option value="especes">Espèces</option><option value="carte">Carte</option></select></div>
     </div>
-    <div id="liste"><div class="spinner"></div></div>`, null, null, { retour: adminPlus });
+    <div id="liste"><div class="spinner"></div></div>`);
   const rendre = async () => {
     const freq = $('#freq').value;
     try {
@@ -688,7 +762,7 @@ async function payer(userId, freq, mode, apres) {
 
 /* ---- Alertes : notifications + demandes de modification ---- */
 async function adminAlertes() {
-  cadre('Alertes', `<div id="a"><div class="spinner"></div></div>`, null, null, { retour: adminPlus });
+  adminShell('alertes', 'Alertes', `<div id="a"><div class="spinner"></div></div>`);
   try {
     const [notifs, demandes] = await Promise.all([
       api('GET', '/notifications').catch(() => []),
@@ -714,9 +788,9 @@ async function adminAlertes() {
 
 /* ---- Réparateurs (admin : voit tout, accorde les crédits) ---- */
 async function adminReparateurs() {
-  cadre('Réparateurs', `
+  adminShell('reparateurs', 'Réparateurs', `
     <button class="btn block" id="nouveau">➕ Nouveau réparateur</button>
-    <div id="liste"><div class="spinner"></div></div>`, ongletsAdmin(), 3);
+    <div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = adminFormReparateur;
   try {
     const d = await api('GET', '/admin/reparateurs');
@@ -749,29 +823,59 @@ async function adminReparateurDetail(id) {
   cadre('Réparateur', `<div id="d"><div class="spinner"></div></div>`, null, null, { retour: adminReparateurs });
   try {
     const r = await api('GET', '/admin/reparateurs/' + id);
+    const prisesMap = Object.fromEntries((r.prises || []).map(p => [p.id, p]));
     $('#d').innerHTML = `
       <div class="card"><h3>${esc(r.nom)}</h3>
         <p class="muted">${esc(r.telephone || '')} ${r.email ? '· ' + esc(r.email) : ''}</p>
         <div class="value" style="font-size:1.4rem">Dette : ${gnf(r.dette)}</div></div>
-      <div class="card"><h3>Prise d'écran</h3>
-        ${champ('p-prod', 'Produit (numéro)', '', 'number')}
+
+      <div class="card"><h3>Prendre un article du stock</h3>
+        ${champ('p-prod', 'Article / écran (numéro du produit)', '', 'number')}
         ${champ('p-qte', 'Quantité', '1', 'number')}
-        ${champ('p-paye', 'Montant payé (GNF, 0 = crédit total)', '0', 'number')}
+        ${champ('p-paye', 'Argent donné (GNF, 0 = rien payé)', '0', 'number')}
+        <p class="muted" style="font-size:.82rem;margin:-4px 0 8px">L'argent qui reste à payer est calculé automatiquement.</p>
         <div class="error-msg" id="pr-err"></div>
-        <button class="btn" id="pr-btn">Enregistrer la prise</button></div>
+        <button class="btn" id="pr-btn">Enregistrer</button></div>
+
+      <div class="card"><h3>Ajouter une dette</h3>
+        <div class="field"><label>Choisir le modèle (dans le catalogue)</label><input id="d-search" placeholder="Rechercher un modèle (ex. A14, iPhone 13…)"></div>
+        <div id="d-res"></div>
+        ${champ('d-modele', 'Modèle')}
+        ${champ('d-marque', 'Marque (facultatif)')}
+        ${champ('d-cat', 'Catégorie (facultatif)')}
+        ${champ('d-prix', 'Prix unitaire (GNF)', '', 'number')}
+        ${champ('d-qte', 'Quantité', '1', 'number')}
+        ${champ('d-paye', 'Argent donné (GNF)', '0', 'number')}
+        <div class="error-msg" id="d-err"></div>
+        <button class="btn" id="d-btn">Ajouter la dette</button></div>
+
       <div class="card"><h3>Remboursement</h3>
         ${champ('rb-montant', 'Montant reçu (GNF)', '', 'number')}
         <div class="field"><label>Mode</label><select id="rb-mode"><option value="especes">Espèces</option><option value="orange_money">Orange Money</option><option value="carte">Carte</option></select></div>
         <div class="error-msg" id="rb-err"></div>
         <button class="btn secondary" id="rb-btn">Enregistrer le remboursement</button></div>
-      <div class="card"><h3>Écrans pris</h3>${(r.prises || []).length ? r.prises.map(p => `
-        <div class="list-item"><div class="main"><div class="name">${esc(p.article)} ${p.modele ? '(' + esc(p.modele) + ')' : ''}</div>
-          <div class="sub">${esc(p.date)} · payé ${gnf(p.montant_paye)} · reste ${gnf(p.reste)}</div></div></div>`).join('') : '<p class="muted">Aucune.</p>'}</div>`;
+
+      <div class="card"><h3>Dettes (articles pris)</h3>${(r.prises || []).length ? r.prises.map(p => `
+        <div class="list-item"><div class="main"><div class="name">${esc(p.article)} ×${p.quantite}${p.manuelle ? '' : ' <span class="badge cat">stock</span>'}</div>
+          <div class="sub">${esc(p.date)} · prix ${gnf(p.montant_total)} · donné ${gnf(p.montant_paye)} · reste ${gnf(p.reste)}</div></div>
+          <div class="btn-row" style="width:auto">
+            <button class="icon-btn" data-edit="${p.id}" title="Modifier">✏️</button>
+            <button class="icon-btn" data-del="${p.id}" title="Supprimer" style="color:var(--danger)">🗑</button>
+          </div></div>`).join('') : '<p class="muted">Aucune.</p>'}</div>`;
+
     $('#pr-btn').onclick = async () => {
       const err = $('#pr-err'); err.textContent = '';
       const corps = { produit_id: parseInt($('#p-prod').value, 10), quantite: parseInt($('#p-qte').value, 10), montant_paye: parseInt($('#p-paye').value, 10) || 0 };
       if (!corps.produit_id || !corps.quantite) { err.textContent = 'Produit et quantité obligatoires.'; return; }
-      try { const res = await api('POST', '/reparateurs/' + id + '/prises', corps); toast('Prise : reste ' + gnf(res.reste)); adminReparateurDetail(id); }
+      try { const res = await api('POST', '/reparateurs/' + id + '/prises', corps); toast('Enregistré. Argent donné ' + gnf(res.montant_paye) + ' · reste à payer ' + gnf(res.reste)); adminReparateurDetail(id); }
+      catch (ex) { err.textContent = ex.premierDetail(); }
+    };
+    let td; $('#d-search').addEventListener('input', e => { clearTimeout(td); td = setTimeout(() => chercherModeleDette(e.target.value.trim()), 300); });
+    $('#d-btn').onclick = async () => {
+      const err = $('#d-err'); err.textContent = '';
+      const corps = { modele: $('#d-modele').value.trim(), marque: $('#d-marque').value.trim() || null, categorie: $('#d-cat').value.trim() || null, prix: parseInt($('#d-prix').value, 10) || 0, quantite: parseInt($('#d-qte').value, 10) || 1, montant_paye: parseInt($('#d-paye').value, 10) || 0 };
+      if (!corps.modele) { err.textContent = 'Le modèle est obligatoire (choisissez-le ou tapez-le).'; return; }
+      try { const res = await api('POST', '/admin/reparateurs/' + id + '/dette', corps); toast('Dette ajoutée. Reste à payer ' + gnf(res.reste)); adminReparateurDetail(id); }
       catch (ex) { err.textContent = ex.premierDetail(); }
     };
     $('#rb-btn').onclick = async () => {
@@ -781,12 +885,62 @@ async function adminReparateurDetail(id) {
       try { const res = await api('POST', '/reparateurs/' + id + '/paiements', { montant, mode_paiement: $('#rb-mode').value }); toast('Reçu. Dette restante : ' + gnf(res.dette_restante)); adminReparateurDetail(id); }
       catch (ex) { err.textContent = ex.premierDetail(); }
     };
+    $('#d').querySelectorAll('[data-edit]').forEach(b => b.onclick = () => adminModifierDette(id, prisesMap[b.dataset.edit]));
+    $('#d').querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+      if (!confirm('Supprimer cette dette ?')) return;
+      try { const res = await api('DELETE', '/admin/prises/' + b.dataset.del); toast('Supprimé. Dette : ' + gnf(res.dette)); adminReparateurDetail(id); }
+      catch (ex) { toast(ex.premierDetail()); }
+    });
   } catch (ex) { $('#d').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
+
+/* Recherche d'un modèle dans le catalogue → remplit modèle, catégorie et prix. */
+async function chercherModeleDette(q) {
+  const el = $('#d-res'); if (!el) return;
+  if (!q) { el.innerHTML = ''; return; }
+  try {
+    const d = await api('GET', '/admin/produits?recherche=' + encodeURIComponent(q));
+    const items = (d.data || []).slice(0, 8);
+    el.innerHTML = items.length ? `<div class="card" style="margin:6px 0">${items.map(p => `
+      <div class="list-item tap" data-mod="${esc(p.modele || p.nom)}" data-cat="${esc(p.categorie || '')}" data-prix="${p.prix_unitaire}" role="button" tabindex="0">
+        <div class="main"><div class="name">${esc(p.nom)}</div><div class="sub">${esc(p.categorie || '')} · ${gnf(p.prix_unitaire)} · stock ${p.stock}</div></div>
+        <span class="badge cat">Choisir</span></div>`).join('')}</div>`
+      : '<p class="muted" style="font-size:.85rem">Aucun résultat. Vous pouvez taper le modèle à la main ci-dessous.</p>';
+    el.querySelectorAll('.tap').forEach(x => x.onclick = () => {
+      $('#d-modele').value = x.dataset.mod;
+      $('#d-cat').value = x.dataset.cat;
+      $('#d-prix').value = x.dataset.prix;
+      el.innerHTML = ''; $('#d-search').value = '';
+      toast('Modèle choisi : ' + x.dataset.mod);
+    });
+  } catch (ex) { el.innerHTML = `<p class="muted">${esc(ex.message)}</p>`; }
+}
+
+/* Modifier une ligne de dette (modèle, marque, prix, quantité, catégorie, argent donné). */
+function adminModifierDette(reparateurId, prise) {
+  cadre('Modifier la dette', `
+    <div class="card">
+      ${champ('m-modele', 'Modèle', prise.modele || '')}
+      ${champ('m-marque', 'Marque', prise.marque || '')}
+      ${champ('m-cat', 'Catégorie', prise.categorie || '')}
+      ${champ('m-prix', 'Prix unitaire (GNF)', prise.prix_unitaire, 'number')}
+      ${champ('m-qte', 'Quantité', prise.quantite, 'number')}
+      ${champ('m-paye', 'Argent donné (GNF)', prise.montant_paye, 'number')}
+      <div class="error-msg" id="m-err"></div>
+      <button class="btn" id="m-save">Enregistrer</button>
+    </div>`, null, null, { retour: () => adminReparateurDetail(reparateurId) });
+  $('#m-save').onclick = async () => {
+    const err = $('#m-err'); err.textContent = '';
+    const corps = { modele: $('#m-modele').value.trim(), marque: $('#m-marque').value.trim() || null, categorie: $('#m-cat').value.trim() || null, prix: parseInt($('#m-prix').value, 10) || 0, quantite: parseInt($('#m-qte').value, 10) || 1, montant_paye: parseInt($('#m-paye').value, 10) || 0 };
+    if (!corps.modele) { err.textContent = 'Le modèle est obligatoire.'; return; }
+    try { const res = await api('PUT', '/admin/prises/' + prise.id, corps); toast('Modifié. Reste à payer ' + gnf(res.reste)); adminReparateurDetail(reparateurId); }
+    catch (ex) { err.textContent = ex.premierDetail(); }
+  };
 }
 
 /* ---- Messagerie admin : un fil par vendeur ---- */
 async function adminMessages() {
-  cadre('Messages des vendeurs', `<div id="b"><div class="spinner"></div></div>`, null, null, { retour: adminPlus });
+  adminShell('messages', 'Messages des vendeurs', `<div id="b"><div class="spinner"></div></div>`);
   try {
     const d = await api('GET', '/admin/messages');
     const items = d.data || [];
@@ -837,7 +991,7 @@ function adminVenteCredit() {
       <div id="prod-res"></div></div>
     <div class="card"><h3>3. Panier</h3><div id="credit-panier"><p class="muted">Vide.</p></div>
       <div class="error-msg" id="vc-err"></div>
-      <button class="btn" id="vc-valider">Valider la vente à crédit</button></div>`, null, null, { retour: adminPlus });
+      <button class="btn" id="vc-valider">Valider la vente à crédit</button></div>`, null, null, { retour: adminCreditsClients });
 
   let tc; $('#cq').addEventListener('input', e => { clearTimeout(tc); tc = setTimeout(() => chercherClient(e.target.value.trim()), 300); });
   let tp; $('#pq').addEventListener('input', e => { clearTimeout(tp); tp = setTimeout(() => chercherProduitCredit(e.target.value.trim()), 300); });
@@ -895,7 +1049,8 @@ async function validerVenteCredit() {
 
 /* ---- Crédits clients : liste + remboursement ---- */
 async function adminCreditsClients() {
-  cadre('Crédits clients', `<div id="cc"><div class="spinner"></div></div>`, null, null, { retour: adminPlus });
+  adminShell('credits', 'Crédits clients', `<button class="btn block" id="nouvelle-credit">➕ Nouvelle vente à crédit</button><div id="cc"><div class="spinner"></div></div>`);
+  $('#nouvelle-credit').onclick = adminVenteCredit;
   try {
     const items = await api('GET', '/admin/credits');
     $('#cc').innerHTML = items.length ? `<div class="card">${items.map(c => `
@@ -946,12 +1101,12 @@ async function whatsAppBoutique(texte = '') {
 
 /* ---- Admin : toutes les ventes ---- */
 async function adminVentes() {
-  cadre('Toutes les ventes', `
+  adminShell('ventes', 'Toutes les ventes', `
     <div class="card">
       <div class="field"><label>Période</label><select id="periode"><option value="jour">Aujourd'hui</option><option value="semaine">Cette semaine</option><option value="mois">Ce mois</option><option value="">Toutes</option></select></div>
       <div class="field"><label>Statut</label><select id="statut"><option value="">Tous</option><option value="payee">Payées</option><option value="a_credit">À crédit</option><option value="en_attente_paiement">En attente</option></select></div>
     </div>
-    <div id="liste"><div class="spinner"></div></div>`, null, null, { retour: adminPlus });
+    <div id="liste"><div class="spinner"></div></div>`);
   const rendre = async () => {
     const p = $('#periode').value, s = $('#statut').value;
     try {
@@ -962,9 +1117,13 @@ async function adminVentes() {
           <div class="name">${esc(v.reference)} — ${gnf(v.montant_total)}</div>
           <div class="sub">${esc(v.date)} · ${esc(v.vendeur || '—')} · ${esc(v.mode_paiement)} · ${esc(v.statut)}${v.client ? ' · ' + esc(v.client) : ''}${v.reste > 0 ? ' · reste ' + gnf(v.reste) : ''}</div>
           <div class="sub">${esc(v.articles.join(', '))}</div></div>
-          ${v.latitude ? `<button class="icon-btn" title="Voir sur la carte" data-lat="${v.latitude}" data-lng="${v.longitude}">📍</button>` : ''}
+          <div class="btn-row" style="width:auto">
+            <button class="icon-btn" title="Facture" data-fact="${v.id}">🧾</button>
+            ${v.latitude ? `<button class="icon-btn" title="Voir sur la carte" data-lat="${v.latitude}" data-lng="${v.longitude}">📍</button>` : ''}
+          </div>
         </div>`).join('')}</div>` : `<p class="muted center mt">Aucune vente.</p>`;
       $('#liste').querySelectorAll('[data-lat]').forEach(b => b.onclick = () => window.open('https://www.google.com/maps?q=' + b.dataset.lat + ',' + b.dataset.lng, '_blank'));
+      $('#liste').querySelectorAll('[data-fact]').forEach(b => b.onclick = () => voirFacture(+b.dataset.fact, adminVentes));
     } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
   };
   $('#periode').onchange = rendre; $('#statut').onchange = rendre; rendre();
@@ -1006,6 +1165,156 @@ async function adminHoraires(user) {
       catch (ex) { err.textContent = ex.premierDetail(); }
     };
   } catch (ex) { $('#h').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
+
+/* ================================================================  DEVIS & FACTURE  */
+
+/* Document imprimable (devis ou facture). */
+function docImprimable(data, estDevis) {
+  const b = data.boutique || {};
+  return `<div class="doc" id="doc">
+    <div class="doc-head">
+      <div class="doc-brand">
+        <svg class="doc-emblem" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="22" fill="#1e3a8a"/><text x="50" y="52" dy=".35em" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="40" font-weight="800" fill="#fff">MB</text></svg>
+        <div><div class="doc-shop">${esc(b.nom || '')}</div>
+          <div class="doc-shop-info">${esc(b.ville || '')}<br>Tél : ${esc(b.telephone || '')}<br>${esc(b.email || '')}${b.rccm ? '<br>RCCM : ' + esc(b.rccm) : ''}${b.nif ? '<br>NIF : ' + esc(b.nif) : ''}</div></div>
+      </div>
+      <div class="doc-meta"><div class="doc-type">${estDevis ? 'DEVIS' : 'FACTURE'}</div>
+        <div>N° ${esc(data.reference)}</div><div>${esc((data.date || '').slice(0, 10))}</div></div>
+    </div>
+    <div class="doc-client"><b>Client :</b> ${esc(data.client || '')}${data.client_tel ? ' · ' + esc(data.client_tel) : ''}</div>
+    <table class="doc-table">
+      <thead><tr><th>Désignation</th><th>Qté</th><th>Prix unit.</th><th>Total</th></tr></thead>
+      <tbody>${(data.lignes || []).map(l => `<tr><td>${esc(l.designation)}</td><td>${l.quantite}</td><td>${gnf(l.prix_unitaire)}</td><td>${gnf(l.sous_total)}</td></tr>`).join('')}</tbody>
+    </table>
+    <div class="doc-total">TOTAL : ${gnf(data.montant_total)}</div>
+    ${!estDevis && data.reste > 0 ? `<div class="doc-pay">Payé : ${gnf(data.montant_paye)} — Reste à payer : <b>${gnf(data.reste)}</b></div>` : ''}
+    <div class="doc-pay">Paiement : Orange Money <b>${esc(b.orange_money || '')}</b> · Compte bancaire <b>${esc(b.banque || '')}</b></div>
+    ${estDevis && data.valide_jusqu ? `<div class="doc-pay">Valable jusqu'au ${esc(data.valide_jusqu)}</div>` : ''}
+    ${data.note ? `<div class="doc-note">${esc(data.note)}</div>` : ''}
+    <div class="doc-foot">Merci de votre confiance — ${esc(b.nom || '')}</div>
+  </div>`;
+}
+function afficherDocument(titre, data, estDevis, retour, actionsHTML = '') {
+  cadre(titre, `
+    <div class="no-print toolbar-doc">
+      <button class="btn" id="imprimer">🖨️ Imprimer</button>
+      ${actionsHTML}
+    </div>
+    ${docImprimable(data, estDevis)}`, null, null, { retour });
+  $('#imprimer').onclick = () => window.print();
+}
+
+/* ---- Admin : liste des devis ---- */
+async function adminDevis() {
+  adminShell('devis', 'Devis', `<button class="btn block" id="nouveau">➕ Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`);
+  $('#nouveau').onclick = () => formDevis(adminDevis);
+  try {
+    const d = await api('GET', '/devis');
+    const items = d.data || [];
+    $('#liste').innerHTML = items.length ? `<div class="card">${items.map(x => `
+      <div class="list-item tap" data-id="${x.id}" role="button" tabindex="0">
+        <div class="main"><div class="name">${esc(x.reference)} — ${gnf(x.montant_total)}</div>
+          <div class="sub">${esc(x.client)} · ${esc(x.date)} · ${esc(x.statut)}</div></div>
+        <span class="badge cat">Voir</span></div>`).join('')}</div>` : '<p class="muted center mt">Aucun devis.</p>';
+    $('#liste').querySelectorAll('.tap').forEach(el => el.onclick = () => voirDevis(+el.dataset.id, adminDevis));
+  } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
+
+/* ---- Formulaire de devis (vendeur ou admin) ---- */
+let devisLignes = [];
+function formDevis(retour) {
+  devisLignes = [];
+  cadre('Nouveau devis', `
+    <div class="card">
+      ${champ('dv-client', 'Nom du client')}
+      <div class="field"><label>Ajouter un article du catalogue</label><input id="dv-search" placeholder="Rechercher…"></div>
+      <div id="dv-res"></div>
+      <button class="btn secondary block" id="dv-libre">➕ Ajouter une ligne libre</button>
+    </div>
+    <div class="card"><h3>Lignes du devis</h3><div id="dv-lignes"><p class="muted">Aucune ligne.</p></div>
+      <div class="info-row" style="padding-top:12px"><span class="lbl">Total</span><span class="val" id="dv-total">0 GNF</span></div></div>
+    <div class="card">${champ('dv-note', 'Note (facultatif)')}
+      ${champ('dv-valide', "Valable jusqu'au (facultatif)", '', 'date')}
+      <div class="error-msg" id="dv-err"></div>
+      <button class="btn" id="dv-save">Créer le devis</button></div>`, null, null, { retour });
+  let t; $('#dv-search').addEventListener('input', e => { clearTimeout(t); t = setTimeout(() => chercherProduitDevis(e.target.value.trim()), 300); });
+  $('#dv-libre').onclick = () => { devisLignes.push({ designation: '', quantite: 1, prix_unitaire: 0, produit_id: null }); rendreDevisLignes(); };
+  $('#dv-save').onclick = () => enregistrerDevis(retour);
+  rendreDevisLignes();
+}
+async function chercherProduitDevis(q) {
+  const el = $('#dv-res'); if (!el) return;
+  if (!q) { el.innerHTML = ''; return; }
+  try {
+    const d = await api('GET', '/catalogue?recherche=' + encodeURIComponent(q));
+    const items = (d.data || []).slice(0, 8);
+    el.innerHTML = items.length ? `<div class="card" style="margin:6px 0">${items.map(p => `
+      <div class="list-item tap" data-nom="${esc(p.nom)}" data-prix="${p.prix_unitaire || 0}" data-id="${p.id}" role="button" tabindex="0">
+        <div class="main"><div class="name">${esc(p.nom)}</div><div class="sub">${gnf(p.prix_unitaire)}</div></div><span class="badge cat">+ Ajouter</span></div>`).join('')}</div>` : '<p class="muted">Aucun.</p>';
+    el.querySelectorAll('.tap').forEach(x => x.onclick = () => {
+      devisLignes.push({ designation: x.dataset.nom, quantite: 1, prix_unitaire: +x.dataset.prix, produit_id: +x.dataset.id });
+      el.innerHTML = ''; $('#dv-search').value = ''; rendreDevisLignes();
+    });
+  } catch (ex) { el.innerHTML = `<p class="muted">${esc(ex.message)}</p>`; }
+}
+function rendreDevisLignes() {
+  const el = $('#dv-lignes'); if (!el) return;
+  if (!devisLignes.length) { el.innerHTML = '<p class="muted">Aucune ligne. Ajoutez un article ou une ligne libre.</p>'; $('#dv-total').textContent = '0 GNF'; return; }
+  el.innerHTML = devisLignes.map((l, i) => `
+    <div class="card" style="padding:10px;margin-bottom:8px">
+      <input data-f="designation" data-i="${i}" value="${esc(l.designation)}" placeholder="Désignation" style="margin-bottom:6px">
+      <div class="btn-row">
+        <input data-f="quantite" data-i="${i}" type="number" value="${l.quantite}" placeholder="Qté">
+        <input data-f="prix_unitaire" data-i="${i}" type="number" value="${l.prix_unitaire}" placeholder="Prix">
+        <button class="icon-btn" data-sup="${i}" style="color:var(--danger)">🗑</button>
+      </div>
+      <div class="muted" style="font-size:.8rem;margin-top:4px">Sous-total : ${gnf((l.prix_unitaire || 0) * (l.quantite || 0))}</div>
+    </div>`).join('');
+  el.querySelectorAll('input').forEach(inp => inp.oninput = () => {
+    const i = +inp.dataset.i, f = inp.dataset.f;
+    devisLignes[i][f] = f === 'designation' ? inp.value : (parseInt(inp.value, 10) || 0);
+    $('#dv-total').textContent = gnf(devisLignes.reduce((s, l) => s + (l.prix_unitaire || 0) * (l.quantite || 0), 0));
+  });
+  el.querySelectorAll('[data-sup]').forEach(b => b.onclick = () => { devisLignes.splice(+b.dataset.sup, 1); rendreDevisLignes(); });
+  $('#dv-total').textContent = gnf(devisLignes.reduce((s, l) => s + (l.prix_unitaire || 0) * (l.quantite || 0), 0));
+}
+async function enregistrerDevis(retour) {
+  const err = $('#dv-err'); err.textContent = '';
+  const lignes = devisLignes.filter(l => l.designation && l.quantite > 0);
+  if (!lignes.length) { err.textContent = 'Ajoutez au moins une ligne avec une désignation.'; return; }
+  const corps = { client_nom: $('#dv-client').value.trim() || null, note: $('#dv-note').value.trim() || null, valide_jusqu: $('#dv-valide').value || null, lignes };
+  try {
+    const d = await api('POST', '/devis', corps);
+    toast('Devis ' + d.reference + ' créé.');
+    afficherDocument('Devis ' + d.reference, d, true, retour, `<button class="btn secondary" id="dv-conv">Convertir en vente</button>`);
+    brancherConversion(d.id, retour);
+  } catch (ex) { err.textContent = ex.premierDetail(); }
+}
+async function voirDevis(id, retour) {
+  try {
+    const d = await api('GET', '/devis/' + id);
+    const conv = d.statut === 'converti' ? '' : `<button class="btn secondary" id="dv-conv">Convertir en vente</button>`;
+    afficherDocument('Devis ' + d.reference, d, true, retour, conv);
+    if (d.statut !== 'converti') brancherConversion(id, retour);
+  } catch (ex) { toast(ex.premierDetail ? ex.premierDetail() : ex.message); }
+}
+function brancherConversion(id, retour) {
+  const btn = $('#dv-conv'); if (!btn) return;
+  btn.onclick = async () => {
+    const mode = prompt('Mode de paiement : especes, orange_money ou carte ?', 'especes');
+    if (!mode) return;
+    try { const r = await api('POST', '/devis/' + id + '/convertir', { mode_paiement: mode }); toast('Vente créée : ' + r.reference_vente); retour(); }
+    catch (ex) { toast(ex.premierDetail()); }
+  };
+}
+
+/* Facture d'une vente. */
+async function voirFacture(venteId, retour) {
+  try {
+    const d = await api('GET', '/ventes/' + venteId + '/facture');
+    afficherDocument('Facture ' + d.reference, d, false, retour);
+  } catch (ex) { toast(ex.premierDetail ? ex.premierDetail() : ex.message); }
 }
 
 /* ================================================================  CONSEILLER  */

@@ -22,6 +22,7 @@ class ReparateurSeeder extends Seeder
         ['Mara', null],
         ['Amara', null],
         ['Boubacar', 'Mara'],
+        ['Fode', 'Koulibaly'],
     ];
 
     public function run(): void

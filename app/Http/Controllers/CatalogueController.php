@@ -6,8 +6,8 @@ use App\Models\Produit;
 use Illuminate\Http\Request;
 
 /**
- * Catalogue vu par les vendeurs : nom, catégorie et modèle seulement.
- * Ni stock, ni prix d'achat, ni prix unitaire.
+ * Catalogue vu par les vendeurs : nom, catégorie, modèle, PRIX DE VENTE et STOCK.
+ * Jamais le prix d'achat ni la marge.
  */
 class CatalogueController extends Controller
 {
@@ -21,7 +21,9 @@ class CatalogueController extends Controller
                 ->orWhere('modele', 'like', "%{$t}%")))
             ->orderBy('categorie')
             ->orderBy('nom')
-            ->paginate(100, ['id', 'nom', 'categorie', 'modele']);
+            // Le vendeur voit le PRIX DE VENTE et le STOCK, mais jamais le prix
+            // d'achat ni la marge.
+            ->paginate(100, ['id', 'nom', 'categorie', 'modele', 'prix_unitaire', 'stock']);
 
         return response()->json($produits);
     }

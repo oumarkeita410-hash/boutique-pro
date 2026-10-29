@@ -181,6 +181,33 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); b
   .tiles { grid-template-columns: repeat(3, 1fr); }
 }
 
+/* Documents imprimables : devis et facture */
+.toolbar-doc { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.toolbar-doc .btn { width: auto; flex: 1 1 140px; }
+.doc { background: #fff; color: #111; border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.doc-head { display: flex; justify-content: space-between; gap: 12px; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 12px; }
+.doc-brand { display: flex; align-items: center; gap: 12px; }
+.doc-emblem { width: 54px; height: 54px; flex: 0 0 auto; border-radius: 12px; }
+.doc-shop { font-size: 1.3rem; font-weight: 800; }
+.doc-shop-info { font-size: .78rem; color: #444; margin-top: 4px; }
+.doc-meta { text-align: right; font-size: .82rem; }
+.doc-type { font-size: 1.2rem; font-weight: 800; }
+.doc-client { margin: 10px 0; }
+.doc-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: .88rem; }
+.doc-table th, .doc-table td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; }
+.doc-table th + th, .doc-table td + td { text-align: right; }
+.doc-total { text-align: right; font-size: 1.1rem; font-weight: 800; margin: 8px 0; }
+.doc-pay { font-size: .85rem; margin: 4px 0; color: #222; }
+.doc-note { margin: 10px 0; font-style: italic; color: #333; }
+.doc-foot { text-align: center; margin-top: 16px; font-size: .85rem; color: #444; }
+
+@media print {
+  body { background: #fff; }
+  #barre, .topbar, .tabbar, .wp-side, .wp-top, .wp-backdrop, .no-print, #toast { display: none !important; }
+  #app, .wp-body, .wp-main, .content, #vue { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+  .doc { border: none; border-radius: 0; padding: 0; }
+}
+
 /* Tableau de bord enrichi */
 .hero-card { background: var(--primary); color: var(--primary-ink); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
 .hero-label { font-size: .8rem; opacity: .85; }
@@ -198,6 +225,56 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); b
 .hbar-fill.c2 { background: var(--accent-2); }
 .hbar-fill.c3 { background: var(--accent-3); }
 .hbar-val { flex: 0 0 auto; font-size: .78rem; color: var(--text-muted); }
+
+/* === Présentation type tableau de bord (menu latéral + barre haut) === */
+.wp { min-height: 100vh; }
+.wp-top { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--surface); border-bottom: 1px solid var(--border); }
+.wp-ttl { font-weight: 700; font-size: 1.05rem; }
+.wp-hello { font-size: .82rem; color: var(--text-muted); white-space: nowrap; }
+.wp-main { padding: 16px; }
+.wp-side { position: fixed; top: 0; left: 0; bottom: 0; width: 244px; background: #1e3a8a; color: #e8eefc; transform: translateX(-100%); transition: transform .22s ease; z-index: 40; overflow-y: auto; padding-bottom: 20px; }
+:root[data-theme="dark"] .wp-side { background: #172554; border-right: 1px solid #1e3a8a; }
+.wp-side.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.4); }
+.wp-brand { font-weight: 800; font-size: 1.15rem; padding: 16px 18px; color: #fff; letter-spacing: .3px; }
+.wp-brand span { color: #93c5fd; }
+.wp-item { display: flex; align-items: center; gap: 12px; width: 100%; border: none; background: none; color: #c7d6f5; text-align: left; padding: 13px 18px; font-size: .95rem; cursor: pointer; }
+.wp-item .emoji { font-size: 1.15rem; width: 1.3em; text-align: center; }
+.wp-item:hover { background: rgba(255,255,255,.1); color: #fff; }
+.wp-item.on { background: #2563eb; color: #fff; font-weight: 600; }
+.wp-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 35; display: none; }
+.wp-backdrop.show { display: block; }
+
+/* Ordinateur : menu toujours visible à gauche, sans cliquer sur ☰ */
+body.admin-mode #app { max-width: none; }
+@media (min-width: 900px) {
+  body.admin-mode .wp-side { transform: none; box-shadow: none; }
+  body.admin-mode .wp-body { margin-left: 244px; }
+  body.admin-mode .wp-burger { display: none; }
+  body.admin-mode .wp-backdrop { display: none !important; }
+  body.admin-mode .wp-main { max-width: 900px; }
+}
+
+.glance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.glance { display: flex; flex-direction: column; gap: 2px; padding: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; }
+.glance.lien { cursor: pointer; }
+.glance.lien:active { transform: scale(.98); }
+.glance .g-emoji { font-size: 1.2rem; }
+.glance .g-val { font-size: 1.1rem; font-weight: 700; }
+.glance .g-lbl { font-size: .74rem; color: var(--text-muted); }
+.glance.alerte .g-val { color: var(--danger); }
+@media (min-width: 560px) { .glance-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 380px) { .wp-hello { display: none; } }
+
+/* Accueil admin simplifié : lignes de chiffres + gros boutons */
+.info-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+.info-row:last-child { border-bottom: none; }
+.info-row .lbl { color: var(--text-muted); font-size: .92rem; }
+.info-row .val { font-weight: 700; font-size: 1.1rem; white-space: nowrap; }
+.info-row .val.alerte { color: var(--danger); }
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.menu-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); cursor: pointer; font-size: .92rem; font-weight: 600; color: var(--text); text-align: center; }
+.menu-btn .emoji { font-size: 1.7rem; }
+.menu-btn:active { transform: scale(.98); }
 
 .stat-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .stat-chip { flex: 1 1 44%; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; font-size: .78rem; color: var(--text-muted); }

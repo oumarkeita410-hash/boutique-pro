@@ -21,7 +21,7 @@ class SecuriteAccesTest extends TestCase
         ]);
     }
 
-    public function test_le_catalogue_vendeur_ne_montre_ni_stock_ni_prix(): void
+    public function test_le_catalogue_vendeur_montre_prix_de_vente_et_stock_mais_pas_le_prix_achat(): void
     {
         $vendeur = $this->user(Role::Vendeur);
         Produit::create([
@@ -33,10 +33,11 @@ class SecuriteAccesTest extends TestCase
             ->getJson('/api/catalogue')
             ->assertOk();
 
-        $contenu = $reponse->getContent();
-        $this->assertStringNotContainsString('180000', $contenu, 'Le prix unitaire ne doit pas apparaître.');
-        $this->assertStringNotContainsString('100000', $contenu, 'Le prix d\'achat ne doit pas apparaître.');
-        $this->assertStringNotContainsString('"stock"', $contenu, 'Le stock ne doit pas apparaître.');
+        // Nouvelle règle : le vendeur voit le prix de vente et le stock, jamais le prix d'achat.
+        $reponse->assertJsonFragment(['prix_unitaire' => 180000]);
+        $reponse->assertJsonFragment(['stock' => 12]);
+        $this->assertStringNotContainsString('100000', $reponse->getContent(), 'Le prix d\'achat ne doit jamais apparaître.');
+        $this->assertStringNotContainsString('prix_achat', $reponse->getContent(), 'Le champ prix_achat ne doit pas être renvoyé.');
     }
 
     public function test_un_vendeur_ne_peut_pas_acceder_a_l_espace_admin(): void

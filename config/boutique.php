@@ -12,6 +12,11 @@ return [
         'email' => env('BOUTIQUE_EMAIL', 'oumarkeita410@gmail.com'),
         'telephone' => env('BOUTIQUE_TELEPHONE', '+224621952252'),
         'whatsapp' => env('BOUTIQUE_WHATSAPP', '+224621952252'),
+        'ville' => env('BOUTIQUE_VILLE', 'Conakry, Guinée'),
+        'orange_money' => env('OM_NUMERO', '621952252'),
+        'banque' => env('BOUTIQUE_BANQUE', '916 507 906'),
+        'rccm' => env('BOUTIQUE_RCCM'),  // numéro registre du commerce (affiché si renseigné)
+        'nif' => env('BOUTIQUE_NIF'),    // numéro d'identification fiscale (affiché si renseigné)
     ],
 
     // --- Orange Money Guinée (API marchand) ---

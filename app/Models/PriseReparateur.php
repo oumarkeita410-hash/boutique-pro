@@ -11,6 +11,7 @@ class PriseReparateur extends Model
 
     protected $fillable = [
         'reparateur_id', 'produit_id', 'enregistre_par',
+        'modele', 'marque', 'categorie',
         'quantite', 'prix_unitaire', 'montant_total', 'montant_paye',
     ];
 
@@ -24,6 +25,18 @@ class PriseReparateur extends Model
     public function reste(): int
     {
         return $this->montant_total - $this->montant_paye;
+    }
+
+    /** Nom affiché : le produit du catalogue, sinon le modèle/marque saisis à la main. */
+    public function designation(): string
+    {
+        if ($this->relationLoaded('produit') && $this->produit) {
+            return $this->produit->nom;
+        }
+        if ($this->produit_id && $this->produit) {
+            return $this->produit->nom;
+        }
+        return trim(($this->modele ?? '').' '.($this->marque ? '('.$this->marque.')' : '')) ?: 'Article';
     }
 
     public function reparateur(): BelongsTo
