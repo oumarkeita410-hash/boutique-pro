@@ -414,11 +414,22 @@ function venteConfirmee(v) {
       <div class="value" style="font-size:1.6rem">${gnf(v.montant_a_encaisser)}</div>
       <div class="info-row"><span class="lbl">Payé par le client</span><span class="val" style="color:var(--success)">${gnf(v.montant_paye)}</span></div>
       ${v.reste > 0 ? `<div class="info-row"><span class="lbl">Reste à payer</span><span class="val" style="color:var(--danger)">${gnf(v.reste)}</span></div>` : '<p class="muted">Payé entièrement ✅</p>'}
-      <button class="btn block" id="vf-fact">🧾 Voir / imprimer la facture</button>
+      <button class="btn block" id="vf-fact">🧾 Voir / imprimer le reçu</button>
+      <button class="btn secondary block" id="vf-wa">💬 Envoyer le reçu au client</button>
       <button class="btn secondary block" id="vf-new">Nouvelle vente</button>
+      <p class="muted" style="font-size:.78rem;margin-top:6px">Cette vente est déjà enregistrée : l'administrateur la voit dans « Toutes les ventes ».</p>
     </div>`, ongletsVendeur(), 0);
   $('#vf-fact').onclick = () => voirFacture(v.id, () => venteConfirmee(v));
+  $('#vf-wa').onclick = () => envoyerRecuWhatsApp(v.id);
   $('#vf-new').onclick = vendeurCatalogue;
+}
+
+/* Récupère la facture d'une vente et ouvre WhatsApp avec le reçu (au client si connu). */
+async function envoyerRecuWhatsApp(venteId) {
+  try {
+    const d = await api('GET', '/ventes/' + venteId + '/facture');
+    envoyerFactureWhatsApp(d);
+  } catch (ex) { toast(ex.premierDetail ? ex.premierDetail() : ex.message); }
 }
 
 /* Garde la vente dans la file locale (survit à une coupure d'électricité : stockée sur l'appareil). */
