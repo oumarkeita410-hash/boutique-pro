@@ -194,18 +194,38 @@ const ongletsVendeur = () => [
 ];
 async function vendeurMesVentes() {
   cadre('Mes ventes', `<div id="mv"><div class="spinner"></div></div>`, ongletsVendeur(), 5);
-  try {
-    const d = await api('GET', '/mes-ventes');
-    const items = d.ventes?.data || [];
-    $('#mv').innerHTML = `
-      <div class="card">
-        <div class="info-row"><span class="lbl">Argent payé par les clients</span><span class="val" style="color:var(--success)">${gnf(d.total_paye)}</span></div>
-        <div class="info-row"><span class="lbl">Reste à payer (crédits)</span><span class="val" style="color:var(--danger)">${gnf(d.total_reste)}</span></div>
-      </div>
-      <div class="card"><h3>Mes ventes</h3>${items.length ? items.map(v => `
-        <div class="list-item"><div class="main"><div class="name">${esc(v.reference)} — ${gnf(v.montant_total)}</div>
-          <div class="sub">${esc(v.date)}${v.client ? ' · ' + esc(v.client) : ''} · payé ${gnf(v.montant_paye)}${v.reste > 0 ? ' · <b style="color:var(--danger)">reste ' + gnf(v.reste) + '</b>' : ''} · ${esc(v.statut)}</div></div></div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
-  } catch (ex) { $('#mv').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+  const rendre = async () => {
+    try {
+      const d = await api('GET', '/mes-ventes');
+      const items = d.ventes?.data || [];
+      $('#mv').innerHTML = `
+        <div class="card">
+          <div class="info-row"><span class="lbl">Argent payé par les clients</span><span class="val" style="color:var(--success)">${gnf(d.total_paye)}</span></div>
+          <div class="info-row"><span class="lbl">Reste à payer (crédits)</span><span class="val" style="color:var(--danger)">${gnf(d.total_reste)}</span></div>
+        </div>
+        <div class="card"><h3>Mes ventes</h3>${items.length ? items.map(v => `
+          <div class="vente-bloc" style="padding:10px 0;border-bottom:1px solid var(--border)">
+            <div class="row-between"><div><b>${esc(v.reference)}</b> — ${gnf(v.montant_total)}
+              <div class="muted" style="font-size:.82rem">${esc(v.date)}${v.client ? ' · ' + esc(v.client) : ''} · payé ${gnf(v.montant_paye)}${v.reste > 0 ? ' · <b style="color:var(--danger)">reste ' + gnf(v.reste) + '</b>' : ' ✅'}</div></div>
+              ${v.reste > 0 ? `<button class="btn" style="width:auto;padding:6px 10px" data-enc="${v.id}" data-reste="${v.reste}">💵 Encaisser</button>` : ''}
+            </div>
+            ${(v.paiements || []).length ? `<div class="muted" style="font-size:.78rem;margin-top:4px">Versements : ${v.paiements.map(p => gnf(p.montant) + ' (' + (p.date || '').slice(0, 10) + ')').join(' · ')}</div>` : ''}
+          </div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
+      $('#mv').querySelectorAll('[data-enc]').forEach(b => b.onclick = async () => {
+        const reste = +b.dataset.reste;
+        const saisie = prompt('Reste à payer : ' + gnf(reste) + '\nMontant que le client paie maintenant (GNF) :', reste);
+        if (saisie === null) return;
+        const montant = parseInt(String(saisie).replace(/\D/g, ''), 10);
+        if (!montant || montant < 1) { toast('Montant invalide.'); return; }
+        try {
+          const r = await api('POST', '/mes-ventes/' + b.dataset.enc + '/encaisser', { montant });
+          toast(r.reste > 0 ? 'Paiement noté. Reste ' + gnf(r.reste) : 'Payé entièrement ✅');
+          rendre();
+        } catch (ex) { toast(ex.premierDetail ? ex.premierDetail() : ex.message); }
+      });
+    } catch (ex) { $('#mv').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+  };
+  rendre();
 }
 async function vendeurDevis() {
   cadre('Devis', `<button class="btn block" id="nouveau">➕ Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`, ongletsVendeur(), 4);

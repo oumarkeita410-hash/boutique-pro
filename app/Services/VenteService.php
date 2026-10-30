@@ -7,6 +7,7 @@ use App\Enums\Role;
 use App\Enums\StatutVente;
 use App\Exceptions\CompteVerrouilleException;
 use App\Exceptions\StockInsuffisantException;
+use App\Models\JournalActivite;
 use App\Models\MouvementStock;
 use App\Models\Position;
 use App\Models\Produit;
@@ -245,6 +246,59 @@ class VenteService
         foreach (Produit::whereIn('id', array_unique($produitIds))->get() as $produit) {
             Notification::send($admins, new StockBasAtteint($produit));
         }
+    }
+
+    /**
+     * Enregistre un versement du reste d'une vente (le client vient payer une
+     * partie de ce qu'il doit). On N'AJOUTE qu'un versement : les paiements
+     * précédents ne sont jamais modifiés. Le reste se recalcule automatiquement
+     * et la vente passe « payée » quand tout est réglé. Chaque versement est
+     * tracé (historique + journal) ; l'administrateur voit tout.
+     *
+     * @param  non-empty-string|null  $mode  especes | orange_money | carte
+     */
+    public function encaisserReste(Vente $vente, User $user, int $montant, ?string $mode = null): Vente
+    {
+        if ($vente->statut === StatutVente::Annulee) {
+            throw ValidationException::withMessages(['vente' => 'Cette vente est annulée.']);
+        }
+
+        $reste = $vente->reste();
+        if ($reste <= 0) {
+            throw ValidationException::withMessages(['vente' => 'Cette vente est déjà entièrement payée.']);
+        }
+        if ($montant < 1) {
+            throw ValidationException::withMessages(['montant' => 'Le montant doit être au moins 1.']);
+        }
+        if ($montant > $reste) {
+            throw ValidationException::withMessages(['montant' => 'Le montant dépasse le reste à payer ('.$reste.' GNF).']);
+        }
+
+        $mode = $mode ?: 'especes';
+
+        return DB::transaction(function () use ($vente, $user, $montant, $mode) {
+            // Nouveau versement ajouté à l'historique (on ne touche pas aux anciens).
+            $vente->paiements()->create([
+                'user_id' => $user->id,
+                'montant' => $montant,
+                'mode_paiement' => $mode,
+            ]);
+
+            $vente->montant_paye += $montant;
+            if ($vente->reste() <= 0) {
+                $vente->statut = StatutVente::Payee;
+            }
+            $vente->save();
+
+            JournalActivite::noter($user, 'encaissement_reste', $vente, [
+                'reference' => $vente->reference,
+                'montant' => $montant,
+                'mode' => $mode,
+                'reste' => $vente->reste(),
+            ]);
+
+            return $vente;
+        });
     }
 
     /**

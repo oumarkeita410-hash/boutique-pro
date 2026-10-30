@@ -8,6 +8,7 @@ use App\Models\JournalActivite;
 use App\Models\MouvementStock;
 use App\Models\Produit;
 use App\Models\Vente;
+use App\Services\VenteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -18,6 +19,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class VenteController extends Controller
 {
+    public function __construct(private VenteService $ventes)
+    {
+    }
+
     /**
      * GET /api/admin/ventes?statut=&vendeur_id=&periode=jour&recherche=
      */
@@ -111,32 +116,12 @@ class VenteController extends Controller
      */
     public function encaisser(Request $request, Vente $vente)
     {
-        if ($vente->statut === StatutVente::Annulee) {
-            throw ValidationException::withMessages(['vente' => 'Cette vente est annulée.']);
-        }
-
-        $reste = $vente->reste();
-        if ($reste <= 0) {
-            throw ValidationException::withMessages(['vente' => 'Cette vente est déjà entièrement payée.']);
-        }
-
         $d = $request->validate([
-            'montant' => ['required', 'integer', 'min:1', 'max:'.$reste],
+            'montant' => ['required', 'integer', 'min:1'],
             'mode_paiement' => ['nullable', 'in:especes,orange_money,carte'],
         ]);
 
-        $vente->montant_paye += $d['montant'];
-        if ($vente->reste() <= 0) {
-            $vente->statut = StatutVente::Payee;
-        }
-        $vente->save();
-
-        JournalActivite::noter($request->user(), 'encaissement_reste', $vente, [
-            'reference' => $vente->reference,
-            'montant' => $d['montant'],
-            'mode' => $d['mode_paiement'] ?? 'especes',
-            'reste' => $vente->reste(),
-        ]);
+        $vente = $this->ventes->encaisserReste($vente, $request->user(), $d['montant'], $d['mode_paiement'] ?? null);
 
         return response()->json([
             'message' => 'Paiement enregistré.',

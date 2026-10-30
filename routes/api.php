@@ -76,6 +76,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Mes ventes (argent payé / reste à payer) — le vendeur voit les siennes.
         Route::get('/mes-ventes', [VenteController::class, 'mesVentes']);
+        // Encaisser le reste d'une de ses ventes (le client vient payer plus tard).
+        Route::post('/mes-ventes/{vente}/encaisser', [VenteController::class, 'encaisser']);
 
         // Facture imprimable d'une vente.
         Route::get('/ventes/{vente}/facture', [FactureController::class, 'facture']);

@@ -44,6 +44,11 @@ class Vente extends Model
         return $this->hasMany(LigneVente::class);
     }
 
+    public function paiements(): HasMany
+    {
+        return $this->hasMany(PaiementVente::class);
+    }
+
     public function demandesModification(): HasMany
     {
         return $this->hasMany(DemandeModificationVente::class);
