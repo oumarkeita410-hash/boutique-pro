@@ -104,6 +104,8 @@ Route::middleware('auth:sanctum')->group(function () {
         // Gestion de caisse (espèces).
         Route::get('caisse', [CaisseController::class, 'jour']);
         Route::post('caisse/mouvement', [CaisseController::class, 'ajouter']);
+        Route::post('caisse/ouvrir', [CaisseController::class, 'ouvrir']);
+        Route::post('caisse/cloturer', [CaisseController::class, 'cloturer']);
 
         Route::apiResource('utilisateurs', UtilisateurController::class)->except('destroy');
         Route::post('utilisateurs/{utilisateur}/verrouiller', [UtilisateurController::class, 'verrouiller']);

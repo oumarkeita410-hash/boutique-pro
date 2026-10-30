@@ -1278,15 +1278,39 @@ async function adminCaisse() {
   const rendre = async () => {
     try {
       const d = await api('GET', '/admin/caisse');
-      $('#c').innerHTML = `
-        <div class="card"><h3>Solde en caisse : ${gnf(d.solde)}</h3>
-          <div class="glance-grid">
-            ${glc('🛒', gnf(d.ventes_especes), 'Ventes espèces')}
-            ${glc('➕', gnf(d.apports), 'Apports')}
-            ${glc('➖', gnf(d.depenses), 'Dépenses', d.depenses > 0)}
-            ${glc('🏦', gnf(d.retraits), 'Retraits')}
-          </div></div>
-        <div class="card"><h3>Ajouter un mouvement</h3>
+      let html = '';
+
+      // 1. En-tête selon l'état de la caisse
+      if (d.cloturee) {
+        const mot = d.ecart === 0 ? 'Caisse juste ✅' : (d.ecart > 0 ? 'Excédent' : 'Manquant');
+        const couleur = d.ecart === 0 ? 'var(--success)' : 'var(--danger)';
+        html += `<div class="card center">
+          <h3>Caisse clôturée</h3>
+          <div class="info-row"><span class="lbl">Solde théorique (attendu)</span><span class="val">${gnf(d.solde_theorique)}</span></div>
+          <div class="info-row"><span class="lbl">Argent compté (réel)</span><span class="val">${gnf(d.montant_reel)}</span></div>
+          <div class="value" style="font-size:1.5rem;color:${couleur};margin-top:8px">${mot}${d.ecart !== 0 ? ' : ' + gnf(Math.abs(d.ecart)) : ''}</div>
+          ${d.note_cloture ? `<p class="muted mt">${esc(d.note_cloture)}</p>` : ''}</div>`;
+      } else if (!d.ouverture_faite) {
+        html += `<div class="card"><h3>Ouvrir la caisse (matin)</h3>
+          <p class="muted" style="font-size:.85rem">Indiquez le <b>fond de caisse</b> : l'argent déjà présent dans le tiroir ce matin.</p>
+          ${champ('o-fond', 'Fond de caisse (GNF)', '0', 'number')}
+          <div class="error-msg" id="o-err"></div>
+          <button class="btn" id="o-btn">Ouvrir la caisse</button></div>`;
+      }
+
+      // 2. Résumé (toujours affiché)
+      html += `<div class="card"><h3>Solde théorique : ${gnf(d.solde_theorique)}</h3>
+        <div class="glance-grid">
+          ${glc('🔑', gnf(d.fond_ouverture), "Fond d'ouverture")}
+          ${glc('🛒', gnf(d.ventes_especes), 'Ventes espèces')}
+          ${glc('➕', gnf(d.apports), 'Apports')}
+          ${glc('➖', gnf(d.depenses), 'Dépenses', d.depenses > 0)}
+          ${glc('🏦', gnf(d.retraits), 'Retraits')}
+        </div></div>`;
+
+      // 3. Mouvements + clôture (seulement si pas encore clôturée)
+      if (!d.cloturee) {
+        html += `<div class="card"><h3>Ajouter un mouvement</h3>
           <div class="field"><label>Type</label><select id="m-type">
             <option value="depense">Dépense (sortie d'argent)</option>
             <option value="apport">Apport (argent ajouté en caisse)</option>
@@ -1294,15 +1318,45 @@ async function adminCaisse() {
           ${champ('m-montant', 'Montant (GNF)', '', 'number')}
           ${champ('m-desc', 'Description (ex. achat scotch, dépôt banque)')}
           <div class="error-msg" id="m-err"></div>
-          <button class="btn" id="m-add">Enregistrer le mouvement</button></div>
-        <div class="card"><h3>Mouvements d'aujourd'hui</h3>${d.mouvements.length ? d.mouvements.map(m => `
-          <div class="list-item"><div class="main"><div class="name">${TYPE_CAISSE[m.type] || m.type} · ${gnf(m.montant)}</div>
-            <div class="sub">${esc(m.description || '')}${m.par ? ' · ' + esc(m.par) : ''} · ${esc(m.date)}</div></div></div>`).join('') : '<p class="muted">Aucun mouvement manuel aujourd\'hui.</p>'}</div>`;
-      $('#m-add').onclick = async () => {
+          <button class="btn" id="m-add">Enregistrer le mouvement</button></div>`;
+
+        if (d.ouverture_faite) {
+          html += `<div class="card"><h3>Clôturer la caisse (soir)</h3>
+            <p class="muted" style="font-size:.85rem">Comptez l'argent réel dans le tiroir et saisissez-le. L'application calcule l'écart (manquant ou excédent).</p>
+            ${champ('cl-reel', 'Argent compté dans le tiroir (GNF)', '', 'number')}
+            ${champ('cl-note', 'Note (facultatif)')}
+            <div class="error-msg" id="cl-err"></div>
+            <button class="btn danger" id="cl-btn">Clôturer la caisse</button></div>`;
+        }
+      }
+
+      // 4. Liste des mouvements
+      html += `<div class="card"><h3>Mouvements d'aujourd'hui</h3>${d.mouvements.length ? d.mouvements.map(m => `
+        <div class="list-item"><div class="main"><div class="name">${TYPE_CAISSE[m.type] || m.type} · ${gnf(m.montant)}</div>
+          <div class="sub">${esc(m.description || '')}${m.par ? ' · ' + esc(m.par) : ''} · ${esc(m.date)}</div></div></div>`).join('') : '<p class="muted">Aucun mouvement manuel aujourd\'hui.</p>'}</div>`;
+
+      $('#c').innerHTML = html;
+
+      if ($('#o-btn')) $('#o-btn').onclick = async () => {
+        const err = $('#o-err'); err.textContent = '';
+        const fond = parseInt($('#o-fond').value, 10);
+        if (isNaN(fond) || fond < 0) { err.textContent = 'Montant invalide.'; return; }
+        try { await api('POST', '/admin/caisse/ouvrir', { fond_ouverture: fond }); toast('Caisse ouverte.'); rendre(); }
+        catch (ex) { err.textContent = ex.premierDetail(); }
+      };
+      if ($('#m-add')) $('#m-add').onclick = async () => {
         const err = $('#m-err'); err.textContent = '';
         const montant = parseInt($('#m-montant').value, 10);
         if (!montant || montant < 1) { err.textContent = 'Montant invalide.'; return; }
         try { await api('POST', '/admin/caisse/mouvement', { type: $('#m-type').value, montant, description: $('#m-desc').value.trim() || null }); toast('Mouvement enregistré.'); rendre(); }
+        catch (ex) { err.textContent = ex.premierDetail(); }
+      };
+      if ($('#cl-btn')) $('#cl-btn').onclick = async () => {
+        const err = $('#cl-err'); err.textContent = '';
+        const reel = parseInt($('#cl-reel').value, 10);
+        if (isNaN(reel) || reel < 0) { err.textContent = 'Saisissez l\'argent compté.'; return; }
+        if (!confirm('Clôturer la caisse du jour ? On ne pourra plus ajouter de mouvement aujourd\'hui.')) return;
+        try { const r = await api('POST', '/admin/caisse/cloturer', { montant_reel: reel, note: $('#cl-note').value.trim() || null }); toast('Caisse clôturée. Écart : ' + gnf(r.ecart)); rendre(); }
         catch (ex) { err.textContent = ex.premierDetail(); }
       };
     } catch (ex) { $('#c').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
