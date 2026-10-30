@@ -100,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('ventes-resume', [AdminVenteController::class, 'resume']);
         Route::get('ventes/export', [AdminVenteController::class, 'export']);
         Route::post('ventes/{vente}/annuler', [AdminVenteController::class, 'annuler']);
+        Route::post('ventes/{vente}/encaisser', [AdminVenteController::class, 'encaisser']);
 
         // Historique d'achats d'un client.
         Route::get('clients/{client}/historique', [ClientController::class, 'historique']);

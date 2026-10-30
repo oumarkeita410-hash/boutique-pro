@@ -113,10 +113,12 @@ class CaisseController extends Controller
         $debut = $date->copy()->startOfDay();
         $fin = $date->copy()->endOfDay();
 
+        // Argent réellement reçu en espèces aujourd'hui (on compte le payé,
+        // pas le total : une vente partielle n'apporte que ce qui a été payé).
         $ventesEspeces = (int) Vente::where('mode_paiement', ModePaiement::Especes)
-            ->where('statut', StatutVente::Payee)
+            ->where('statut', '!=', StatutVente::Annulee)
             ->whereBetween('created_at', [$debut, $fin])
-            ->sum('montant_total');
+            ->sum('montant_paye');
 
         $mouv = MouvementCaisse::with('auteur:id,name,prenom')
             ->whereBetween('created_at', [$debut, $fin])

@@ -1318,6 +1318,7 @@ async function adminVentes() {
           <div class="sub">${esc(v.articles.join(', '))}</div></div>
           <div class="btn-row" style="width:auto">
             <button class="icon-btn" title="Facture" data-fact="${v.id}">🧾</button>
+            ${v.statut !== 'annulee' && v.reste > 0 ? `<button class="icon-btn" title="Encaisser le reste" data-encaisser="${v.id}" data-reste="${v.reste}" style="color:var(--success,#16a34a)">💵</button>` : ''}
             ${v.statut !== 'annulee' ? `<button class="icon-btn" title="Annuler (retour)" data-annuler="${v.id}" style="color:var(--danger)">↩️</button>` : ''}
             ${v.latitude ? `<button class="icon-btn" title="Voir sur la carte" data-lat="${v.latitude}" data-lng="${v.longitude}">📍</button>` : ''}
           </div>
@@ -1329,6 +1330,18 @@ async function adminVentes() {
         if (motif === null) return; // l'administrateur a annulé l'action
         try { await api('POST', '/admin/ventes/' + b.dataset.annuler + '/annuler', { motif }); toast('Vente annulée, stock remis.'); rendre(); }
         catch (ex) { toast(ex.premierDetail()); }
+      });
+      $('#liste').querySelectorAll('[data-encaisser]').forEach(b => b.onclick = async () => {
+        const reste = +b.dataset.reste;
+        const saisie = prompt('Reste à payer : ' + gnf(reste) + '\nMontant reçu du client (GNF) :', reste);
+        if (saisie === null) return; // l'administrateur a annulé l'action
+        const montant = parseInt(String(saisie).replace(/\D/g, ''), 10);
+        if (!montant || montant < 1) { toast('Montant invalide.'); return; }
+        try {
+          const r = await api('POST', '/admin/ventes/' + b.dataset.encaisser + '/encaisser', { montant });
+          toast(r.reste > 0 ? 'Paiement enregistré. Reste ' + gnf(r.reste) : 'Payé entièrement ✅');
+          rendre();
+        } catch (ex) { toast(ex.premierDetail()); }
       });
     } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
   };

@@ -105,6 +105,48 @@ class VenteController extends Controller
     }
 
     /**
+     * POST /api/admin/ventes/{vente}/encaisser
+     * { "montant": 60000, "mode_paiement": "especes" }
+     * Enregistre un paiement sur une vente à crédit : le reste à payer diminue.
+     */
+    public function encaisser(Request $request, Vente $vente)
+    {
+        if ($vente->statut === StatutVente::Annulee) {
+            throw ValidationException::withMessages(['vente' => 'Cette vente est annulée.']);
+        }
+
+        $reste = $vente->reste();
+        if ($reste <= 0) {
+            throw ValidationException::withMessages(['vente' => 'Cette vente est déjà entièrement payée.']);
+        }
+
+        $d = $request->validate([
+            'montant' => ['required', 'integer', 'min:1', 'max:'.$reste],
+            'mode_paiement' => ['nullable', 'in:especes,orange_money,carte'],
+        ]);
+
+        $vente->montant_paye += $d['montant'];
+        if ($vente->reste() <= 0) {
+            $vente->statut = StatutVente::Payee;
+        }
+        $vente->save();
+
+        JournalActivite::noter($request->user(), 'encaissement_reste', $vente, [
+            'reference' => $vente->reference,
+            'montant' => $d['montant'],
+            'mode' => $d['mode_paiement'] ?? 'especes',
+            'reste' => $vente->reste(),
+        ]);
+
+        return response()->json([
+            'message' => 'Paiement enregistré.',
+            'montant_paye' => $vente->montant_paye,
+            'reste' => $vente->reste(),
+            'statut' => $vente->statut->value,
+        ]);
+    }
+
+    /**
      * POST /api/admin/ventes/{vente}/annuler : annule une vente (retour).
      * Remet les articles en stock et marque la vente « annulée ».
      */

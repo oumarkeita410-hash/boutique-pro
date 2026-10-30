@@ -43,7 +43,7 @@ class TableauDeBordController extends Controller
             // Caisse du jour (espèces) : encaissé + apports − dépenses − retraits = solde.
             'caisse' => (function () use ($aujourdhui) {
                 $especes = (int) Vente::where('mode_paiement', ModePaiement::Especes)
-                    ->where('statut', StatutVente::Payee)->where('created_at', '>=', $aujourdhui)->sum('montant_total');
+                    ->where('statut', '!=', StatutVente::Annulee)->where('created_at', '>=', $aujourdhui)->sum('montant_paye');
                 $mouv = MouvementCaisse::where('created_at', '>=', $aujourdhui)->get();
                 $apports = (int) $mouv->where('type', 'apport')->sum('montant');
                 $depenses = (int) $mouv->where('type', 'depense')->sum('montant');
