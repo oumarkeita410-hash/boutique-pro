@@ -1,7 +1,7 @@
 /* Service worker MOK-Business : rend l'application utilisable hors ligne.
    On met en cache la coquille (HTML/CSS/JS/icône). Les appels API ne sont
    jamais mis en cache : les données doivent rester fraîches et sûres. */
-const CACHE = 'mok-shell-v22';
+const CACHE = 'mok-shell-v23';
 const SHELL = [
   './',
   './index.html',

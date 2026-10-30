@@ -11,6 +11,11 @@ const store = {
   set token(v) { v ? localStorage.setItem('mok_token', v) : localStorage.removeItem('mok_token'); },
   get user() { try { return JSON.parse(localStorage.getItem('mok_user') || 'null'); } catch { return null; } },
   set user(v) { v ? localStorage.setItem('mok_user', JSON.stringify(v)) : localStorage.removeItem('mok_user'); },
+  // Dernier compte utilisé sur CET appareil : pour une reconnexion très rapide.
+  get lastId() { return localStorage.getItem('mok_last_id') || ''; },
+  set lastId(v) { v ? localStorage.setItem('mok_last_id', v) : localStorage.removeItem('mok_last_id'); },
+  get lastRole() { return localStorage.getItem('mok_last_role') || ''; },
+  set lastRole(v) { v ? localStorage.setItem('mok_last_role', v) : localStorage.removeItem('mok_last_role'); },
 };
 
 /* ---------- Thème clair / sombre ---------- */
@@ -62,12 +67,14 @@ const ROLES = [
   { v: 'conseiller', nom: 'Conseiller', emoji: '🎧' },
 ];
 function ecranConnexion() {
+  // Type pré-sélectionné = le dernier utilisé sur cet appareil (sinon « vendeur »).
+  const roleDefaut = store.lastRole || 'vendeur';
   app.innerHTML = `
     <div class="login-wrap">
       <div class="logo"><div class="mark">MB</div><h1>MOK<span>-Business</span></h1>
         <p>Boutique électronique — Guinée Conakry</p></div>
       <p class="roles-titre">Choisissez votre type de compte</p>
-      <div class="roles">${ROLES.map((r, i) => `<div class="role-chip ${i === 1 ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${r.emoji}</span>${r.nom}</div>`).join('')}</div>
+      <div class="roles">${ROLES.map(r => `<div class="role-chip ${r.v === roleDefaut ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${r.emoji}</span>${r.nom}</div>`).join('')}</div>
       <div id="comptes-liste"></div>
       <form id="form-login" novalidate>
         <div class="field"><label for="identifiant">Identifiant, téléphone ou email</label>
@@ -88,7 +95,9 @@ function ecranConnexion() {
   });
   $('#theme-btn').addEventListener('click', basculerTheme);
   $('#form-login').addEventListener('submit', soumettreConnexion);
-  chargerComptesConnexion('vendeur'); // liste affichée par défaut (type sélectionné)
+  // Reconnexion rapide : on pré-remplit le dernier identifiant et on vise le mot de passe.
+  if (store.lastId) { $('#identifiant').value = store.lastId; setTimeout(() => $('#password').focus(), 100); }
+  chargerComptesConnexion(roleDefaut); // liste des comptes du type sélectionné
 }
 
 /* Affiche les comptes d'un type sous l'écran de connexion. Toucher un compte remplit l'identifiant. */
@@ -117,6 +126,9 @@ async function soumettreConnexion(e) {
     const pos = await position();
     const data = await api('POST', '/connexion', { identifiant, password, appareil: navigator.userAgent.slice(0, 80), ...(pos || {}) });
     store.token = data.token; store.user = data.utilisateur;
+    // On retient le compte pour une reconnexion rapide la prochaine fois.
+    store.lastId = identifiant;
+    store.lastRole = (data.utilisateur && data.utilisateur.role) || store.lastRole;
     if (data.avis) toast(data.avis);
     routerAccueil();
   } catch (ex) {
@@ -631,6 +643,7 @@ async function adminPaiementsConfirmer() {
   } catch (ex) { $('#pc').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
 }
 
+const MVT_STOCK_LBL = { vente: '🔴 Vente', approvisionnement: '🟢 Entrée', annulation: '↩️ Retour' };
 async function adminTableau() {
   adminShell('tableau', 'Tableau de bord', `<div id="tb"><div class="spinner"></div></div>`);
   try {
@@ -677,6 +690,16 @@ async function adminTableau() {
               <div class="sub">${esc(v.identifiant)}${v.region ? ' · ' + esc(v.region) : ''} · ventes du mois : ${gnf(ventesParVendeur[v.id] || 0)}</div></div>
             <span class="badge" style="color:${v.est_verrouille ? 'var(--danger)' : 'var(--success)'}">${v.est_verrouille ? 'Verrouillé' : 'Actif'}</span>
           </div>`).join('') : '<p class="muted">Aucun vendeur. Créez-en dans « Comptes ».</p>'}
+      </div>
+
+      <div class="card">
+        <div class="row-between"><h3>Mouvements de stock</h3>
+          <span class="badge">🟢 ${d.mouvements_stock?.entrees_jour ?? 0} · 🔴 ${d.mouvements_stock?.sorties_jour ?? 0} aujourd'hui</span></div>
+        ${(d.mouvements_stock?.recents || []).length ? d.mouvements_stock.recents.map(m => `
+          <div class="list-item"><div class="main">
+            <div class="name">${MVT_STOCK_LBL[m.type] || m.type} — ${esc(m.produit || '—')}</div>
+            <div class="sub">${m.quantite > 0 ? '+' + m.quantite : m.quantite} · reste ${m.stock_apres}${m.par ? ' · ' + esc(m.par) : ''} · ${esc(m.date)}</div></div>
+          </div>`).join('') : '<p class="muted">Aucun mouvement de stock pour le moment.</p>'}
       </div>`;
 
     const aller = { ventes: adminVentes, produits: adminProduits, reparateurs: adminReparateurs, confirm: adminPaiementsConfirmer, messages: adminMessages, comptes: adminComptes, caisse: adminCaisse };

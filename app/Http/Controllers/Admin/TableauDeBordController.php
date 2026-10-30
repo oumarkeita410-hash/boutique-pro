@@ -9,6 +9,7 @@ use App\Models\LigneVente;
 use App\Enums\ModePaiement;
 use App\Models\Message;
 use App\Models\MouvementCaisse;
+use App\Models\MouvementStock;
 use App\Models\PriseReparateur;
 use App\Models\Produit;
 use App\Models\Reparateur;
@@ -105,6 +106,28 @@ class TableauDeBordController extends Controller
                     ->limit(20)
                     ->get(['id', 'nom', 'stock', 'seuil_alerte']),
             ],
+
+            // Mouvements de stock : entrées/sorties du jour + les plus récents.
+            'mouvements_stock' => (function () use ($aujourdhui) {
+                $jour = MouvementStock::where('created_at', '>=', $aujourdhui)->get(['type', 'quantite']);
+
+                return [
+                    'entrees_jour' => (int) $jour->where('quantite', '>', 0)->sum('quantite'),
+                    'sorties_jour' => (int) abs($jour->where('quantite', '<', 0)->sum('quantite')),
+                    'recents' => MouvementStock::with(['produit:id,nom', 'utilisateur:id,name,prenom'])
+                        ->latest()
+                        ->limit(15)
+                        ->get()
+                        ->map(fn (MouvementStock $m) => [
+                            'type' => $m->type,
+                            'produit' => $m->produit?->nom,
+                            'quantite' => (int) $m->quantite,
+                            'stock_apres' => (int) $m->stock_apres,
+                            'par' => $m->utilisateur ? trim($m->utilisateur->prenom.' '.$m->utilisateur->name) : null,
+                            'date' => $m->created_at->toDateTimeString(),
+                        ]),
+                ];
+            })(),
 
             'reparateurs' => [
                 'dette_totale' => (int) PriseReparateur::sum(DB::raw('montant_total - montant_paye')),
