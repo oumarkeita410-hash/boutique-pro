@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\LocalisationController;
 use App\Http\Controllers\Admin\PaieController;
 use App\Http\Controllers\Admin\ProduitController;
+use App\Http\Controllers\Admin\RapportController;
 use App\Http\Controllers\Admin\ReparateurController;
+use App\Http\Controllers\Admin\RestesController;
 use App\Http\Controllers\Admin\TableauDeBordController;
 use App\Http\Controllers\Admin\UtilisateurController;
 use App\Http\Controllers\Admin\VenteController as AdminVenteController;
@@ -94,6 +96,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('role:admin')->prefix('admin')->group(function () {
         Route::get('tableau-de-bord', TableauDeBordController::class);
+
+        // Rapport de fin de journée + tous les restes à payer dus à la boutique.
+        Route::get('rapport-jour', [RapportController::class, 'jour']);
+        Route::get('restes-a-payer', [RestesController::class, 'index']);
 
         // Toutes les ventes (admin voit tout).
         Route::get('ventes', [AdminVenteController::class, 'index']);

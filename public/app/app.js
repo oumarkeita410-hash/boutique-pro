@@ -508,9 +508,11 @@ function menuAdmin() {
     ['produits', '📦', 'Produits', adminProduits],
     ['reparateurs', '🔧', 'Réparateurs', adminReparateurs],
     ['ventes', '📒', 'Ventes', adminVentes],
+    ['rapport', '🧾', 'Rapport du jour', adminRapportJour],
     ['caisse', '💶', 'Caisse', adminCaisse],
     ['devis', '📄', 'Devis', adminDevis],
     ['clients', '👤', 'Clients', adminClients],
+    ['restes', '💰', 'Restes à payer', adminRestes],
     ['credits', '💳', 'Crédits clients', adminCreditsClients],
     ['paie', '💵', 'Paie', adminPaie],
     ['confirm', '✅', 'Paiements', adminPaiementsConfirmer],
@@ -1348,6 +1350,88 @@ async function adminVentes() {
   $('#periode').onchange = rendre; $('#statut').onchange = rendre; rendre();
 }
 
+/* ---- Admin : rapport de fin de journée ---- */
+const MODE_LBL = { especes: 'Espèces', orange_money: 'Orange Money', carte: 'Carte', credit: 'Crédit' };
+async function adminRapportJour() {
+  adminShell('rapport', 'Rapport du jour', `
+    <div class="card"><div class="field"><label>Date</label><input type="date" id="rdate" value="${new Date().toISOString().slice(0, 10)}"></div></div>
+    <div id="r"><div class="spinner"></div></div>`);
+  const glc = (emoji, val, lbl) => `<div class="glance"><span class="g-emoji">${emoji}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+  const rendre = async () => {
+    $('#r').innerHTML = '<div class="spinner"></div>';
+    try {
+      const d = await api('GET', '/admin/rapport-jour?date=' + $('#rdate').value);
+      const v = d.ventes, c = d.caisse;
+      let html = `<div class="glance-grid">
+        ${glc('🧾', v.nombre, 'Ventes')}
+        ${glc('💵', gnf(v.total_encaisse), 'Encaissé')}
+        ${glc('🏷️', gnf(v.total_vendu), 'Vendu')}
+        ${glc('⏳', gnf(v.total_reste), 'Reste dû')}
+      </div>`;
+      html += `<div class="card"><h3>Encaissé par mode</h3>${v.total_encaisse || d.par_mode.length ? d.par_mode.map(m => `<div class="info-row"><span class="lbl">${MODE_LBL[m.mode] || m.mode} (${m.nombre})</span><span class="val">${gnf(m.encaisse)}</span></div>`).join('') : '<p class="muted">Aucune vente.</p>'}
+        <div class="info-row"><span class="lbl">Ventes à crédit accordées</span><span class="val">${v.credits_accordes}</span></div>
+        <div class="info-row"><span class="lbl">Ventes annulées</span><span class="val">${v.annulees}</span></div></div>`;
+      html += `<div class="card"><h3>Caisse</h3>
+        <div class="info-row"><span class="lbl">Fond d'ouverture</span><span class="val">${gnf(c.fond_ouverture)}</span></div>
+        <div class="info-row"><span class="lbl">Espèces reçues</span><span class="val">${gnf(c.ventes_especes)}</span></div>
+        <div class="info-row"><span class="lbl">Apports / Dépenses / Retraits</span><span class="val">${gnf(c.apports)} / ${gnf(c.depenses)} / ${gnf(c.retraits)}</span></div>
+        <div class="info-row"><span class="lbl">Solde théorique</span><span class="val">${gnf(c.solde_theorique)}</span></div>
+        ${c.cloturee ? `<div class="info-row"><span class="lbl">Compté (réel)</span><span class="val">${gnf(c.montant_reel)}</span></div><div class="info-row"><span class="lbl">Écart</span><span class="val" style="color:${c.ecart === 0 ? 'var(--success)' : 'var(--danger)'}">${gnf(c.ecart)}</span></div>` : '<p class="muted">Caisse pas encore clôturée.</p>'}</div>`;
+      html += `<div class="card"><h3>Top produits du jour</h3>${d.top_produits.length ? d.top_produits.map(p => `<div class="info-row"><span class="lbl">${esc(p.nom)} ×${p.quantite}</span><span class="val">${gnf(p.montant)}</span></div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
+      html += `<div class="card"><h3>Par vendeur</h3>${d.par_vendeur.length ? d.par_vendeur.map(x => `<div class="info-row"><span class="lbl">${esc(x.vendeur || '—')} (${x.nombre})</span><span class="val">${gnf(x.total)}</span></div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
+      html += `<button class="btn block secondary" id="rwa">💬 Envoyer le résumé sur WhatsApp</button>`;
+      $('#r').innerHTML = html;
+      $('#rwa').onclick = () => partagerWhatsApp(resumeRapportTexte(d));
+    } catch (ex) { $('#r').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+  };
+  $('#rdate').onchange = rendre; rendre();
+}
+function resumeRapportTexte(d) {
+  const v = d.ventes, c = d.caisse;
+  let t = `MOK-Business — Rapport du ${d.date}\n`;
+  t += `Ventes : ${v.nombre} · Encaissé : ${gnf(v.total_encaisse)} · Vendu : ${gnf(v.total_vendu)}\n`;
+  t += `Reste dû : ${gnf(v.total_reste)} · Crédits : ${v.credits_accordes} · Annulées : ${v.annulees}\n`;
+  d.par_mode.forEach(m => { t += `- ${MODE_LBL[m.mode] || m.mode} : ${gnf(m.encaisse)}\n`; });
+  t += `Caisse : espèces ${gnf(c.ventes_especes)} · solde théorique ${gnf(c.solde_theorique)}`;
+  if (c.cloturee) t += ` · écart ${gnf(c.ecart)}`;
+  return t;
+}
+
+/* ---- Admin : tous les restes à payer dus à la boutique ---- */
+async function adminRestes() {
+  adminShell('restes', 'Restes à payer', `<div id="r"><div class="spinner"></div></div>`);
+  const rendre = async () => {
+    try {
+      const d = await api('GET', '/admin/restes-a-payer');
+      let html = `<div class="card center"><p class="muted">Total dû à la boutique</p>
+        <div class="value" style="font-size:1.6rem;color:var(--danger)">${gnf(d.total_du)}</div>
+        <p class="muted">${d.nombre_clients} client(s) qui doivent</p></div>`;
+      html += d.clients.length ? d.clients.map(c => `
+        <div class="card">
+          <div class="row-between"><div><b>${esc(c.nom)}</b>
+            <div class="muted" style="font-size:.85rem">${c.telephone ? esc(c.telephone) + ' · ' : ''}reste <b style="color:var(--danger)">${gnf(c.total_reste)}</b></div></div>
+            ${c.telephone ? `<button class="btn secondary" style="width:auto;padding:6px 10px" data-wa="${esc(c.telephone)}" data-nom="${esc(c.nom)}" data-reste="${c.total_reste}">💬</button>` : ''}
+          </div>
+          ${c.ventes.map(x => `<div class="list-item"><div class="main"><div class="name">${esc(x.reference)}</div>
+            <div class="sub">${esc(x.date)} · payé ${gnf(x.montant_paye)} · reste ${gnf(x.reste)}</div></div>
+            <button class="icon-btn" title="Encaisser le reste" data-enc="${x.id}" data-reste="${x.reste}" style="color:var(--success,#16a34a)">💵</button></div>`).join('')}
+        </div>`).join('') : '<p class="muted center mt">Personne ne doit d\'argent. 👍</p>';
+      $('#r').innerHTML = html;
+      $('#r').querySelectorAll('[data-wa]').forEach(b => b.onclick = () => ouvrirWhatsApp(b.dataset.wa, 'Bonjour ' + b.dataset.nom + ', votre reste à payer chez MOK-Business est de ' + gnf(+b.dataset.reste) + '. Merci de passer régler.'));
+      $('#r').querySelectorAll('[data-enc]').forEach(b => b.onclick = async () => {
+        const reste = +b.dataset.reste;
+        const saisie = prompt('Reste à payer : ' + gnf(reste) + '\nMontant reçu du client (GNF) :', reste);
+        if (saisie === null) return;
+        const montant = parseInt(String(saisie).replace(/\D/g, ''), 10);
+        if (!montant || montant < 1) { toast('Montant invalide.'); return; }
+        try { const r = await api('POST', '/admin/ventes/' + b.dataset.enc + '/encaisser', { montant }); toast(r.reste > 0 ? 'Enregistré. Reste ' + gnf(r.reste) : 'Payé entièrement ✅'); rendre(); }
+        catch (ex) { toast(ex.premierDetail()); }
+      });
+    } catch (ex) { $('#r').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+  };
+  rendre();
+}
+
 /* ---- Admin : gestion de caisse ---- */
 const TYPE_CAISSE = { apport: 'Apport', depense: 'Dépense', retrait: 'Retrait' };
 async function adminCaisse() {
@@ -1660,8 +1744,23 @@ function brancherConversion(id, retour) {
 async function voirFacture(venteId, retour) {
   try {
     const d = await api('GET', '/ventes/' + venteId + '/facture');
-    afficherDocument('Facture ' + d.reference, d, false, retour);
+    afficherDocument('Facture ' + d.reference, d, false, retour, '<button class="btn secondary" id="fact-wa">💬 Envoyer au client</button>');
+    const wa = $('#fact-wa'); if (wa) wa.onclick = () => envoyerFactureWhatsApp(d);
   } catch (ex) { toast(ex.premierDetail ? ex.premierDetail() : ex.message); }
+}
+/* Construit un ticket texte lisible et l'ouvre dans WhatsApp (au client si son numéro est connu). */
+function envoyerFactureWhatsApp(d) {
+  const b = d.boutique || {};
+  let t = `${b.nom || 'MOK-Business'}\nFacture ${d.reference} (${(d.date || '').slice(0, 10)})\n`;
+  if (d.client) t += `Client : ${d.client}\n`;
+  t += '--------------------\n';
+  (d.lignes || []).forEach(l => { t += `${l.designation} x${l.quantite} = ${gnf(l.sous_total)}\n`; });
+  t += '--------------------\n';
+  t += `TOTAL : ${gnf(d.montant_total)}\n`;
+  t += d.reste > 0 ? `Payé : ${gnf(d.montant_paye)} — Reste à payer : ${gnf(d.reste)}\n` : `Payé entièrement ✅\n`;
+  if (b.orange_money) t += `Paiement Orange Money : ${b.orange_money}\n`;
+  t += 'Merci de votre confiance.';
+  if (d.client_tel) ouvrirWhatsApp(d.client_tel, t); else partagerWhatsApp(t);
 }
 
 /* ================================================================  CONSEILLER  */

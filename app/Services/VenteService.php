@@ -12,10 +12,12 @@ use App\Models\Position;
 use App\Models\Produit;
 use App\Models\User;
 use App\Models\Vente;
+use App\Notifications\StockBasAtteint;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
@@ -93,8 +95,12 @@ class VenteService
 
         $quantites = $this->regrouperQuantites($lignes);
 
+        // Produits qui passent sous leur seuil d'alerte pendant cette vente :
+        // l'administrateur en est prévenu après l'enregistrement.
+        $stockFranchi = [];
+
         try {
-            return DB::transaction(function () use ($vendeur, $quantites, $modePaiement, $clientId, $uuidClient, $position, $clientNom, $clientTel, $montantPaye) {
+            $vente = DB::transaction(function () use ($vendeur, $quantites, $modePaiement, $clientId, $uuidClient, $position, $clientNom, $clientTel, $montantPaye, &$stockFranchi) {
                 // Verrouille les lignes produits jusqu'à la fin de la transaction :
                 // deux vendeurs ne peuvent pas vendre le même dernier article.
                 $produits = Produit::whereIn('id', array_keys($quantites))
@@ -148,6 +154,11 @@ class VenteService
 
                     $stockAvant = $produit->stock;
                     $produit->decrement('stock', $quantite);
+
+                    // Franchit-on le seuil d'alerte avec cette vente ?
+                    if ($stockAvant > $produit->seuil_alerte && $produit->stock <= $produit->seuil_alerte) {
+                        $stockFranchi[] = $produit->id;
+                    }
 
                     MouvementStock::create([
                         'produit_id' => $produit->id,
@@ -209,6 +220,30 @@ class VenteService
             }
 
             throw $e;
+        }
+
+        // Alerte stock bas (après l'enregistrement réussi) : on prévient les admins.
+        if ($stockFranchi !== []) {
+            $this->alerterStockBas($stockFranchi);
+        }
+
+        return $vente;
+    }
+
+    /**
+     * Prévient tous les administrateurs des produits passés sous leur seuil.
+     *
+     * @param  array<int, int>  $produitIds
+     */
+    private function alerterStockBas(array $produitIds): void
+    {
+        $admins = User::where('role', Role::Admin)->get();
+        if ($admins->isEmpty()) {
+            return;
+        }
+
+        foreach (Produit::whereIn('id', array_unique($produitIds))->get() as $produit) {
+            Notification::send($admins, new StockBasAtteint($produit));
         }
     }
 
