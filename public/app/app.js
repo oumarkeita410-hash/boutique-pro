@@ -68,6 +68,7 @@ function ecranConnexion() {
         <p>Boutique électronique — Guinée Conakry</p></div>
       <p class="roles-titre">Choisissez votre type de compte</p>
       <div class="roles">${ROLES.map((r, i) => `<div class="role-chip ${i === 1 ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${r.emoji}</span>${r.nom}</div>`).join('')}</div>
+      <div id="comptes-liste"></div>
       <form id="form-login" novalidate>
         <div class="field"><label for="identifiant">Identifiant, téléphone ou email</label>
           <input id="identifiant" autocomplete="username" autocapitalize="none" required></div>
@@ -83,10 +84,28 @@ function ecranConnexion() {
   $('.roles').addEventListener('click', e => {
     const c = e.target.closest('.role-chip'); if (!c) return;
     $('.roles').querySelectorAll('.role-chip').forEach(x => x.classList.remove('active')); c.classList.add('active');
-    $('#identifiant').focus();
+    chargerComptesConnexion(c.dataset.role);
   });
   $('#theme-btn').addEventListener('click', basculerTheme);
   $('#form-login').addEventListener('submit', soumettreConnexion);
+  chargerComptesConnexion('vendeur'); // liste affichée par défaut (type sélectionné)
+}
+
+/* Affiche les comptes d'un type sous l'écran de connexion. Toucher un compte remplit l'identifiant. */
+async function chargerComptesConnexion(role) {
+  const el = $('#comptes-liste'); if (!el) return;
+  el.innerHTML = `<div class="spinner" style="margin:12px auto"></div>`;
+  try {
+    const comptes = await api('GET', '/comptes-connexion?role=' + role);
+    if (!comptes.length) {
+      el.innerHTML = `<p class="muted" style="font-size:.8rem;text-align:center;margin:8px 0 14px">Aucun compte ${esc(role)} pour l'instant.</p>`;
+      return;
+    }
+    el.innerHTML = `<div class="card" style="margin-bottom:14px">
+      <div class="sub muted" style="font-size:.78rem;margin-bottom:4px">Touchez votre compte, puis entrez votre mot de passe :</div>
+      ${comptes.map(c => `<div class="list-item tap" data-id="${esc(c.identifiant)}" role="button" tabindex="0"><div class="main"><div class="name">${esc(c.nom)}</div><div class="sub">${esc(c.identifiant)}</div></div><span class="badge cat">Choisir</span></div>`).join('')}</div>`;
+    el.querySelectorAll('.tap').forEach(x => x.onclick = () => { $('#identifiant').value = x.dataset.id; $('#password').focus(); });
+  } catch (ex) { el.innerHTML = ''; }
 }
 async function soumettreConnexion(e) {
   e.preventDefault();
@@ -159,7 +178,23 @@ const ongletsVendeur = () => [
   { nom: 'Messages', emoji: '💬', aller: vendeurMessages },
   { nom: 'Mon jour', emoji: '🕗', aller: vendeurHoraire },
   { nom: 'Devis', emoji: '📄', aller: vendeurDevis },
+  { nom: 'Ventes', emoji: '💰', aller: vendeurMesVentes },
 ];
+async function vendeurMesVentes() {
+  cadre('Mes ventes', `<div id="mv"><div class="spinner"></div></div>`, ongletsVendeur(), 5);
+  try {
+    const d = await api('GET', '/mes-ventes');
+    const items = d.ventes?.data || [];
+    $('#mv').innerHTML = `
+      <div class="card">
+        <div class="info-row"><span class="lbl">Argent payé par les clients</span><span class="val" style="color:var(--success)">${gnf(d.total_paye)}</span></div>
+        <div class="info-row"><span class="lbl">Reste à payer (crédits)</span><span class="val" style="color:var(--danger)">${gnf(d.total_reste)}</span></div>
+      </div>
+      <div class="card"><h3>Mes ventes</h3>${items.length ? items.map(v => `
+        <div class="list-item"><div class="main"><div class="name">${esc(v.reference)} — ${gnf(v.montant_total)}</div>
+          <div class="sub">${esc(v.date)}${v.client ? ' · ' + esc(v.client) : ''} · payé ${gnf(v.montant_paye)}${v.reste > 0 ? ' · <b style="color:var(--danger)">reste ' + gnf(v.reste) + '</b>' : ''} · ${esc(v.statut)}</div></div></div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
+  } catch (ex) { $('#mv').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
 async function vendeurDevis() {
   cadre('Devis', `<button class="btn block" id="nouveau">➕ Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`, ongletsVendeur(), 4);
   $('#nouveau').onclick = () => formDevis(vendeurDevis);
@@ -225,15 +260,15 @@ function vendeurPanier() {
       <div class="card">${panier.map((l, i) => `
         <div class="list-item">
           <div class="main"><div class="name">${esc(l.nom)}</div>
-            <div class="sub">${gnf(l.prix)} × ${l.quantite} = <b>${gnf((l.prix || 0) * l.quantite)}</b></div></div>
+            <div class="sub" data-sub="${i}">${gnf(l.prix)} × ${l.quantite} = <b>${gnf((l.prix || 0) * l.quantite)}</b></div></div>
           <div class="btn-row" style="width:auto">
             <button class="icon-btn" data-moins="${i}">−</button>
-            <span style="min-width:28px;text-align:center;align-self:center">${l.quantite}</span>
+            <input class="qte-input" data-i="${i}" type="number" inputmode="numeric" min="1" value="${l.quantite}">
             <button class="icon-btn" data-plus="${i}">+</button>
             <button class="icon-btn" data-sup="${i}" style="color:var(--danger)">🗑</button>
           </div>
         </div>`).join('')}
-        <div class="info-row" style="padding-top:12px"><span class="lbl">Total à encaisser</span><span class="val">${gnf(totalPanier())}</span></div></div>
+        <div class="info-row" style="padding-top:12px"><span class="lbl">Total à encaisser</span><span class="val" id="pan-total">${gnf(totalPanier())}</span></div></div>
       <div class="card"><h3>Client (facultatif — pour la facture)</h3>
         ${venteClient ? `<div class="list-item"><div class="main"><div class="name">${esc(venteClient.nom)}</div><div class="sub">${esc(venteClient.tel || '')} · client enregistré</div></div><button class="icon-btn" id="vcl-clear" style="color:var(--danger)">✕</button></div>`
           : `<div class="field"><label>Nom complet du client</label><input id="vcl-nom" value="${esc(venteClientNom)}" placeholder="Prénom et nom"></div>
@@ -244,13 +279,41 @@ function vendeurPanier() {
       <div class="card">
         <div class="field"><label>Mode de paiement</label>
           <select id="mode"><option value="especes">Espèces</option><option value="orange_money">Orange Money</option><option value="carte">Carte bancaire</option></select></div>
+        <div class="field" id="paye-wrap"><label>Argent payé maintenant par le client (GNF)</label>
+          <input id="montant-paye" type="number" inputmode="numeric" value="${totalPanier()}"></div>
+        <div id="reste-info" style="font-size:.85rem;margin:-6px 0 10px"></div>
         <div class="error-msg" id="p-err"></div>
-        <button class="btn" id="valider">Valider la vente · ${gnf(totalPanier())}</button>
+        <button class="btn" id="valider">Valider la vente · <span id="pan-total-btn">${gnf(totalPanier())}</span></button>
       </div>`;
     $('#vue').querySelectorAll('[data-plus]').forEach(b => b.onclick = () => { panier[+b.dataset.plus].quantite++; sauverPanier(); rendre(); });
     $('#vue').querySelectorAll('[data-moins]').forEach(b => b.onclick = () => { const l = panier[+b.dataset.moins]; if (--l.quantite < 1) panier.splice(+b.dataset.moins, 1); sauverPanier(); rendre(); });
     $('#vue').querySelectorAll('[data-sup]').forEach(b => b.onclick = () => { panier.splice(+b.dataset.sup, 1); sauverPanier(); rendre(); });
+    // Quantité tapée à la main (sans tout recharger, pour garder le curseur dans le champ).
+    const majTotaux = () => { const t = gnf(totalPanier()); $('#pan-total').textContent = t; $('#pan-total-btn').textContent = t; };
+    $('#vue').querySelectorAll('.qte-input').forEach(inp => {
+      inp.oninput = () => {
+        const i = +inp.dataset.i, v = parseInt(inp.value, 10);
+        if (!isNaN(v) && v >= 1) {
+          panier[i].quantite = v; sauverPanier();
+          $(`[data-sub="${i}"]`).innerHTML = `${gnf(panier[i].prix)} × ${v} = <b>${gnf((panier[i].prix || 0) * v)}</b>`;
+          majTotaux();
+        }
+      };
+      inp.onchange = () => { const i = +inp.dataset.i; if (!parseInt(inp.value, 10) || parseInt(inp.value, 10) < 1) { inp.value = panier[i].quantite; } };
+    });
     $('#valider').onclick = validerVente;
+    // Montant payé / reste à payer (espèces seulement).
+    const majReste = () => {
+      const info = $('#reste-info'); if (!info) return;
+      if ($('#mode').value !== 'especes') { $('#paye-wrap').style.display = 'none'; info.textContent = ''; return; }
+      $('#paye-wrap').style.display = '';
+      const total = totalPanier(), paye = parseInt($('#montant-paye').value, 10);
+      if (isNaN(paye) || paye >= total) info.innerHTML = '✅ Payé entièrement';
+      else info.innerHTML = 'Reste à payer : <b style="color:var(--danger)">' + gnf(total - Math.max(0, paye)) + '</b>';
+    };
+    $('#mode').onchange = majReste;
+    $('#montant-paye').oninput = majReste;
+    majReste();
     if (venteClient) { $('#vcl-clear').onclick = () => { venteClient = null; rendre(); }; }
     else {
       $('#vcl-nom').oninput = e => { venteClientNom = e.target.value; };
@@ -283,6 +346,7 @@ async function validerVente() {
     client_id: venteClient?.id || null,
     client_nom: venteClient ? null : (venteClientNom.trim() || null),
     client_tel: venteClient ? null : (venteClientTel.trim() || null),
+    montant_paye: $('#mode').value === 'especes' ? (parseInt($('#montant-paye').value, 10) || 0) : null,
     ...(pos || {}),
   };
 
@@ -316,7 +380,8 @@ function venteConfirmee(v) {
       <div style="font-size:2rem">✅</div>
       <h3 style="margin:.3rem 0">${esc(v.reference)}</h3>
       <div class="value" style="font-size:1.6rem">${gnf(v.montant_a_encaisser)}</div>
-      <p class="muted">Encaissé en espèces</p>
+      <div class="info-row"><span class="lbl">Payé par le client</span><span class="val" style="color:var(--success)">${gnf(v.montant_paye)}</span></div>
+      ${v.reste > 0 ? `<div class="info-row"><span class="lbl">Reste à payer</span><span class="val" style="color:var(--danger)">${gnf(v.reste)}</span></div>` : '<p class="muted">Payé entièrement ✅</p>'}
       <button class="btn block" id="vf-fact">🧾 Voir / imprimer la facture</button>
       <button class="btn secondary block" id="vf-new">Nouvelle vente</button>
     </div>`, ongletsVendeur(), 0);

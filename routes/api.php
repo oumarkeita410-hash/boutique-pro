@@ -28,6 +28,9 @@ use Illuminate\Support\Facades\Route;
 // 5 essais par minute : bloque les tentatives de deviner un mot de passe.
 Route::post('/connexion', [AuthController::class, 'connexion'])->middleware('throttle:6,1');
 
+// Liste des comptes d'un rôle pour l'écran de connexion (nom + identifiant ; mot de passe requis).
+Route::get('/comptes-connexion', [AuthController::class, 'comptesConnexion'])->middleware('throttle:30,1');
+
 // Webhook Orange Money : appelé par les serveurs d'Orange, pas par un navigateur.
 // Pas d'authentification de session ; la confiance vient de la vérification dans le service.
 Route::post('/webhooks/orange-money', [PaiementController::class, 'webhookOrangeMoney']);
@@ -68,6 +71,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Modifier une vente = demande soumise à l'accord de l'administrateur.
         Route::post('/ventes/{vente}/demande-modification', [ModificationVenteController::class, 'demander']);
+
+        // Mes ventes (argent payé / reste à payer) — le vendeur voit les siennes.
+        Route::get('/mes-ventes', [VenteController::class, 'mesVentes']);
 
         // Facture imprimable d'une vente.
         Route::get('/ventes/{vente}/facture', [FactureController::class, 'facture']);

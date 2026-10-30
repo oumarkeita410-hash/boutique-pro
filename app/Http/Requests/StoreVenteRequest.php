@@ -23,6 +23,8 @@ class StoreVenteRequest extends FormRequest
             'client_id' => ['required_if:mode_paiement,credit', 'nullable', 'integer', 'exists:clients,id'],
             'client_nom' => ['nullable', 'string', 'max:150'],
             'client_tel' => ['nullable', 'string', 'max:30'],
+            // Montant payé par le client (si moins que le total → reste à payer).
+            'montant_paye' => ['nullable', 'integer', 'min:0'],
             'uuid_client' => ['nullable', 'uuid'],
             // Position GPS de l'appareil (visible), facultative.
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],

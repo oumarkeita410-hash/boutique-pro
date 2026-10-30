@@ -22,6 +22,8 @@ class VenteVendeurResource extends JsonResource
                 'quantite' => $ligne->quantite,
             ]),
             'montant_a_encaisser' => $this->montant_total,
+            'montant_paye' => $this->montant_paye,
+            'reste' => $this->reste(),
             'devise' => 'GNF',
             'mode_paiement' => $this->mode_paiement->value,
             'statut' => $this->statut->value,

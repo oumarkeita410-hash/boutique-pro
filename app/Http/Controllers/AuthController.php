@@ -13,6 +13,28 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
+     * GET /api/comptes-connexion?role=vendeur  (public)
+     * Liste les comptes d'un rôle (nom + identifiant) pour l'écran de connexion.
+     * Le mot de passe reste obligatoire pour se connecter.
+     */
+    public function comptesConnexion(Request $request)
+    {
+        $role = $request->query('role');
+        if (! in_array($role, ['vendeur', 'conseiller', 'admin'], true)) {
+            return response()->json([]);
+        }
+
+        return User::where('role', $role)
+            ->where('est_verrouille', false)
+            ->orderBy('prenom')->orderBy('name')
+            ->get(['name', 'prenom', 'identifiant'])
+            ->map(fn (User $u) => [
+                'nom' => trim($u->prenom.' '.$u->name),
+                'identifiant' => $u->identifiant,
+            ]);
+    }
+
+    /**
      * POST /api/connexion
      * Tous les comptes (admin, vendeur, conseiller) se connectent ici avec
      * l'identifiant et le mot de passe fournis par l'administrateur.

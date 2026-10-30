@@ -63,6 +63,7 @@ class VenteService
         ?array $position = null,
         ?string $clientNom = null,
         ?string $clientTel = null,
+        ?int $montantPaye = null,
     ): Vente {
         if ($vendeur->est_verrouille) {
             throw new CompteVerrouilleException();
@@ -93,7 +94,7 @@ class VenteService
         $quantites = $this->regrouperQuantites($lignes);
 
         try {
-            return DB::transaction(function () use ($vendeur, $quantites, $modePaiement, $clientId, $uuidClient, $position, $clientNom, $clientTel) {
+            return DB::transaction(function () use ($vendeur, $quantites, $modePaiement, $clientId, $uuidClient, $position, $clientNom, $clientTel, $montantPaye) {
                 // Verrouille les lignes produits jusqu'à la fin de la transaction :
                 // deux vendeurs ne peuvent pas vendre le même dernier article.
                 $produits = Produit::whereIn('id', array_keys($quantites))
@@ -161,7 +162,22 @@ class VenteService
                     $total += $sousTotal;
                 }
 
-                $champsVente = ['montant_total' => $total];
+                // Montant payé par le client et statut final (payé / reste à payer).
+                if ($modePaiement === ModePaiement::OrangeMoney || $modePaiement === ModePaiement::Carte) {
+                    // Confirmé plus tard par l'administrateur.
+                    $paye = 0;
+                    $statutFinal = StatutVente::EnAttentePaiement;
+                } elseif ($modePaiement === ModePaiement::Credit) {
+                    // Vente à crédit : par défaut rien payé (tout reste à payer).
+                    $paye = $montantPaye !== null ? max(0, min($montantPaye, $total)) : 0;
+                    $statutFinal = $paye >= $total ? StatutVente::Payee : StatutVente::ACredit;
+                } else {
+                    // Espèces : le vendeur indique ce que le client a payé (défaut = tout).
+                    $paye = $montantPaye !== null ? max(0, min($montantPaye, $total)) : $total;
+                    $statutFinal = $paye >= $total ? StatutVente::Payee : StatutVente::ACredit;
+                }
+
+                $champsVente = ['montant_total' => $total, 'montant_paye' => $paye, 'statut' => $statutFinal];
 
                 // Localisation de la vente (visible, communiquée au vendeur) si fournie.
                 if ($position && isset($position['latitude'], $position['longitude'])) {
