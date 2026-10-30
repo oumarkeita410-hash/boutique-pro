@@ -36,7 +36,7 @@ class ReparateurOperationController extends Controller
     {
         $donnees = $request->validate([
             'produit_id' => ['required', 'integer', 'exists:produits,id'],
-            'quantite' => ['required', 'integer', 'min:1', 'max:10000000'],
+            'quantite' => ['required', 'integer', 'min:1'],
             'montant_paye' => ['required', 'integer', 'min:0'],
         ]);
 

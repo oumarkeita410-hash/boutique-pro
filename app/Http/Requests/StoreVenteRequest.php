@@ -16,10 +16,11 @@ class StoreVenteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Autant de lignes (produits différents) que nécessaire, quantités sans limite pratique.
-            'lignes' => ['required', 'array', 'min:1', 'max:2000'],
+            // Aucune limite : autant de lignes (produits différents) que nécessaire,
+            // et une quantité aussi grande que voulue (au moins 1).
+            'lignes' => ['required', 'array', 'min:1'],
             'lignes.*.produit_id' => ['required', 'integer', 'exists:produits,id'],
-            'lignes.*.quantite' => ['required', 'integer', 'min:1', 'max:10000000'],
+            'lignes.*.quantite' => ['required', 'integer', 'min:1'],
             'mode_paiement' => ['required', Rule::enum(ModePaiement::class)],
             'client_id' => ['required_if:mode_paiement,credit', 'nullable', 'integer', 'exists:clients,id'],
             'client_nom' => ['nullable', 'string', 'max:150'],

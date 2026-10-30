@@ -49,10 +49,10 @@ class DevisController extends Controller
             'client_nom' => ['nullable', 'string', 'max:150'],
             'note' => ['nullable', 'string', 'max:500'],
             'valide_jusqu' => ['nullable', 'date'],
-            'lignes' => ['required', 'array', 'min:1', 'max:2000'],
+            'lignes' => ['required', 'array', 'min:1'],
             'lignes.*.produit_id' => ['nullable', 'integer', 'exists:produits,id'],
             'lignes.*.designation' => ['required', 'string', 'max:200'],
-            'lignes.*.quantite' => ['required', 'integer', 'min:1', 'max:10000000'],
+            'lignes.*.quantite' => ['required', 'integer', 'min:1'],
             'lignes.*.prix_unitaire' => ['required', 'integer', 'min:0'],
         ]);
 

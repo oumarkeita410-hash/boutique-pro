@@ -177,7 +177,7 @@ class ReparateurController extends Controller
             'marque' => ['nullable', 'string', 'max:100'],
             'categorie' => ['nullable', 'string', 'max:100'],
             'prix' => ['required', 'integer', 'min:0'],
-            'quantite' => ['required', 'integer', 'min:1', 'max:10000000'],
+            'quantite' => ['required', 'integer', 'min:1'],
             'montant_paye' => ['required', 'integer', 'min:0'],
         ]);
     }
