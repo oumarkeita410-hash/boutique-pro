@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CaisseController;
 use App\Http\Controllers\Admin\CreditClientController;
 use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\LocalisationController;
@@ -99,6 +100,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Journal des activités (trace de qui a fait quoi).
         Route::get('journal', [JournalController::class, 'index']);
+
+        // Gestion de caisse (espèces).
+        Route::get('caisse', [CaisseController::class, 'jour']);
+        Route::post('caisse/mouvement', [CaisseController::class, 'ajouter']);
 
         Route::apiResource('utilisateurs', UtilisateurController::class)->except('destroy');
         Route::post('utilisateurs/{utilisateur}/verrouiller', [UtilisateurController::class, 'verrouiller']);

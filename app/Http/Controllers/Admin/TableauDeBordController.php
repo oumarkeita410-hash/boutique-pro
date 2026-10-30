@@ -6,7 +6,9 @@ use App\Enums\StatutVente;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\LigneVente;
+use App\Enums\ModePaiement;
 use App\Models\Message;
+use App\Models\MouvementCaisse;
 use App\Models\PriseReparateur;
 use App\Models\Produit;
 use App\Models\Reparateur;
@@ -37,6 +39,21 @@ class TableauDeBordController extends Controller
             ],
             'ventes_aujourdhui' => $payees()->where('created_at', '>=', $aujourdhui)->count(),
             'paiements_en_attente' => Vente::where('statut', StatutVente::EnAttentePaiement)->count(),
+
+            // Caisse du jour (espèces) : encaissé + apports − dépenses − retraits = solde.
+            'caisse' => (function () use ($aujourdhui) {
+                $especes = (int) Vente::where('mode_paiement', ModePaiement::Especes)
+                    ->where('statut', StatutVente::Payee)->where('created_at', '>=', $aujourdhui)->sum('montant_total');
+                $mouv = MouvementCaisse::where('created_at', '>=', $aujourdhui)->get();
+                $apports = (int) $mouv->where('type', 'apport')->sum('montant');
+                $depenses = (int) $mouv->where('type', 'depense')->sum('montant');
+                $retraits = (int) $mouv->where('type', 'retrait')->sum('montant');
+                return [
+                    'especes_ventes' => $especes,
+                    'depenses' => $depenses,
+                    'solde' => $especes + $apports - $depenses - $retraits,
+                ];
+            })(),
 
             'marge_mois' => (int) LigneVente::join('ventes', 'ventes.id', '=', 'lignes_vente.vente_id')
                 ->where('ventes.statut', StatutVente::Payee)

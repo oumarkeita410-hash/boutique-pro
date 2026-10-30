@@ -92,6 +92,7 @@ body {
 .logo h1 span { color: var(--primary); }
 .logo p { margin: 4px 0 0; color: var(--text-muted); font-size: .9rem; }
 
+.roles-titre { text-align: center; font-size: .85rem; color: var(--text-muted); margin: 0 0 8px; }
 .roles { display: flex; gap: 8px; margin-bottom: 18px; }
 .role-chip {
   flex: 1; text-align: center; padding: 10px 6px; border-radius: 10px;

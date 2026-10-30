@@ -66,6 +66,7 @@ function ecranConnexion() {
     <div class="login-wrap">
       <div class="logo"><div class="mark">MB</div><h1>MOK<span>-Business</span></h1>
         <p>Boutique électronique — Guinée Conakry</p></div>
+      <p class="roles-titre">Choisissez votre type de compte</p>
       <div class="roles">${ROLES.map((r, i) => `<div class="role-chip ${i === 1 ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${r.emoji}</span>${r.nom}</div>`).join('')}</div>
       <form id="form-login" novalidate>
         <div class="field"><label for="identifiant">Identifiant, téléphone ou email</label>
@@ -442,6 +443,7 @@ function menuAdmin() {
     ['produits', '📦', 'Produits', adminProduits],
     ['reparateurs', '🔧', 'Réparateurs', adminReparateurs],
     ['ventes', '📒', 'Ventes', adminVentes],
+    ['caisse', '💶', 'Caisse', adminCaisse],
     ['devis', '📄', 'Devis', adminDevis],
     ['clients', '👤', 'Clients', adminClients],
     ['credits', '💳', 'Crédits clients', adminCreditsClients],
@@ -587,6 +589,8 @@ async function adminTableau() {
           ${glance('🧾', gnf(ca.aujourdhui), "CA aujourd'hui")}
           ${glance('🛒', d.ventes_aujourdhui ?? 0, "Ventes aujourd'hui", 'ventes')}
           ${glance('📈', gnf(d.marge_mois), "Marge du mois")}
+          ${glance('💶', gnf(d.caisse?.solde), "Solde en caisse", 'caisse')}
+          ${glance('➖', gnf(d.caisse?.depenses), "Dépenses du jour", 'caisse', d.caisse?.depenses > 0)}
           ${glance('📦', d.stock?.en_rupture ?? 0, "En rupture", 'produits', d.stock?.en_rupture)}
           ${glance('📉', d.stock?.stock_bas ?? 0, "Stock bas", 'produits')}
           ${glance('🔧', d.reparateurs?.en_alerte ?? 0, "Réparateurs en alerte", 'reparateurs', d.reparateurs?.en_alerte)}
@@ -608,7 +612,7 @@ async function adminTableau() {
           </div>`).join('') : '<p class="muted">Aucun vendeur. Créez-en dans « Comptes ».</p>'}
       </div>`;
 
-    const aller = { ventes: adminVentes, produits: adminProduits, reparateurs: adminReparateurs, confirm: adminPaiementsConfirmer, messages: adminMessages, comptes: adminComptes };
+    const aller = { ventes: adminVentes, produits: adminProduits, reparateurs: adminReparateurs, confirm: adminPaiementsConfirmer, messages: adminMessages, comptes: adminComptes, caisse: adminCaisse };
     $('#tb').querySelectorAll('[data-go]').forEach(b => b.onclick = () => aller[b.dataset.go]());
     $('#tb').querySelectorAll('[data-uid]').forEach(b => b.onclick = () => adminDetailCompte(+b.dataset.uid));
   } catch (ex) { $('#tb').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
@@ -1264,6 +1268,46 @@ async function adminVentes() {
     } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
   };
   $('#periode').onchange = rendre; $('#statut').onchange = rendre; rendre();
+}
+
+/* ---- Admin : gestion de caisse ---- */
+const TYPE_CAISSE = { apport: 'Apport', depense: 'Dépense', retrait: 'Retrait' };
+async function adminCaisse() {
+  adminShell('caisse', 'Caisse du jour', `<div id="c"><div class="spinner"></div></div>`);
+  const glc = (emoji, val, lbl, alerte) => `<div class="glance ${alerte ? 'alerte' : ''}"><span class="g-emoji">${emoji}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+  const rendre = async () => {
+    try {
+      const d = await api('GET', '/admin/caisse');
+      $('#c').innerHTML = `
+        <div class="card"><h3>Solde en caisse : ${gnf(d.solde)}</h3>
+          <div class="glance-grid">
+            ${glc('🛒', gnf(d.ventes_especes), 'Ventes espèces')}
+            ${glc('➕', gnf(d.apports), 'Apports')}
+            ${glc('➖', gnf(d.depenses), 'Dépenses', d.depenses > 0)}
+            ${glc('🏦', gnf(d.retraits), 'Retraits')}
+          </div></div>
+        <div class="card"><h3>Ajouter un mouvement</h3>
+          <div class="field"><label>Type</label><select id="m-type">
+            <option value="depense">Dépense (sortie d'argent)</option>
+            <option value="apport">Apport (argent ajouté en caisse)</option>
+            <option value="retrait">Retrait / dépôt banque (sortie)</option></select></div>
+          ${champ('m-montant', 'Montant (GNF)', '', 'number')}
+          ${champ('m-desc', 'Description (ex. achat scotch, dépôt banque)')}
+          <div class="error-msg" id="m-err"></div>
+          <button class="btn" id="m-add">Enregistrer le mouvement</button></div>
+        <div class="card"><h3>Mouvements d'aujourd'hui</h3>${d.mouvements.length ? d.mouvements.map(m => `
+          <div class="list-item"><div class="main"><div class="name">${TYPE_CAISSE[m.type] || m.type} · ${gnf(m.montant)}</div>
+            <div class="sub">${esc(m.description || '')}${m.par ? ' · ' + esc(m.par) : ''} · ${esc(m.date)}</div></div></div>`).join('') : '<p class="muted">Aucun mouvement manuel aujourd\'hui.</p>'}</div>`;
+      $('#m-add').onclick = async () => {
+        const err = $('#m-err'); err.textContent = '';
+        const montant = parseInt($('#m-montant').value, 10);
+        if (!montant || montant < 1) { err.textContent = 'Montant invalide.'; return; }
+        try { await api('POST', '/admin/caisse/mouvement', { type: $('#m-type').value, montant, description: $('#m-desc').value.trim() || null }); toast('Mouvement enregistré.'); rendre(); }
+        catch (ex) { err.textContent = ex.premierDetail(); }
+      };
+    } catch (ex) { $('#c').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+  };
+  rendre();
 }
 
 /* ---- Admin : clients + historique d'achats ---- */
