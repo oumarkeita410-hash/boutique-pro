@@ -290,3 +290,13 @@ body.admin-mode #app { max-width: none; }
 .stat-chip { flex: 1 1 44%; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; font-size: .78rem; color: var(--text-muted); }
 .stat-chip b { display: block; font-size: 1.15rem; color: var(--text); margin-bottom: 1px; }
 .stat-chip.alerte b { color: var(--danger); }
+
+/* ===== Icônes SVG professionnelles (remplacent les emojis) ===== */
+svg.ic { display: inline-block; vertical-align: -0.18em; stroke: currentColor; }
+.icon-btn svg.ic { vertical-align: middle; }
+.btn svg.ic, .menu-btn svg.ic { margin-right: 2px; }
+.role-chip .emoji, .tabbar button .emoji, .wp-item .emoji, .glance .g-emoji { line-height: 0; }
+.role-chip .emoji svg.ic { width: 24px; height: 24px; display: block; margin: 0 auto 2px; vertical-align: middle; }
+.tabbar button .emoji svg.ic { width: 22px; height: 22px; display: block; margin: 0 auto; vertical-align: middle; }
+.wp-item .emoji svg.ic { width: 20px; height: 20px; vertical-align: middle; }
+.glance .g-emoji svg.ic { width: 26px; height: 26px; vertical-align: middle; }

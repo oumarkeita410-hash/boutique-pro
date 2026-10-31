@@ -44,6 +44,62 @@ function position() {
   });
 }
 
+/* ---------- Icônes (SVG professionnelles, pas d'emoji) ----------
+   Trait fin, couleur = couleur du texte (s'adapte au thème). ic('nom'). */
+const ICONES = {
+  back: '<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>',
+  forward: '<path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>',
+  close: '<path d="M18 6 6 18"/><path d="M6 6l12 12"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  checkCircle: '<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',
+  plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
+  minus: '<path d="M5 12h14"/>',
+  trash: '<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',
+  theme: '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+  menu: '<path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/>',
+  message: '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.8-.8L3 21l1.9-5.2A8.4 8.4 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5Z"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/>',
+  receipt: '<path d="M5 3v18l2-1 2 1 2-1 2 1 2-1 2 1V3l-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8"/><path d="M8 12h8"/>',
+  coins: '<circle cx="9" cy="9" r="6"/><path d="M14.7 5.3a6 6 0 1 1 0 13.4"/>',
+  banknote: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4"/><path d="M18 10v4"/>',
+  wallet: '<path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9H6"/><path d="M16 13h.01"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  bell: '<path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>',
+  cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L23 7H6"/>',
+  headset: '<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="4" height="7" rx="2"/><rect x="18" y="14" width="4" height="7" rx="2"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+  box: '<path d="M21 8 12 3 3 8v8l9 5 9-5Z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>',
+  wrench: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6a2 2 0 1 0 3 3l6-6a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2 2.5-2.5Z"/>',
+  list: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h4"/>',
+  journal: '<path d="M4 4a2 2 0 0 1 2-2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 8h5"/><path d="M8 12h8"/><path d="M8 16h8"/>',
+  dashboard: '<rect x="3" y="3" width="8" height="9" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="11" width="8" height="10" rx="1"/><rect x="3" y="15" width="8" height="6" rx="1"/>',
+  trendUp: '<path d="M3 17l6-6 4 4 7-7"/><path d="M17 7h4v4"/>',
+  trendDown: '<path d="M3 7l6 6 4-4 7 7"/><path d="M17 17h4v-4"/>',
+  edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  unlock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9"/><path d="M17 5l3 3"/><path d="M15 7l2 2"/>',
+  download: '<path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 21h14"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  tag: '<path d="M20 13l-7 7-9-9V4h7Z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+  bank: '<path d="M12 3l9 5H3Z"/><path d="M5 10v8"/><path d="M9 10v8"/><path d="M15 10v8"/><path d="M19 10v8"/><path d="M3 21h18"/>',
+  printer: '<path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/>',
+  alert: '<path d="M12 3 2 20h20Z"/><path d="M12 9v5"/><path d="M12 17h.01"/>',
+  in: '<circle cx="12" cy="12" r="9"/><path d="M12 8v7"/><path d="M8.5 11.5 12 15l3.5-3.5"/>',
+  out: '<circle cx="12" cy="12" r="9"/><path d="M12 16V9"/><path d="M8.5 12.5 12 9l3.5 3.5"/>',
+  undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 5 5v5"/>',
+  dot: '<circle cx="12" cy="12" r="6"/>',
+};
+function ic(nom, taille = 18) {
+  const p = ICONES[nom];
+  if (!p) return '';
+  return `<svg class="ic" viewBox="0 0 24 24" width="${taille}" height="${taille}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+}
+
 /* ---------- Appels API ---------- */
 async function api(methode, chemin, corps) {
   const headers = { 'Accept': 'application/json' };
@@ -62,9 +118,9 @@ class ApiError extends Error {
 
 /* ================================================================  CONNEXION  */
 const ROLES = [
-  { v: 'admin', nom: 'Administrateur', emoji: '🛡️' },
-  { v: 'vendeur', nom: 'Vendeur', emoji: '🛒' },
-  { v: 'conseiller', nom: 'Conseiller', emoji: '🎧' },
+  { v: 'admin', nom: 'Administrateur', icone: 'shield' },
+  { v: 'vendeur', nom: 'Vendeur', icone: 'cart' },
+  { v: 'conseiller', nom: 'Conseiller', icone: 'headset' },
 ];
 function ecranConnexion() {
   // Type pré-sélectionné = le dernier utilisé sur cet appareil (sinon « vendeur »).
@@ -74,7 +130,7 @@ function ecranConnexion() {
       <div class="logo"><div class="mark">MB</div><h1>MOK<span>-Business</span></h1>
         <p>Boutique électronique — Guinée Conakry</p></div>
       <p class="roles-titre">Choisissez votre type de compte</p>
-      <div class="roles">${ROLES.map(r => `<div class="role-chip ${r.v === roleDefaut ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${r.emoji}</span>${r.nom}</div>`).join('')}</div>
+      <div class="roles">${ROLES.map(r => `<div class="role-chip ${r.v === roleDefaut ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${ic(r.icone)}</span>${r.nom}</div>`).join('')}</div>
       <div id="comptes-liste"></div>
       <form id="form-login" novalidate>
         <div class="field"><label for="identifiant">Identifiant, téléphone ou email</label>
@@ -84,7 +140,7 @@ function ecranConnexion() {
         <div class="error-msg" id="login-error"></div>
         <button class="btn" type="submit" id="login-btn">Se connecter</button>
       </form>
-      <div class="btn-row mt"><button class="btn secondary" id="theme-btn" type="button">🌓 Thème clair / sombre</button></div>
+      <div class="btn-row mt"><button class="btn secondary" id="theme-btn" type="button">${ic('theme')} Thème clair / sombre</button></div>
       <p class="notice">L'accès à chaque compte nécessite un identifiant et un mot de passe fournis par l'administrateur.<br>
         Votre position et votre appareil sont enregistrés par MOK-Business pendant l'utilisation.</p>
     </div>`;
@@ -143,13 +199,13 @@ function cadre(titre, contenuHTML, onglets, actifIdx, opts = {}) {
   app.innerHTML = `
     <div id="barre"></div>
     <div class="topbar">
-      ${opts.retour ? `<button class="icon-btn" id="btn-retour" title="Retour">←</button>` : `<div class="brand">MOK<span>·</span>B</div>`}
+      ${opts.retour ? `<button class="icon-btn" id="btn-retour" title="Retour">${ic('back')}</button>` : `<div class="brand">MOK<span>·</span>B</div>`}
       <div class="spacer"></div>
-      <button class="icon-btn" id="btn-theme" title="Thème clair/sombre">🌓</button>
-      <button class="icon-btn" id="btn-logout" title="Se déconnecter">⎋</button>
+      <button class="icon-btn" id="btn-theme" title="Thème clair/sombre">${ic('theme')}</button>
+      <button class="icon-btn" id="btn-logout" title="Se déconnecter">${ic('logout')}</button>
     </div>
     <div class="content"><h2 class="screen-title">${esc(titre)}</h2><div id="vue">${contenuHTML}</div></div>
-    ${onglets ? `<nav class="tabbar">${onglets.map((o, i) => `<button data-idx="${i}" class="${i === actifIdx ? 'active' : ''}"><span class="emoji">${o.emoji}</span>${o.nom}</button>`).join('')}</nav>` : ''}`;
+    ${onglets ? `<nav class="tabbar">${onglets.map((o, i) => `<button data-idx="${i}" class="${i === actifIdx ? 'active' : ''}"><span class="emoji">${ic(o.icone)}</span>${o.nom}</button>`).join('')}</nav>` : ''}`;
   $('#btn-theme').addEventListener('click', basculerTheme);
   $('#btn-logout').addEventListener('click', deconnexion);
   if (opts.retour) $('#btn-retour').addEventListener('click', opts.retour);
@@ -185,12 +241,12 @@ function routerAccueil() {
 
 /* ================================================================  VENDEUR  */
 const ongletsVendeur = () => [
-  { nom: 'Vendre', emoji: '🛒', aller: vendeurCatalogue },
-  { nom: 'Panier', emoji: '🧺', aller: vendeurPanier },
-  { nom: 'Messages', emoji: '💬', aller: vendeurMessages },
-  { nom: 'Mon jour', emoji: '🕗', aller: vendeurHoraire },
-  { nom: 'Devis', emoji: '📄', aller: vendeurDevis },
-  { nom: 'Ventes', emoji: '💰', aller: vendeurMesVentes },
+  { nom: 'Vendre', icone: 'cart', aller: vendeurCatalogue },
+  { nom: 'Panier', icone: 'cart', aller: vendeurPanier },
+  { nom: 'Messages', icone: 'message', aller: vendeurMessages },
+  { nom: 'Mon jour', icone: 'clock', aller: vendeurHoraire },
+  { nom: 'Devis', icone: 'file', aller: vendeurDevis },
+  { nom: 'Ventes', icone: 'coins', aller: vendeurMesVentes },
 ];
 async function vendeurMesVentes() {
   cadre('Mes ventes', `<div id="mv"><div class="spinner"></div></div>`, ongletsVendeur(), 5);
@@ -206,8 +262,8 @@ async function vendeurMesVentes() {
         <div class="card"><h3>Mes ventes</h3>${items.length ? items.map(v => `
           <div class="vente-bloc" style="padding:10px 0;border-bottom:1px solid var(--border)">
             <div class="row-between"><div><b>${esc(v.reference)}</b> — ${gnf(v.montant_total)}
-              <div class="muted" style="font-size:.82rem">${esc(v.date)}${v.client ? ' · ' + esc(v.client) : ''} · payé ${gnf(v.montant_paye)}${v.reste > 0 ? ' · <b style="color:var(--danger)">reste ' + gnf(v.reste) + '</b>' : ' ✅'}</div></div>
-              ${v.reste > 0 ? `<button class="btn" style="width:auto;padding:6px 10px" data-enc="${v.id}" data-reste="${v.reste}">💵 Encaisser</button>` : ''}
+              <div class="muted" style="font-size:.82rem">${esc(v.date)}${v.client ? ' · ' + esc(v.client) : ''} · payé ${gnf(v.montant_paye)}${v.reste > 0 ? ' · <b style="color:var(--danger)">reste ' + gnf(v.reste) + '</b>' : ' ' + ic('check', 14)}</div></div>
+              ${v.reste > 0 ? `<button class="btn" style="width:auto;padding:6px 10px" data-enc="${v.id}" data-reste="${v.reste}">${ic('banknote')} Encaisser</button>` : ''}
             </div>
             ${(v.paiements || []).length ? `<div class="muted" style="font-size:.78rem;margin-top:4px">Versements : ${v.paiements.map(p => gnf(p.montant) + ' (' + (p.date || '').slice(0, 10) + ')').join(' · ')}</div>` : ''}
           </div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
@@ -219,7 +275,7 @@ async function vendeurMesVentes() {
         if (!montant || montant < 1) { toast('Montant invalide.'); return; }
         try {
           const r = await api('POST', '/mes-ventes/' + b.dataset.enc + '/encaisser', { montant });
-          toast(r.reste > 0 ? 'Paiement noté. Reste ' + gnf(r.reste) : 'Payé entièrement ✅');
+          toast(r.reste > 0 ? 'Paiement noté. Reste ' + gnf(r.reste) : 'Payé entièrement');
           rendre();
         } catch (ex) { toast(ex.premierDetail ? ex.premierDetail() : ex.message); }
       });
@@ -228,7 +284,7 @@ async function vendeurMesVentes() {
   rendre();
 }
 async function vendeurDevis() {
-  cadre('Devis', `<button class="btn block" id="nouveau">➕ Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`, ongletsVendeur(), 4);
+  cadre('Devis', `<button class="btn block" id="nouveau">${ic('plus')} Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`, ongletsVendeur(), 4);
   $('#nouveau').onclick = () => formDevis(vendeurDevis);
   try {
     const d = await api('GET', '/devis');
@@ -266,7 +322,7 @@ async function vendeurCatalogue() {
       $('#liste').innerHTML = items.length ? `<div class="card">${items.map(p => `
         <div class="list-item tap" data-id="${p.id}" data-nom="${esc(p.nom)}" data-prix="${p.prix_unitaire || 0}" role="button" tabindex="0">
           <div class="main"><div class="name">${esc(p.nom)}</div>
-            <div class="sub">${esc(p.modele || p.categorie || '')} · <b>${gnf(p.prix_unitaire)}</b> · stock ${p.stock}${p.stock <= 0 ? ' ⚠️' : ''}</div></div>
+            <div class="sub">${esc(p.modele || p.categorie || '')} · <b>${gnf(p.prix_unitaire)}</b> · stock ${p.stock}${p.stock <= 0 ? ' ' + ic('alert', 14) : ''}</div></div>
           <span class="badge cat">+ Ajouter</span>
         </div>`).join('')}</div>` : `<p class="muted center mt">Aucun article trouvé.</p>`;
       $('#liste').querySelectorAll('.tap').forEach(el => el.addEventListener('click', () => {
@@ -281,7 +337,7 @@ async function vendeurCatalogue() {
 function majBadgePanier() {
   const b = $('.tabbar button[data-idx="1"]'); if (!b) return;
   const n = nbPanier();
-  b.innerHTML = `<span class="emoji">🧺</span>Panier${n ? ' (' + n + ')' : ''}`;
+  b.innerHTML = `<span class="emoji">${ic('cart')}</span>Panier${n ? ' (' + n + ')' : ''}`;
 }
 
 function vendeurPanier() {
@@ -294,15 +350,15 @@ function vendeurPanier() {
           <div class="main"><div class="name">${esc(l.nom)}</div>
             <div class="sub" data-sub="${i}">${gnf(l.prix)} × ${l.quantite} = <b>${gnf((l.prix || 0) * l.quantite)}</b></div></div>
           <div class="btn-row" style="width:auto">
-            <button class="icon-btn" data-moins="${i}">−</button>
+            <button class="icon-btn" data-moins="${i}">${ic('minus')}</button>
             <input class="qte-input" data-i="${i}" type="number" inputmode="numeric" min="1" value="${l.quantite}">
-            <button class="icon-btn" data-plus="${i}">+</button>
-            <button class="icon-btn" data-sup="${i}" style="color:var(--danger)">🗑</button>
+            <button class="icon-btn" data-plus="${i}">${ic('plus')}</button>
+            <button class="icon-btn" data-sup="${i}" style="color:var(--danger)">${ic('trash')}</button>
           </div>
         </div>`).join('')}
         <div class="info-row" style="padding-top:12px"><span class="lbl">Total à encaisser</span><span class="val" id="pan-total">${gnf(totalPanier())}</span></div></div>
       <div class="card"><h3>Client (facultatif — pour la facture)</h3>
-        ${venteClient ? `<div class="list-item"><div class="main"><div class="name">${esc(venteClient.nom)}</div><div class="sub">${esc(venteClient.tel || '')} · client enregistré</div></div><button class="icon-btn" id="vcl-clear" style="color:var(--danger)">✕</button></div>`
+        ${venteClient ? `<div class="list-item"><div class="main"><div class="name">${esc(venteClient.nom)}</div><div class="sub">${esc(venteClient.tel || '')} · client enregistré</div></div><button class="icon-btn" id="vcl-clear" style="color:var(--danger)">${ic('close')}</button></div>`
           : `<div class="field"><label>Nom complet du client</label><input id="vcl-nom" value="${esc(venteClientNom)}" placeholder="Prénom et nom"></div>
              <div class="field"><label>Numéro de téléphone</label><input id="vcl-tel" value="${esc(venteClientTel)}" inputmode="tel" placeholder="+224…"></div>
              <div class="field"><label>…ou choisir un client déjà enregistré</label><input id="vcl-search" placeholder="Rechercher par nom ou téléphone"></div>
@@ -340,7 +396,7 @@ function vendeurPanier() {
       if ($('#mode').value !== 'especes') { $('#paye-wrap').style.display = 'none'; info.textContent = ''; return; }
       $('#paye-wrap').style.display = '';
       const total = totalPanier(), paye = parseInt($('#montant-paye').value, 10);
-      if (isNaN(paye) || paye >= total) info.innerHTML = '✅ Payé entièrement';
+      if (isNaN(paye) || paye >= total) info.innerHTML = ic('check') + ' Payé entièrement';
       else info.innerHTML = 'Reste à payer : <b style="color:var(--danger)">' + gnf(total - Math.max(0, paye)) + '</b>';
     };
     $('#mode').onchange = majReste;
@@ -409,13 +465,13 @@ async function validerVente() {
 function venteConfirmee(v) {
   cadre('Vente enregistrée', `
     <div class="card center">
-      <div style="font-size:2rem">✅</div>
+      <div style="color:var(--success)">${ic('checkCircle', 44)}</div>
       <h3 style="margin:.3rem 0">${esc(v.reference)}</h3>
       <div class="value" style="font-size:1.6rem">${gnf(v.montant_a_encaisser)}</div>
       <div class="info-row"><span class="lbl">Payé par le client</span><span class="val" style="color:var(--success)">${gnf(v.montant_paye)}</span></div>
-      ${v.reste > 0 ? `<div class="info-row"><span class="lbl">Reste à payer</span><span class="val" style="color:var(--danger)">${gnf(v.reste)}</span></div>` : '<p class="muted">Payé entièrement ✅</p>'}
-      <button class="btn block" id="vf-fact">🧾 Voir / imprimer le reçu</button>
-      <button class="btn secondary block" id="vf-wa">💬 Envoyer le reçu au client</button>
+      ${v.reste > 0 ? `<div class="info-row"><span class="lbl">Reste à payer</span><span class="val" style="color:var(--danger)">${gnf(v.reste)}</span></div>` : '<p class="muted">Payé entièrement</p>'}
+      <button class="btn block" id="vf-fact">${ic('receipt')} Voir / imprimer le reçu</button>
+      <button class="btn secondary block" id="vf-wa">${ic('message')} Envoyer le reçu au client</button>
       <button class="btn secondary block" id="vf-new">Nouvelle vente</button>
       <p class="muted" style="font-size:.78rem;margin-top:6px">Cette vente est déjà enregistrée : l'administrateur la voit dans « Toutes les ventes ».</p>
     </div>`, ongletsVendeur(), 0);
@@ -457,7 +513,7 @@ async function vendeurPaiement(v) {
         <div class="field"><label>Référence de la transaction (donnée par le client)</label><input id="ref" placeholder="ex. PP24..."></div>
         <div class="error-msg" id="ref-err"></div>
         <button class="btn" id="ref-btn">Enregistrer la référence</button>
-        <button class="btn secondary block" id="fact">🧾 Facture</button>
+        <button class="btn secondary block" id="fact">${ic('receipt')} Facture</button>
         <button class="btn secondary block" id="skip">Plus tard</button>
         <p class="notice">Le paiement sera confirmé par l'administrateur après vérification sur le compte.</p>
       </div>`;
@@ -508,7 +564,7 @@ async function vendeurMessages() {
   cadre('Messages', `<div id="fil"><div class="spinner"></div></div>
     <div class="card"><div class="field"><textarea id="msg" rows="3" placeholder="Écrire à l'administrateur (ex. un problème)…"></textarea></div>
       <div class="error-msg" id="m-err"></div><button class="btn" id="envoyer">Envoyer</button>
-      <button class="btn secondary block" id="wa">💬 Contacter la boutique sur WhatsApp</button></div>`, ongletsVendeur(), 2);
+      <button class="btn secondary block" id="wa">${ic('message')} Contacter la boutique sur WhatsApp</button></div>`, ongletsVendeur(), 2);
   $('#wa').onclick = () => whatsAppBoutique('Bonjour, ');
   const charger = async () => {
     try {
@@ -534,7 +590,7 @@ async function vendeurHoraire() {
     const d = await api('GET', '/mon-horaire'); const m = d.maintenant || {};
     const jours = ['', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     $('#h').innerHTML = `
-      <div class="card center"><div style="font-size:2rem">${m.statut === 'en_service' ? '🟢' : m.statut === 'avant_service' ? '🟡' : '⚪'}</div>
+      <div class="card center"><div style="font-size:2rem">${m.statut === 'en_service' ? '<span style="color:var(--success)">'+ic('dot',30)+'</span>' : m.statut === 'avant_service' ? '<span style="color:#d97706">'+ic('dot',30)+'</span>' : '<span style="color:#9ca3af">'+ic('dot',30)+'</span>'}</div>
         <h3 style="margin:.3rem 0">${esc(m.message || '')}</h3><p class="muted">Fuseau : ${esc(d.fuseau_horaire || '')}</p></div>
       <div class="card"><h3>Ma semaine</h3>${(d.jours && d.jours.length) ? d.jours.map(j => `<div class="list-item"><div class="main"><div class="name">${jours[j.jour_semaine] || j.jour_semaine}</div></div><span class="badge">${(j.heure_debut || '').slice(0, 5)} – ${(j.heure_fin || '').slice(0, 5)}</span></div>`).join('') : '<p class="muted">Aucun horaire défini.</p>'}</div>`;
   } catch (ex) { $('#h').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
@@ -546,22 +602,22 @@ async function vendeurHoraire() {
 
 function menuAdmin() {
   return [
-    ['tableau', '📊', 'Tableau de bord', adminTableau],
-    ['comptes', '👥', 'Comptes vendeurs', adminComptes],
-    ['produits', '📦', 'Produits', adminProduits],
-    ['reparateurs', '🔧', 'Réparateurs', adminReparateurs],
-    ['ventes', '📒', 'Ventes', adminVentes],
-    ['rapport', '🧾', 'Rapport du jour', adminRapportJour],
-    ['caisse', '💶', 'Caisse', adminCaisse],
-    ['devis', '📄', 'Devis', adminDevis],
-    ['clients', '👤', 'Clients', adminClients],
-    ['restes', '💰', 'Restes à payer', adminRestes],
-    ['credits', '💳', 'Crédits clients', adminCreditsClients],
-    ['paie', '💵', 'Paie', adminPaie],
-    ['confirm', '✅', 'Paiements', adminPaiementsConfirmer],
-    ['messages', '💬', 'Messages', adminMessages],
-    ['alertes', '🔔', 'Alertes', adminAlertes],
-    ['journal', '📝', 'Journal', adminJournal],
+    ['tableau', 'dashboard', 'Tableau de bord', adminTableau],
+    ['comptes', 'users', 'Comptes vendeurs', adminComptes],
+    ['produits', 'box', 'Produits', adminProduits],
+    ['reparateurs', 'wrench', 'Réparateurs', adminReparateurs],
+    ['ventes', 'list', 'Ventes', adminVentes],
+    ['rapport', 'receipt', 'Rapport du jour', adminRapportJour],
+    ['caisse', 'wallet', 'Caisse', adminCaisse],
+    ['devis', 'file', 'Devis', adminDevis],
+    ['clients', 'user', 'Clients', adminClients],
+    ['restes', 'coins', 'Restes à payer', adminRestes],
+    ['credits', 'card', 'Crédits clients', adminCreditsClients],
+    ['paie', 'banknote', 'Paie', adminPaie],
+    ['confirm', 'checkCircle', 'Paiements', adminPaiementsConfirmer],
+    ['messages', 'message', 'Messages', adminMessages],
+    ['alertes', 'bell', 'Alertes', adminAlertes],
+    ['journal', 'journal', 'Journal', adminJournal],
   ];
 }
 
@@ -589,7 +645,7 @@ function formatDetails(d) {
   if (d.champs) p.push('champs : ' + (Array.isArray(d.champs) ? d.champs.join(', ') : d.champs));
   if (d.chemin) p.push('page ' + d.chemin);
   if (d.tentative) p.push('tentative n°' + d.tentative);
-  if (d.compte_bloque) p.push('→ compte bloqué');
+  if (d.compte_bloque) p.push('Compte bloqué');
   if (d.vente) p.push('vente ' + d.vente);
   return p.join(' · ');
 }
@@ -630,17 +686,17 @@ function adminShell(actif, titre, contenuHTML) {
     <div class="wp">
       <aside class="wp-side" id="wp-side">
         <div class="wp-brand">MOK<span>-Business</span></div>
-        <nav>${menu.map(m => `<button class="wp-item ${m[0] === actif ? 'on' : ''}" data-k="${m[0]}"><span class="emoji">${m[1]}</span>${m[2]}</button>`).join('')}</nav>
+        <nav>${menu.map(m => `<button class="wp-item ${m[0] === actif ? 'on' : ''}" data-k="${m[0]}"><span class="emoji">${ic(m[1])}</span>${m[2]}</button>`).join('')}</nav>
       </aside>
       <div class="wp-backdrop" id="wp-bd"></div>
       <div class="wp-body">
         <header class="wp-top">
-          <button class="icon-btn wp-burger" id="wp-burger" title="Menu">☰</button>
+          <button class="icon-btn wp-burger" id="wp-burger" title="Menu">${ic('menu')}</button>
           <div class="wp-ttl">${esc(titre)}</div>
           <div class="spacer"></div>
           <span class="wp-hello">Bonjour, ${esc(nom)}</span>
-          <button class="icon-btn" id="wp-theme" title="Thème">🌓</button>
-          <button class="icon-btn" id="wp-logout" title="Se déconnecter">⎋</button>
+          <button class="icon-btn" id="wp-theme" title="Thème">${ic('theme')}</button>
+          <button class="icon-btn" id="wp-logout" title="Se déconnecter">${ic('logout')}</button>
         </header>
         <main class="wp-main"><div id="vue">${contenuHTML}</div></main>
       </div>
@@ -674,7 +730,11 @@ async function adminPaiementsConfirmer() {
   } catch (ex) { $('#pc').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
 }
 
-const MVT_STOCK_LBL = { vente: '🔴 Vente', approvisionnement: '🟢 Entrée', annulation: '↩️ Retour' };
+const MVT_STOCK_LBL = {
+  vente: `<span style="color:var(--danger)">${ic('out', 15)}</span> Vente`,
+  approvisionnement: `<span style="color:var(--success)">${ic('in', 15)}</span> Entrée`,
+  annulation: `${ic('undo', 15)} Retour`,
+};
 async function adminTableau() {
   adminShell('tableau', 'Tableau de bord', `<div id="tb"><div class="spinner"></div></div>`);
   try {
@@ -688,28 +748,28 @@ async function adminTableau() {
     (d.top_vendeurs_mois || []).forEach(v => { ventesParVendeur[v.vendeur_id] = Number(v.montant); });
     const vendeurs = vd.data || [];
 
-    const glance = (emoji, val, lbl, go, alerte) =>
+    const glance = (icone, val, lbl, go, alerte) =>
       `<div class="glance ${go ? 'lien' : ''} ${alerte ? 'alerte' : ''}" ${go ? `data-go="${go}"` : ''}>
-        <span class="g-emoji">${emoji}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+        <span class="g-emoji">${ic(icone, 24)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
 
     $('#tb').innerHTML = `
       <div class="card">
         <h3>D'un coup d'œil</h3>
         <div class="glance-grid">
-          ${glance('💰', gnf(ca.mois), "CA du mois")}
-          ${glance('🧾', gnf(ca.aujourdhui), "CA aujourd'hui")}
-          ${glance('🛒', d.ventes_aujourdhui ?? 0, "Ventes aujourd'hui", 'ventes')}
-          ${glance('📈', gnf(d.marge_mois), "Marge du mois")}
-          ${glance('💶', gnf(d.caisse?.solde), "Solde en caisse", 'caisse')}
-          ${glance('➖', gnf(d.caisse?.depenses), "Dépenses du jour", 'caisse', d.caisse?.depenses > 0)}
-          ${glance('📦', d.stock?.en_rupture ?? 0, "En rupture", 'produits', d.stock?.en_rupture)}
-          ${glance('📉', d.stock?.stock_bas ?? 0, "Stock bas", 'produits')}
-          ${glance('🔧', d.reparateurs?.en_alerte ?? 0, "Réparateurs en alerte", 'reparateurs', d.reparateurs?.en_alerte)}
-          ${glance('💳', gnf(d.reparateurs?.dette_totale), "Dette réparateurs", 'reparateurs')}
-          ${glance('✅', d.paiements_en_attente ?? 0, "Paiements à confirmer", 'confirm', d.paiements_en_attente)}
-          ${glance('💬', d.messages_non_lus ?? 0, "Messages non lus", 'messages', d.messages_non_lus)}
-          ${glance('👤', d.clients?.total ?? 0, "Clients")}
-          ${glance('👥', (d.comptes?.verrouilles ?? 0), "Vendeurs verrouillés", 'comptes')}
+          ${glance('coins', gnf(ca.mois), "CA du mois")}
+          ${glance('receipt', gnf(ca.aujourdhui), "CA aujourd'hui")}
+          ${glance('cart', d.ventes_aujourdhui ?? 0, "Ventes aujourd'hui", 'ventes')}
+          ${glance('trendUp', gnf(d.marge_mois), "Marge du mois")}
+          ${glance('wallet', gnf(d.caisse?.solde), "Solde en caisse", 'caisse')}
+          ${glance('trendDown', gnf(d.caisse?.depenses), "Dépenses du jour", 'caisse', d.caisse?.depenses > 0)}
+          ${glance('box', d.stock?.en_rupture ?? 0, "En rupture", 'produits', d.stock?.en_rupture)}
+          ${glance('alert', d.stock?.stock_bas ?? 0, "Stock bas", 'produits')}
+          ${glance('wrench', d.reparateurs?.en_alerte ?? 0, "Réparateurs en alerte", 'reparateurs', d.reparateurs?.en_alerte)}
+          ${glance('card', gnf(d.reparateurs?.dette_totale), "Dette réparateurs", 'reparateurs')}
+          ${glance('checkCircle', d.paiements_en_attente ?? 0, "Paiements à confirmer", 'confirm', d.paiements_en_attente)}
+          ${glance('message', d.messages_non_lus ?? 0, "Messages non lus", 'messages', d.messages_non_lus)}
+          ${glance('user', d.clients?.total ?? 0, "Clients")}
+          ${glance('users', (d.comptes?.verrouilles ?? 0), "Vendeurs verrouillés", 'comptes')}
         </div>
       </div>
 
@@ -725,7 +785,7 @@ async function adminTableau() {
 
       <div class="card">
         <div class="row-between"><h3>Mouvements de stock</h3>
-          <span class="badge">🟢 ${d.mouvements_stock?.entrees_jour ?? 0} · 🔴 ${d.mouvements_stock?.sorties_jour ?? 0} aujourd'hui</span></div>
+          <span class="badge"><span style="color:var(--success)">${ic('in', 14)}</span> ${d.mouvements_stock?.entrees_jour ?? 0} · <span style="color:var(--danger)">${ic('out', 14)}</span> ${d.mouvements_stock?.sorties_jour ?? 0} aujourd'hui</span></div>
         ${(d.mouvements_stock?.recents || []).length ? d.mouvements_stock.recents.map(m => `
           <div class="list-item"><div class="main">
             <div class="name">${MVT_STOCK_LBL[m.type] || m.type} — ${esc(m.produit || '—')}</div>
@@ -777,7 +837,7 @@ function blocTop(titre, items, cls = 'c1') {
 /* ---- Comptes : liste + création + modification ---- */
 async function adminComptes() {
   adminShell('comptes', 'Comptes vendeurs', `
-    <button class="btn block" id="nouveau">➕ Nouveau compte</button>
+    <button class="btn block" id="nouveau">${ic('plus')} Nouveau compte</button>
     <div class="field mt"><input id="q" placeholder="Rechercher (nom, identifiant, téléphone)…"></div>
     <div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = () => adminFormCompte();
@@ -865,13 +925,13 @@ async function adminDetailCompte(id) {
         <div class="list-item"><div class="main"><div class="sub">Paie</div><div class="name">${u.frequence_paie ? esc(u.frequence_paie) + ' · ' + gnf(u.montant_paie) : '—'}</div></div></div>
         <div class="list-item"><div class="main"><div class="sub">État</div><div class="name" style="color:${u.est_verrouille ? 'var(--danger)' : 'var(--success)'}">${u.est_verrouille ? 'Verrouillé' : 'Actif'}${u.tentatives_intrusion ? ' · ' + u.tentatives_intrusion + ' tentative(s)' : ''}</div></div></div>
       </div>
-      <button class="btn block" id="b-modif">✏️ Modifier</button>
-      ${u.role === 'vendeur' ? `<button class="btn block secondary" id="b-horaires">🕗 Définir les horaires</button>` : ''}
-      ${u.telephone ? `<button class="btn block secondary" id="b-wa">💬 WhatsApp</button>` : ''}
+      <button class="btn block" id="b-modif">${ic('edit')} Modifier</button>
+      ${u.role === 'vendeur' ? `<button class="btn block secondary" id="b-horaires">${ic('clock')} Définir les horaires</button>` : ''}
+      ${u.telephone ? `<button class="btn block secondary" id="b-wa">${ic('message')} WhatsApp</button>` : ''}
       ${u.est_verrouille
-        ? `<button class="btn block" id="b-activer" style="background:var(--success);color:#fff">🔓 Réactiver le compte</button>`
-        : `<button class="btn block danger" id="b-verrou">🔒 Verrouiller le compte</button>`}
-      <button class="btn block secondary" id="b-mdp">🔑 Réinitialiser le mot de passe</button>`;
+        ? `<button class="btn block" id="b-activer" style="background:var(--success);color:#fff">${ic('unlock')} Réactiver le compte</button>`
+        : `<button class="btn block danger" id="b-verrou">${ic('lock')} Verrouiller le compte</button>`}
+      <button class="btn block secondary" id="b-mdp">${ic('key')} Réinitialiser le mot de passe</button>`;
     $('#b-modif').onclick = () => adminFormCompte(u);
     if (u.role === 'vendeur') $('#b-horaires').onclick = () => adminHoraires(u);
     if (u.telephone) $('#b-wa').onclick = () => ouvrirWhatsApp(u.telephone, 'Bonjour ' + u.prenom + ', ');
@@ -889,8 +949,8 @@ async function adminDetailCompte(id) {
 /* ---- Produits ---- */
 async function adminProduits() {
   adminShell('produits', 'Produits', `
-    <button class="btn block" id="nouveau">➕ Nouveau produit</button>
-    <button class="btn block secondary" id="stockbas">⚠️ Stock bas (à recommander)</button>
+    <button class="btn block" id="nouveau">${ic('plus')} Nouveau produit</button>
+    <button class="btn block secondary" id="stockbas">${ic('alert')} Stock bas (à recommander)</button>
     <div class="field mt"><input id="q" placeholder="Rechercher un produit…"></div>
     <div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = adminFormProduit;
@@ -902,7 +962,7 @@ async function adminProduits() {
       $('#liste').innerHTML = `<div class="card">${items.map(p => `
         <div class="list-item tap" data-id="${p.id}" role="button" tabindex="0">
           <div class="main"><div class="name">${esc(p.nom)}</div><div class="sub">${esc(p.categorie || '')} · ${gnf(p.prix_unitaire)} · stock ${p.stock}${p.actif ? '' : ' · inactif'}</div></div>
-          <span class="badge">＋ stock</span>
+          <span class="badge">${ic('plus',14)} stock</span>
         </div>`).join('')}</div>`;
       $('#liste').querySelectorAll('.tap').forEach(el => el.onclick = () => adminApprovisionner(+el.dataset.id));
     } catch (ex) { $('#liste').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
@@ -995,8 +1055,8 @@ async function adminAlertes() {
           <div class="list-item"><div class="main"><div class="name">Vente ${esc(x.vente?.reference || '')}</div>
             <div class="sub">${esc(x.demandeur?.prenom || '')} ${esc(x.demandeur?.name || '')} — ${esc(JSON.stringify(x.changements))}<br>${esc(x.motif_demande || '')}</div></div>
             <div class="btn-row" style="width:auto">
-              <button class="icon-btn" style="color:var(--success)" data-ok="${x.id}">✓</button>
-              <button class="icon-btn" style="color:var(--danger)" data-no="${x.id}">✗</button></div>
+              <button class="icon-btn" style="color:var(--success)" data-ok="${x.id}">${ic('check')}</button>
+              <button class="icon-btn" style="color:var(--danger)" data-no="${x.id}">${ic('close')}</button></div>
           </div>`).join('') : '<p class="muted">Aucune demande en attente.</p>'}</div>
       <div class="card"><h3>Notifications</h3>
         ${(notifs.length ? notifs.map(n => `<div class="list-item"><div class="main"><div class="name">${esc(n.message || n.type)}</div>
@@ -1009,7 +1069,7 @@ async function adminAlertes() {
 /* ---- Réparateurs (admin : voit tout, accorde les crédits) ---- */
 async function adminReparateurs() {
   adminShell('reparateurs', 'Réparateurs', `
-    <button class="btn block" id="nouveau">➕ Nouveau réparateur</button>
+    <button class="btn block" id="nouveau">${ic('plus')} Nouveau réparateur</button>
     <div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = adminFormReparateur;
   try {
@@ -1019,7 +1079,7 @@ async function adminReparateurs() {
     $('#liste').innerHTML = `<p class="muted" style="font-size:.85rem">Alerte si la dette dépasse ${gnf(seuil)}.</p>
       <div class="card">${items.map(r => `
         <div class="list-item tap" data-id="${r.id}" role="button" tabindex="0">
-          <div class="main"><div class="name">${esc(r.nom)} ${r.en_alerte ? '🔴' : ''}</div>
+          <div class="main"><div class="name">${esc(r.nom)} ${r.en_alerte ? '<span style="color:var(--danger)">' + ic('dot', 12) + '</span>' : ''}</div>
             <div class="sub">${r.telephone ? esc(r.telephone) + ' · ' : ''}dette ${gnf(r.dette)}</div></div>
           <span class="badge" style="${r.en_alerte ? 'color:var(--danger)' : ''}">${r.dette > 0 ? gnf(r.dette) : 'à jour'}</span>
         </div>`).join('')}</div>`;
@@ -1079,8 +1139,8 @@ async function adminReparateurDetail(id) {
         <div class="list-item"><div class="main"><div class="name">${esc(p.article)} ×${p.quantite}${p.manuelle ? '' : ' <span class="badge cat">stock</span>'}</div>
           <div class="sub">${esc(p.date)} · prix ${gnf(p.montant_total)} · donné ${gnf(p.montant_paye)} · reste ${gnf(p.reste)}</div></div>
           <div class="btn-row" style="width:auto">
-            <button class="icon-btn" data-edit="${p.id}" title="Modifier">✏️</button>
-            <button class="icon-btn" data-del="${p.id}" title="Supprimer" style="color:var(--danger)">🗑</button>
+            <button class="icon-btn" data-edit="${p.id}" title="Modifier">${ic('edit')}</button>
+            <button class="icon-btn" data-del="${p.id}" title="Supprimer" style="color:var(--danger)">${ic('trash')}</button>
           </div></div>`).join('') : '<p class="muted">Aucune.</p>'}</div>`;
 
     $('#pr-btn').onclick = async () => {
@@ -1250,7 +1310,7 @@ function rendreCreditPanier() {
   const el = $('#credit-panier'); if (!el) return;
   if (!creditPanier.length) { el.innerHTML = '<p class="muted">Vide.</p>'; return; }
   el.innerHTML = creditPanier.map((l, i) => `<div class="list-item"><div class="main"><div class="name">${esc(l.nom)}</div></div>
-    <div class="btn-row" style="width:auto"><button class="icon-btn" data-m="${i}">−</button><span style="min-width:28px;text-align:center;align-self:center">${l.quantite}</span><button class="icon-btn" data-p="${i}">+</button><button class="icon-btn" data-s="${i}" style="color:var(--danger)">🗑</button></div></div>`).join('');
+    <div class="btn-row" style="width:auto"><button class="icon-btn" data-m="${i}">${ic('minus')}</button><span style="min-width:28px;text-align:center;align-self:center">${l.quantite}</span><button class="icon-btn" data-p="${i}">${ic('plus')}</button><button class="icon-btn" data-s="${i}" style="color:var(--danger)">${ic('trash')}</button></div></div>`).join('');
   el.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { creditPanier[+b.dataset.p].quantite++; rendreCreditPanier(); });
   el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { const l = creditPanier[+b.dataset.m]; if (--l.quantite < 1) creditPanier.splice(+b.dataset.m, 1); rendreCreditPanier(); });
   el.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { creditPanier.splice(+b.dataset.s, 1); rendreCreditPanier(); });
@@ -1269,7 +1329,7 @@ async function validerVenteCredit() {
 
 /* ---- Crédits clients : liste + remboursement ---- */
 async function adminCreditsClients() {
-  adminShell('credits', 'Crédits clients', `<button class="btn block" id="nouvelle-credit">➕ Nouvelle vente à crédit</button><div id="cc"><div class="spinner"></div></div>`);
+  adminShell('credits', 'Crédits clients', `<button class="btn block" id="nouvelle-credit">${ic('plus')} Nouvelle vente à crédit</button><div id="cc"><div class="spinner"></div></div>`);
   $('#nouvelle-credit').onclick = adminVenteCredit;
   try {
     const items = await api('GET', '/admin/credits');
@@ -1288,7 +1348,7 @@ async function adminCreditDetail(clientId) {
     $('#d').innerHTML = `
       <div class="card"><h3>${esc(d.client.nom)}</h3><p class="muted">${esc(d.client.telephone || '')}</p>
         <div class="value" style="font-size:1.4rem">Dette : ${gnf(d.dette)}</div></div>
-      ${d.client.telephone ? `<button class="btn block secondary" id="wa-cli">💬 Rappeler sur WhatsApp</button>` : ''}
+      ${d.client.telephone ? `<button class="btn block secondary" id="wa-cli">${ic('message')} Rappeler sur WhatsApp</button>` : ''}
       <div class="card"><h3>Remboursement</h3>
         ${champ('rb-montant', 'Montant reçu (GNF)', '', 'number')}
         <div class="field"><label>Mode</label><select id="rb-mode"><option value="especes">Espèces</option><option value="orange_money">Orange Money</option><option value="carte">Carte</option></select></div>
@@ -1329,10 +1389,10 @@ async function adminStockBas() {
     const items = d.data || [];
     const liste = items.map(p => '- ' + p.nom + ' (reste ' + p.stock + ')').join('\n');
     $('#sb').innerHTML = `
-      <button class="btn block secondary" id="retour-prod">← Retour aux produits</button>
+      <button class="btn block secondary" id="retour-prod">${ic('back')} Retour aux produits</button>
       <p class="muted" style="font-size:.85rem">Articles dont le stock est bas — à recommander chez DL-Service (Bamako).</p>
-      <button class="btn block" id="wa">💬 Envoyer la liste sur WhatsApp</button>
-      <div class="card">${items.length ? items.map(p => `<div class="list-item"><div class="main"><div class="name">${esc(p.nom)}</div><div class="sub">${esc(p.categorie || '')} · reste ${p.stock} (seuil ${p.seuil_alerte})</div></div><button class="btn" style="width:auto;padding:6px 10px" data-appro="${p.id}">＋ stock</button></div>`).join('') : '<p class="muted">Aucun produit en stock bas. 👍</p>'}</div>`;
+      <button class="btn block" id="wa">${ic('message')} Envoyer la liste sur WhatsApp</button>
+      <div class="card">${items.length ? items.map(p => `<div class="list-item"><div class="main"><div class="name">${esc(p.nom)}</div><div class="sub">${esc(p.categorie || '')} · reste ${p.stock} (seuil ${p.seuil_alerte})</div></div><button class="btn" style="width:auto;padding:6px 10px" data-appro="${p.id}">${ic('plus',14)} stock</button></div>`).join('') : '<p class="muted">Aucun produit en stock bas.</p>'}</div>`;
     $('#retour-prod').onclick = adminProduits;
     $('#wa').onclick = () => partagerWhatsApp('Bonjour DL-Service, commande MOK-Business :\n' + (liste || '(liste vide)'));
     $('#sb').querySelectorAll('[data-appro]').forEach(b => b.onclick = () => adminApprovisionner(+b.dataset.appro));
@@ -1358,7 +1418,7 @@ async function adminVentes() {
     <div class="card">
       <div class="field"><label>Période</label><select id="periode"><option value="jour">Aujourd'hui</option><option value="semaine">Cette semaine</option><option value="mois">Ce mois</option><option value="">Toutes</option></select></div>
       <div class="field"><label>Statut</label><select id="statut"><option value="">Tous</option><option value="payee">Payées</option><option value="a_credit">À crédit</option><option value="en_attente_paiement">En attente</option><option value="annulee">Annulées</option></select></div>
-      <button class="btn secondary block" id="export">⬇️ Exporter en Excel</button>
+      <button class="btn secondary block" id="export">${ic('download')} Exporter en Excel</button>
     </div>
     <div id="liste"><div class="spinner"></div></div>`);
   $('#export').onclick = () => telechargerCSV('/admin/ventes/export?periode=' + $('#periode').value, 'ventes.csv');
@@ -1373,10 +1433,10 @@ async function adminVentes() {
           <div class="sub">${esc(v.date)} · ${esc(v.vendeur || '—')} · ${esc(v.mode_paiement)} · ${esc(v.statut)}${v.client ? ' · ' + esc(v.client) : ''}${v.reste > 0 ? ' · reste ' + gnf(v.reste) : ''}</div>
           <div class="sub">${esc(v.articles.join(', '))}</div></div>
           <div class="btn-row" style="width:auto">
-            <button class="icon-btn" title="Facture" data-fact="${v.id}">🧾</button>
-            ${v.statut !== 'annulee' && v.reste > 0 ? `<button class="icon-btn" title="Encaisser le reste" data-encaisser="${v.id}" data-reste="${v.reste}" style="color:var(--success,#16a34a)">💵</button>` : ''}
-            ${v.statut !== 'annulee' ? `<button class="icon-btn" title="Annuler (retour)" data-annuler="${v.id}" style="color:var(--danger)">↩️</button>` : ''}
-            ${v.latitude ? `<button class="icon-btn" title="Voir sur la carte" data-lat="${v.latitude}" data-lng="${v.longitude}">📍</button>` : ''}
+            <button class="icon-btn" title="Facture" data-fact="${v.id}">${ic('receipt')}</button>
+            ${v.statut !== 'annulee' && v.reste > 0 ? `<button class="icon-btn" title="Encaisser le reste" data-encaisser="${v.id}" data-reste="${v.reste}" style="color:var(--success,#16a34a)">${ic('banknote')}</button>` : ''}
+            ${v.statut !== 'annulee' ? `<button class="icon-btn" title="Annuler (retour)" data-annuler="${v.id}" style="color:var(--danger)">${ic('undo')}</button>` : ''}
+            ${v.latitude ? `<button class="icon-btn" title="Voir sur la carte" data-lat="${v.latitude}" data-lng="${v.longitude}">${ic('pin')}</button>` : ''}
           </div>
         </div>`).join('')}</div>` : `<p class="muted center mt">Aucune vente.</p>`;
       $('#liste').querySelectorAll('[data-lat]').forEach(b => b.onclick = () => window.open('https://www.google.com/maps?q=' + b.dataset.lat + ',' + b.dataset.lng, '_blank'));
@@ -1395,7 +1455,7 @@ async function adminVentes() {
         if (!montant || montant < 1) { toast('Montant invalide.'); return; }
         try {
           const r = await api('POST', '/admin/ventes/' + b.dataset.encaisser + '/encaisser', { montant });
-          toast(r.reste > 0 ? 'Paiement enregistré. Reste ' + gnf(r.reste) : 'Payé entièrement ✅');
+          toast(r.reste > 0 ? 'Paiement enregistré. Reste ' + gnf(r.reste) : 'Payé entièrement');
           rendre();
         } catch (ex) { toast(ex.premierDetail()); }
       });
@@ -1410,17 +1470,17 @@ async function adminRapportJour() {
   adminShell('rapport', 'Rapport du jour', `
     <div class="card"><div class="field"><label>Date</label><input type="date" id="rdate" value="${new Date().toISOString().slice(0, 10)}"></div></div>
     <div id="r"><div class="spinner"></div></div>`);
-  const glc = (emoji, val, lbl) => `<div class="glance"><span class="g-emoji">${emoji}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+  const glc = (icone, val, lbl) => `<div class="glance"><span class="g-emoji">${ic(icone, 24)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
   const rendre = async () => {
     $('#r').innerHTML = '<div class="spinner"></div>';
     try {
       const d = await api('GET', '/admin/rapport-jour?date=' + $('#rdate').value);
       const v = d.ventes, c = d.caisse;
       let html = `<div class="glance-grid">
-        ${glc('🧾', v.nombre, 'Ventes')}
-        ${glc('💵', gnf(v.total_encaisse), 'Encaissé')}
-        ${glc('🏷️', gnf(v.total_vendu), 'Vendu')}
-        ${glc('⏳', gnf(v.total_reste), 'Reste dû')}
+        ${glc('receipt', v.nombre, 'Ventes')}
+        ${glc('banknote', gnf(v.total_encaisse), 'Encaissé')}
+        ${glc('tag', gnf(v.total_vendu), 'Vendu')}
+        ${glc('clock', gnf(v.total_reste), 'Reste dû')}
       </div>`;
       html += `<div class="card"><h3>Encaissé par mode</h3>${v.total_encaisse || d.par_mode.length ? d.par_mode.map(m => `<div class="info-row"><span class="lbl">${MODE_LBL[m.mode] || m.mode} (${m.nombre})</span><span class="val">${gnf(m.encaisse)}</span></div>`).join('') : '<p class="muted">Aucune vente.</p>'}
         <div class="info-row"><span class="lbl">Ventes à crédit accordées</span><span class="val">${v.credits_accordes}</span></div>
@@ -1433,7 +1493,7 @@ async function adminRapportJour() {
         ${c.cloturee ? `<div class="info-row"><span class="lbl">Compté (réel)</span><span class="val">${gnf(c.montant_reel)}</span></div><div class="info-row"><span class="lbl">Écart</span><span class="val" style="color:${c.ecart === 0 ? 'var(--success)' : 'var(--danger)'}">${gnf(c.ecart)}</span></div>` : '<p class="muted">Caisse pas encore clôturée.</p>'}</div>`;
       html += `<div class="card"><h3>Top produits du jour</h3>${d.top_produits.length ? d.top_produits.map(p => `<div class="info-row"><span class="lbl">${esc(p.nom)} ×${p.quantite}</span><span class="val">${gnf(p.montant)}</span></div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
       html += `<div class="card"><h3>Par vendeur</h3>${d.par_vendeur.length ? d.par_vendeur.map(x => `<div class="info-row"><span class="lbl">${esc(x.vendeur || '—')} (${x.nombre})</span><span class="val">${gnf(x.total)}</span></div>`).join('') : '<p class="muted">Aucune vente.</p>'}</div>`;
-      html += `<button class="btn block secondary" id="rwa">💬 Envoyer le résumé sur WhatsApp</button>`;
+      html += `<button class="btn block secondary" id="rwa">${ic('message')} Envoyer le résumé sur WhatsApp</button>`;
       $('#r').innerHTML = html;
       $('#rwa').onclick = () => partagerWhatsApp(resumeRapportTexte(d));
     } catch (ex) { $('#r').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
@@ -1464,12 +1524,12 @@ async function adminRestes() {
         <div class="card">
           <div class="row-between"><div><b>${esc(c.nom)}</b>
             <div class="muted" style="font-size:.85rem">${c.telephone ? esc(c.telephone) + ' · ' : ''}reste <b style="color:var(--danger)">${gnf(c.total_reste)}</b></div></div>
-            ${c.telephone ? `<button class="btn secondary" style="width:auto;padding:6px 10px" data-wa="${esc(c.telephone)}" data-nom="${esc(c.nom)}" data-reste="${c.total_reste}">💬</button>` : ''}
+            ${c.telephone ? `<button class="btn secondary" style="width:auto;padding:6px 10px" data-wa="${esc(c.telephone)}" data-nom="${esc(c.nom)}" data-reste="${c.total_reste}">${ic('message')}</button>` : ''}
           </div>
           ${c.ventes.map(x => `<div class="list-item"><div class="main"><div class="name">${esc(x.reference)}</div>
             <div class="sub">${esc(x.date)} · payé ${gnf(x.montant_paye)} · reste ${gnf(x.reste)}</div></div>
-            <button class="icon-btn" title="Encaisser le reste" data-enc="${x.id}" data-reste="${x.reste}" style="color:var(--success,#16a34a)">💵</button></div>`).join('')}
-        </div>`).join('') : '<p class="muted center mt">Personne ne doit d\'argent. 👍</p>';
+            <button class="icon-btn" title="Encaisser le reste" data-enc="${x.id}" data-reste="${x.reste}" style="color:var(--success,#16a34a)">${ic('banknote')}</button></div>`).join('')}
+        </div>`).join('') : '<p class="muted center mt">Personne ne doit d\'argent.</p>';
       $('#r').innerHTML = html;
       $('#r').querySelectorAll('[data-wa]').forEach(b => b.onclick = () => ouvrirWhatsApp(b.dataset.wa, 'Bonjour ' + b.dataset.nom + ', votre reste à payer chez MOK-Business est de ' + gnf(+b.dataset.reste) + '. Merci de passer régler.'));
       $('#r').querySelectorAll('[data-enc]').forEach(b => b.onclick = async () => {
@@ -1478,7 +1538,7 @@ async function adminRestes() {
         if (saisie === null) return;
         const montant = parseInt(String(saisie).replace(/\D/g, ''), 10);
         if (!montant || montant < 1) { toast('Montant invalide.'); return; }
-        try { const r = await api('POST', '/admin/ventes/' + b.dataset.enc + '/encaisser', { montant }); toast(r.reste > 0 ? 'Enregistré. Reste ' + gnf(r.reste) : 'Payé entièrement ✅'); rendre(); }
+        try { const r = await api('POST', '/admin/ventes/' + b.dataset.enc + '/encaisser', { montant }); toast(r.reste > 0 ? 'Enregistré. Reste ' + gnf(r.reste) : 'Payé entièrement'); rendre(); }
         catch (ex) { toast(ex.premierDetail()); }
       });
     } catch (ex) { $('#r').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
@@ -1490,7 +1550,7 @@ async function adminRestes() {
 const TYPE_CAISSE = { apport: 'Apport', depense: 'Dépense', retrait: 'Retrait' };
 async function adminCaisse() {
   adminShell('caisse', 'Caisse du jour', `<div id="c"><div class="spinner"></div></div>`);
-  const glc = (emoji, val, lbl, alerte) => `<div class="glance ${alerte ? 'alerte' : ''}"><span class="g-emoji">${emoji}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+  const glc = (icone, val, lbl, alerte) => `<div class="glance ${alerte ? 'alerte' : ''}"><span class="g-emoji">${ic(icone, 24)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
   const rendre = async () => {
     try {
       const d = await api('GET', '/admin/caisse');
@@ -1498,7 +1558,7 @@ async function adminCaisse() {
 
       // 1. En-tête selon l'état de la caisse
       if (d.cloturee) {
-        const mot = d.ecart === 0 ? 'Caisse juste ✅' : (d.ecart > 0 ? 'Excédent' : 'Manquant');
+        const mot = d.ecart === 0 ? 'Caisse juste' : (d.ecart > 0 ? 'Excédent' : 'Manquant');
         const couleur = d.ecart === 0 ? 'var(--success)' : 'var(--danger)';
         html += `<div class="card center">
           <h3>Caisse clôturée</h3>
@@ -1517,11 +1577,11 @@ async function adminCaisse() {
       // 2. Résumé (toujours affiché)
       html += `<div class="card"><h3>Solde théorique : ${gnf(d.solde_theorique)}</h3>
         <div class="glance-grid">
-          ${glc('🔑', gnf(d.fond_ouverture), "Fond d'ouverture")}
-          ${glc('🛒', gnf(d.ventes_especes), 'Ventes espèces')}
-          ${glc('➕', gnf(d.apports), 'Apports')}
-          ${glc('➖', gnf(d.depenses), 'Dépenses', d.depenses > 0)}
-          ${glc('🏦', gnf(d.retraits), 'Retraits')}
+          ${glc('key', gnf(d.fond_ouverture), "Fond d'ouverture")}
+          ${glc('cart', gnf(d.ventes_especes), 'Ventes espèces')}
+          ${glc('plus', gnf(d.apports), 'Apports')}
+          ${glc('trendDown', gnf(d.depenses), 'Dépenses', d.depenses > 0)}
+          ${glc('bank', gnf(d.retraits), 'Retraits')}
         </div></div>`;
 
       // 3. Mouvements + clôture (seulement si pas encore clôturée)
@@ -1604,7 +1664,7 @@ async function adminClientHistorique(id) {
       <div class="card"><h3>${esc(c.prenom)} ${esc(c.nom)}</h3>
         <p class="muted">${esc(c.telephone || '')}${c.email ? ' · ' + esc(c.email) : ''}<br>${esc(c.ville || '')} ${esc(c.pays || '')}</p>
         <div class="row-between"><span>Achats : <b>${d.nombre_achats}</b></span><span>Total : <b>${gnf(d.total_achats)}</b></span></div></div>
-      ${c.telephone ? `<button class="btn block secondary" id="wa">💬 WhatsApp</button>` : ''}
+      ${c.telephone ? `<button class="btn block secondary" id="wa">${ic('message')} WhatsApp</button>` : ''}
       <div class="card"><h3>Historique d'achats</h3>${d.ventes.length ? d.ventes.map(v => `
         <div class="list-item"><div class="main"><div class="name">${esc(v.reference)} — ${gnf(v.montant_total)}</div>
           <div class="sub">${esc(v.date)} · ${esc(v.statut)}<br>${esc(v.articles.join(', '))}</div></div></div>`).join('') : '<p class="muted">Aucun achat.</p>'}</div>`;
@@ -1681,8 +1741,8 @@ function docImprimable(data, estDevis) {
 function afficherDocument(titre, data, estDevis, retour, actionsHTML = '') {
   cadre(titre, `
     <div class="no-print toolbar-doc">
-      <button class="btn" id="imprimer">🖨️ Imprimer (A4)</button>
-      <button class="btn secondary" id="ticket">🧾 Ticket court</button>
+      <button class="btn" id="imprimer">${ic('printer')} Imprimer (A4)</button>
+      <button class="btn secondary" id="ticket">${ic('receipt')} Ticket court</button>
       ${actionsHTML}
     </div>
     ${docImprimable(data, estDevis)}`, null, null, { retour });
@@ -1692,7 +1752,7 @@ function afficherDocument(titre, data, estDevis, retour, actionsHTML = '') {
 
 /* ---- Admin : liste des devis ---- */
 async function adminDevis() {
-  adminShell('devis', 'Devis', `<button class="btn block" id="nouveau">➕ Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`);
+  adminShell('devis', 'Devis', `<button class="btn block" id="nouveau">${ic('plus')} Nouveau devis</button><div id="liste"><div class="spinner"></div></div>`);
   $('#nouveau').onclick = () => formDevis(adminDevis);
   try {
     const d = await api('GET', '/devis');
@@ -1715,7 +1775,7 @@ function formDevis(retour) {
       ${champ('dv-client', 'Nom du client')}
       <div class="field"><label>Ajouter un article du catalogue</label><input id="dv-search" placeholder="Rechercher…"></div>
       <div id="dv-res"></div>
-      <button class="btn secondary block" id="dv-libre">➕ Ajouter une ligne libre</button>
+      <button class="btn secondary block" id="dv-libre">${ic('plus')} Ajouter une ligne libre</button>
     </div>
     <div class="card"><h3>Lignes du devis</h3><div id="dv-lignes"><p class="muted">Aucune ligne.</p></div>
       <div class="info-row" style="padding-top:12px"><span class="lbl">Total</span><span class="val" id="dv-total">0 GNF</span></div></div>
@@ -1752,7 +1812,7 @@ function rendreDevisLignes() {
       <div class="btn-row">
         <input data-f="quantite" data-i="${i}" type="number" value="${l.quantite}" placeholder="Qté">
         <input data-f="prix_unitaire" data-i="${i}" type="number" value="${l.prix_unitaire}" placeholder="Prix">
-        <button class="icon-btn" data-sup="${i}" style="color:var(--danger)">🗑</button>
+        <button class="icon-btn" data-sup="${i}" style="color:var(--danger)">${ic('trash')}</button>
       </div>
       <div class="muted" style="font-size:.8rem;margin-top:4px">Sous-total : ${gnf((l.prix_unitaire || 0) * (l.quantite || 0))}</div>
     </div>`).join('');
@@ -1798,7 +1858,7 @@ function brancherConversion(id, retour) {
 async function voirFacture(venteId, retour) {
   try {
     const d = await api('GET', '/ventes/' + venteId + '/facture');
-    afficherDocument('Facture ' + d.reference, d, false, retour, '<button class="btn secondary" id="fact-wa">💬 Envoyer au client</button>');
+    afficherDocument('Facture ' + d.reference, d, false, retour, '<button class="btn secondary" id="fact-wa">' + ic('message') + ' Envoyer au client</button>');
     const wa = $('#fact-wa'); if (wa) wa.onclick = () => envoyerFactureWhatsApp(d);
   } catch (ex) { toast(ex.premierDetail ? ex.premierDetail() : ex.message); }
 }
@@ -1811,7 +1871,7 @@ function envoyerFactureWhatsApp(d) {
   (d.lignes || []).forEach(l => { t += `${l.designation} x${l.quantite} = ${gnf(l.sous_total)}\n`; });
   t += '--------------------\n';
   t += `TOTAL : ${gnf(d.montant_total)}\n`;
-  t += d.reste > 0 ? `Payé : ${gnf(d.montant_paye)} — Reste à payer : ${gnf(d.reste)}\n` : `Payé entièrement ✅\n`;
+  t += d.reste > 0 ? `Payé : ${gnf(d.montant_paye)} — Reste à payer : ${gnf(d.reste)}\n` : `Payé entièrement\n`;
   if (b.orange_money) t += `Paiement Orange Money : ${b.orange_money}\n`;
   t += 'Merci de votre confiance.';
   if (d.client_tel) ouvrirWhatsApp(d.client_tel, t); else partagerWhatsApp(t);

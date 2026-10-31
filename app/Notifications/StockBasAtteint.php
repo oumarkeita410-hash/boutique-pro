@@ -28,7 +28,7 @@ class StockBasAtteint extends Notification
             'produit' => $this->produit->nom,
             'stock' => (int) $this->produit->stock,
             'seuil' => (int) $this->produit->seuil_alerte,
-            'message' => "⚠️ Stock bas : {$this->produit->nom} — il reste {$this->produit->stock} (seuil {$this->produit->seuil_alerte}). À recommander.",
+            'message' => "Stock bas : {$this->produit->nom} — il reste {$this->produit->stock} (seuil {$this->produit->seuil_alerte}). À recommander.",
         ];
     }
 }
