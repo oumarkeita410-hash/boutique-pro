@@ -97,7 +97,24 @@ const ICONES = {
 function ic(nom, taille = 18) {
   const p = ICONES[nom];
   if (!p) return '';
-  return `<svg class="ic" viewBox="0 0 24 24" width="${taille}" height="${taille}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+  return `<svg class="ic" viewBox="0 0 24 24" width="${taille}" height="${taille}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+}
+
+/* Couleur propre à chaque fonction (style « vraies applications »). */
+const TEINTES = {
+  dashboard: '#2563eb', users: '#7c3aed', box: '#0891b2', wrench: '#ea580c',
+  list: '#0d9488', receipt: '#059669', wallet: '#d97706', file: '#64748b',
+  user: '#db2777', coins: '#f59e0b', card: '#4f46e5', banknote: '#16a34a',
+  checkCircle: '#16a34a', message: '#0ea5e9', bell: '#dc2626', journal: '#475569',
+  cart: '#2563eb', headset: '#7c3aed', shield: '#1d4ed8', clock: '#0891b2',
+};
+/* Icône « pleine » : dessin blanc dans une pastille arrondie de couleur. */
+function icTile(nom, taille = 30) {
+  const p = ICONES[nom];
+  if (!p) return '';
+  const couleur = TEINTES[nom] || '#2563eb';
+  const g = Math.round(taille * 0.6);
+  return `<span class="ic-tile" style="--tc:${couleur};width:${taille}px;height:${taille}px"><svg viewBox="0 0 24 24" width="${g}" height="${g}" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg></span>`;
 }
 
 /* ---------- Appels API ---------- */
@@ -130,7 +147,7 @@ function ecranConnexion() {
       <div class="logo"><div class="mark">MB</div><h1>MOK<span>-Business</span></h1>
         <p>Boutique électronique — Guinée Conakry</p></div>
       <p class="roles-titre">Choisissez votre type de compte</p>
-      <div class="roles">${ROLES.map(r => `<div class="role-chip ${r.v === roleDefaut ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${ic(r.icone)}</span>${r.nom}</div>`).join('')}</div>
+      <div class="roles">${ROLES.map(r => `<div class="role-chip ${r.v === roleDefaut ? 'active' : ''}" data-role="${r.v}"><span class="emoji">${icTile(r.icone, 44)}</span>${r.nom}</div>`).join('')}</div>
       <div id="comptes-liste"></div>
       <form id="form-login" novalidate>
         <div class="field"><label for="identifiant">Identifiant, téléphone ou email</label>
@@ -205,7 +222,7 @@ function cadre(titre, contenuHTML, onglets, actifIdx, opts = {}) {
       <button class="icon-btn" id="btn-logout" title="Se déconnecter">${ic('logout')}</button>
     </div>
     <div class="content"><h2 class="screen-title">${esc(titre)}</h2><div id="vue">${contenuHTML}</div></div>
-    ${onglets ? `<nav class="tabbar">${onglets.map((o, i) => `<button data-idx="${i}" class="${i === actifIdx ? 'active' : ''}"><span class="emoji">${ic(o.icone)}</span>${o.nom}</button>`).join('')}</nav>` : ''}`;
+    ${onglets ? `<nav class="tabbar">${onglets.map((o, i) => `<button data-idx="${i}" class="${i === actifIdx ? 'active' : ''}"><span class="emoji">${icTile(o.icone, 30)}</span>${o.nom}</button>`).join('')}</nav>` : ''}`;
   $('#btn-theme').addEventListener('click', basculerTheme);
   $('#btn-logout').addEventListener('click', deconnexion);
   if (opts.retour) $('#btn-retour').addEventListener('click', opts.retour);
@@ -337,7 +354,7 @@ async function vendeurCatalogue() {
 function majBadgePanier() {
   const b = $('.tabbar button[data-idx="1"]'); if (!b) return;
   const n = nbPanier();
-  b.innerHTML = `<span class="emoji">${ic('cart')}</span>Panier${n ? ' (' + n + ')' : ''}`;
+  b.innerHTML = `<span class="emoji">${icTile('cart', 30)}</span>Panier${n ? ' (' + n + ')' : ''}`;
 }
 
 function vendeurPanier() {
@@ -510,6 +527,14 @@ async function vendeurPaiement(v) {
         ${info.mode === 'orange_money' ? `<div class="value" style="font-size:1.4rem;color:var(--primary)">${esc(info.numero_orange_money)}</div>` : ''}
       </div>
       <div class="card">
+        <h3>${ic('card')} Payer en ligne (Orange Money, MTN, carte)</h3>
+        <p class="muted" style="font-size:.82rem">Génère un lien de paiement sécurisé. Le client paie, et la vente passe en « payée » automatiquement.</p>
+        <div class="field"><label>Téléphone du client (facultatif)</label><input id="enl-tel" inputmode="tel" placeholder="ex. 62xxxxxxx"></div>
+        <div class="error-msg" id="enl-err"></div>
+        <button class="btn block" id="enl-btn">${ic('card')} Créer le lien de paiement</button>
+        <div id="enl-apres"></div>
+      </div>
+      <div class="card">
         <div class="field"><label>Référence de la transaction (donnée par le client)</label><input id="ref" placeholder="ex. PP24..."></div>
         <div class="error-msg" id="ref-err"></div>
         <button class="btn" id="ref-btn">Enregistrer la référence</button>
@@ -517,6 +542,28 @@ async function vendeurPaiement(v) {
         <button class="btn secondary block" id="skip">Plus tard</button>
         <p class="notice">Le paiement sera confirmé par l'administrateur après vérification sur le compte.</p>
       </div>`;
+    // Paiement en ligne (CinetPay) : créer le lien, puis vérifier.
+    $('#enl-btn').onclick = async () => {
+      const err = $('#enl-err'); err.textContent = '';
+      const btn = $('#enl-btn'); btn.disabled = true; btn.textContent = 'Création…';
+      try {
+        const r = await api('POST', '/ventes/' + v.id + '/payer-en-ligne', { telephone: $('#enl-tel').value.trim() || null });
+        window.open(r.url_paiement, '_blank');
+        $('#enl-apres').innerHTML = `
+          <a class="btn secondary block" href="${esc(r.url_paiement)}" target="_blank" rel="noopener">${ic('forward')} Rouvrir le lien de paiement</a>
+          <button class="btn block" id="enl-verif">${ic('check')} Le client a payé — vérifier</button>
+          <p class="muted" style="font-size:.78rem">Réf : ${esc(r.reference)}</p>`;
+        btn.style.display = 'none';
+        $('#enl-verif').onclick = async () => {
+          const vb = $('#enl-verif'); vb.disabled = true; vb.textContent = 'Vérification…';
+          try {
+            const res = await api('POST', '/ventes/' + v.id + '/verifier-paiement', { reference: r.reference });
+            if (res.paye) { toast('Paiement confirmé.'); venteConfirmee({ ...v, montant_a_encaisser: info.montant, montant_paye: info.montant, reste: 0 }); }
+            else { vb.disabled = false; vb.textContent = 'Pas encore payé — vérifier à nouveau'; toast('Paiement pas encore reçu.'); }
+          } catch (ex) { vb.disabled = false; vb.textContent = 'Réessayer'; toast(ex.premierDetail()); }
+        };
+      } catch (ex) { err.textContent = ex.premierDetail(); btn.disabled = false; btn.textContent = 'Créer le lien de paiement'; }
+    };
     $('#fact').onclick = () => voirFacture(v.id, () => vendeurPaiement(v));
     $('#ref-btn').onclick = async () => {
       const err = $('#ref-err'); err.textContent = '';
@@ -686,7 +733,7 @@ function adminShell(actif, titre, contenuHTML) {
     <div class="wp">
       <aside class="wp-side" id="wp-side">
         <div class="wp-brand">MOK<span>-Business</span></div>
-        <nav>${menu.map(m => `<button class="wp-item ${m[0] === actif ? 'on' : ''}" data-k="${m[0]}"><span class="emoji">${ic(m[1])}</span>${m[2]}</button>`).join('')}</nav>
+        <nav>${menu.map(m => `<button class="wp-item ${m[0] === actif ? 'on' : ''}" data-k="${m[0]}"><span class="emoji">${icTile(m[1], 28)}</span>${m[2]}</button>`).join('')}</nav>
       </aside>
       <div class="wp-backdrop" id="wp-bd"></div>
       <div class="wp-body">
@@ -750,7 +797,7 @@ async function adminTableau() {
 
     const glance = (icone, val, lbl, go, alerte) =>
       `<div class="glance ${go ? 'lien' : ''} ${alerte ? 'alerte' : ''}" ${go ? `data-go="${go}"` : ''}>
-        <span class="g-emoji">${ic(icone, 24)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+        <span class="g-emoji">${icTile(icone, 34)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
 
     $('#tb').innerHTML = `
       <div class="card">
@@ -1470,7 +1517,7 @@ async function adminRapportJour() {
   adminShell('rapport', 'Rapport du jour', `
     <div class="card"><div class="field"><label>Date</label><input type="date" id="rdate" value="${new Date().toISOString().slice(0, 10)}"></div></div>
     <div id="r"><div class="spinner"></div></div>`);
-  const glc = (icone, val, lbl) => `<div class="glance"><span class="g-emoji">${ic(icone, 24)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+  const glc = (icone, val, lbl) => `<div class="glance"><span class="g-emoji">${icTile(icone, 34)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
   const rendre = async () => {
     $('#r').innerHTML = '<div class="spinner"></div>';
     try {
@@ -1550,7 +1597,7 @@ async function adminRestes() {
 const TYPE_CAISSE = { apport: 'Apport', depense: 'Dépense', retrait: 'Retrait' };
 async function adminCaisse() {
   adminShell('caisse', 'Caisse du jour', `<div id="c"><div class="spinner"></div></div>`);
-  const glc = (icone, val, lbl, alerte) => `<div class="glance ${alerte ? 'alerte' : ''}"><span class="g-emoji">${ic(icone, 24)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
+  const glc = (icone, val, lbl, alerte) => `<div class="glance ${alerte ? 'alerte' : ''}"><span class="g-emoji">${icTile(icone, 34)}</span><span class="g-val">${val}</span><span class="g-lbl">${lbl}</span></div>`;
   const rendre = async () => {
     try {
       const d = await api('GET', '/admin/caisse');

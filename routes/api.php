@@ -37,6 +37,10 @@ Route::get('/comptes-connexion', [AuthController::class, 'comptesConnexion'])->m
 // Pas d'authentification de session ; la confiance vient de la vérification dans le service.
 Route::post('/webhooks/orange-money', [PaiementController::class, 'webhookOrangeMoney']);
 
+// Webhook CinetPay (paiement en ligne tout-en-un) : appelé par les serveurs CinetPay.
+// Route publique ; le service re-vérifie l'état réel avant de confirmer la vente.
+Route::post('/webhooks/cinetpay', [PaiementController::class, 'webhookCinetPay']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/deconnexion', [AuthController::class, 'deconnexion']);
 
@@ -70,6 +74,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/ventes/{vente}/statut-paiement', [PaiementController::class, 'statut']);
         // Orange Money API marchand (si un jour un compte marchand est ouvert).
         Route::post('/ventes/{vente}/payer-orange-money', [PaiementController::class, 'orangeMoney']);
+        // Paiement en ligne tout-en-un (Orange Money + MTN + carte) via CinetPay.
+        Route::post('/ventes/{vente}/payer-en-ligne', [PaiementController::class, 'payerEnLigne']);
+        Route::post('/ventes/{vente}/verifier-paiement', [PaiementController::class, 'verifierEnLigne']);
 
         // Modifier une vente = demande soumise à l'accord de l'administrateur.
         Route::post('/ventes/{vente}/demande-modification', [ModificationVenteController::class, 'demander']);

@@ -3,16 +3,91 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ModePaiement;
+use App\Enums\Role;
 use App\Enums\StatutVente;
 use App\Models\Vente;
+use App\Services\Paiement\CinetPayService;
 use App\Services\Paiement\OrangeMoneyService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class PaiementController extends Controller
 {
-    public function __construct(private OrangeMoneyService $orangeMoney)
+    public function __construct(
+        private OrangeMoneyService $orangeMoney,
+        private CinetPayService $cinetpay,
+    ) {
+    }
+
+    /**
+     * POST /api/ventes/{vente}/payer-en-ligne   { "telephone": "62..." (facultatif) }
+     * Démarre un paiement en ligne tout-en-un (Orange Money / MTN / carte) via
+     * CinetPay et renvoie le lien de paiement à ouvrir / envoyer au client.
+     * Le vendeur ne peut payer que ses propres ventes ; l'admin, toutes.
+     */
+    public function payerEnLigne(Request $request, Vente $vente)
     {
+        if ($request->user()->role === Role::Vendeur && $vente->vendeur_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        if ($vente->statut === StatutVente::Payee) {
+            throw ValidationException::withMessages(['vente' => 'Cette vente est déjà payée.']);
+        }
+        if ($vente->statut === StatutVente::Annulee) {
+            throw ValidationException::withMessages(['vente' => 'Cette vente est annulée.']);
+        }
+
+        $donnees = $request->validate(['telephone' => ['nullable', 'string', 'max:30']]);
+
+        $resultat = $this->cinetpay->initier(
+            $vente,
+            $donnees['telephone'] ?? $vente->client_tel,
+            ['nom' => $vente->client_nom ?: 'Client'],
+        );
+
+        return response()->json([
+            'url_paiement' => $resultat['url_paiement'],
+            'reference' => $resultat['transaction']->reference_interne,
+            'message' => 'Ouvrez ce lien (ou envoyez-le au client) pour payer par Orange Money, MTN ou carte.',
+        ]);
+    }
+
+    /**
+     * POST /api/webhooks/cinetpay  (appelé par CinetPay, PAS par le navigateur)
+     * Route publique : on ne fait pas confiance au contenu, le service re-vérifie
+     * l'état réel auprès de CinetPay. On répond toujours 200.
+     */
+    public function webhookCinetPay(Request $request)
+    {
+        $this->cinetpay->traiterNotification($request->all());
+
+        return response()->json(['recu' => true]);
+    }
+
+    /**
+     * POST /api/ventes/{vente}/verifier-paiement  { "reference": "CP-..." }
+     * Le vendeur/admin force la vérification auprès de CinetPay après que le
+     * client a dit avoir payé (utile si le webhook n'est pas encore passé).
+     */
+    public function verifierEnLigne(Request $request, Vente $vente)
+    {
+        if ($request->user()->role === Role::Vendeur && $vente->vendeur_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $ref = $request->validate(['reference' => ['required', 'string', 'max:100']])['reference'];
+        $transaction = $this->cinetpay->verifier($ref);
+
+        if (! $transaction || $transaction->vente_id !== $vente->id) {
+            throw ValidationException::withMessages(['reference' => 'Transaction introuvable pour cette vente.']);
+        }
+
+        return response()->json([
+            'statut_transaction' => $transaction->statut,
+            'statut_vente' => $vente->refresh()->statut->value,
+            'paye' => $vente->statut === StatutVente::Payee,
+        ]);
     }
 
     /**

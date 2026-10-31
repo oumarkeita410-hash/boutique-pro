@@ -45,6 +45,22 @@ return [
         'api_secret' => env('CARTE_API_SECRET'),
     ],
 
+    // --- Paiement en ligne tout-en-un : CinetPay (Orange Money + MTN + carte) ---
+    // Un seul compte marchand couvre tous les moyens de paiement en Guinée (GNF).
+    // Toutes ces valeurs vont dans .env, jamais dans le code, et ne sont jamais versionnées.
+    'cinetpay' => [
+        'base_url' => env('CINETPAY_BASE_URL', 'https://api-checkout.cinetpay.com/v2'),
+        'apikey' => env('CINETPAY_APIKEY'),
+        'site_id' => env('CINETPAY_SITE_ID'),
+        'secret_key' => env('CINETPAY_SECRET_KEY'), // pour vérifier la signature du webhook (HMAC)
+        'devise' => env('CINETPAY_DEVISE', 'GNF'),
+        // ALL = tous les moyens ; sinon MOBILE_MONEY, CREDIT_CARD, WALLET…
+        'canaux' => env('CINETPAY_CANAUX', 'ALL'),
+        // URL où CinetPay renvoie le client (navigateur) et URL serveur-à-serveur (webhook).
+        'return_url' => env('CINETPAY_RETURN_URL'),
+        'notify_url' => env('CINETPAY_NOTIFY_URL'),
+    ],
+
     // --- WhatsApp Business (Meta Cloud API) ---
     'whatsapp' => [
         'base_url' => env('WA_BASE_URL', 'https://graph.facebook.com/v21.0'),
