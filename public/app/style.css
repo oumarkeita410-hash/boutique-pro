@@ -294,9 +294,9 @@ body.admin-mode #app { max-width: none; }
 /* ===== Icônes SVG professionnelles (remplacent les emojis) ===== */
 svg.ic { display: inline-block; vertical-align: -0.18em; stroke: currentColor; }
 .icon-btn svg.ic { vertical-align: middle; }
-.btn svg.ic, .menu-btn svg.ic { margin-right: 2px; }
+.btn svg.ic, .menu-btn svg.ic { margin-right: 4px; width: 20px; height: 20px; }
 .role-chip .emoji, .tabbar button .emoji, .wp-item .emoji, .glance .g-emoji { line-height: 0; }
-.role-chip .emoji svg.ic { width: 24px; height: 24px; display: block; margin: 0 auto 2px; vertical-align: middle; }
-.tabbar button .emoji svg.ic { width: 22px; height: 22px; display: block; margin: 0 auto; vertical-align: middle; }
-.wp-item .emoji svg.ic { width: 20px; height: 20px; vertical-align: middle; }
-.glance .g-emoji svg.ic { width: 26px; height: 26px; vertical-align: middle; }
+.role-chip .emoji svg.ic { width: 28px; height: 28px; display: block; margin: 0 auto 2px; vertical-align: middle; }
+.tabbar button .emoji svg.ic { width: 26px; height: 26px; display: block; margin: 0 auto; vertical-align: middle; }
+.wp-item .emoji svg.ic { width: 24px; height: 24px; vertical-align: middle; }
+.glance .g-emoji svg.ic { width: 30px; height: 30px; vertical-align: middle; }
