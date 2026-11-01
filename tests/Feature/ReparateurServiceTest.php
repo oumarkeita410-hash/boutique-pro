@@ -110,4 +110,32 @@ class ReparateurServiceTest extends TestCase
 
         $this->assertSame(50000, $reparateur->calculerDette());
     }
+
+    public function test_dette_manuelle_par_type_sans_modele(): void
+    {
+        $admin = $this->admin();
+        $reparateur = Reparateur::create(['prenom' => 'Sékou']);
+
+        // On choisit juste le type (batterie) et le prix, sans modèle.
+        $this->withToken($admin->createToken('t')->plainTextToken)
+            ->postJson("/api/admin/reparateurs/{$reparateur->id}/dette", [
+                'categorie' => 'Batterie', 'prix' => 75000, 'quantite' => 1, 'montant_paye' => 0,
+            ])->assertCreated();
+
+        $prise = $reparateur->prises()->first();
+        $this->assertSame('Batterie', $prise->categorie);
+        $this->assertSame('Batterie', $prise->designation());
+        $this->assertSame(75000, $reparateur->calculerDette());
+    }
+
+    public function test_dette_manuelle_refusee_sans_type(): void
+    {
+        $admin = $this->admin();
+        $reparateur = Reparateur::create(['prenom' => 'Lamine']);
+
+        $this->withToken($admin->createToken('t')->plainTextToken)
+            ->postJson("/api/admin/reparateurs/{$reparateur->id}/dette", [
+                'prix' => 50000, 'quantite' => 1, 'montant_paye' => 0,
+            ])->assertStatus(422);
+    }
 }

@@ -96,8 +96,8 @@ class ReparateurController extends Controller
         $prise = $reparateur->prises()->create([
             'produit_id' => null,
             'enregistre_par' => $request->user()->id,
-            'modele' => $d['modele'],
-            'marque' => $d['marque'],
+            'modele' => $d['modele'] ?? null,
+            'marque' => $d['marque'] ?? null,
             'categorie' => $d['categorie'],
             'quantite' => $d['quantite'],
             'prix_unitaire' => $d['prix'],
@@ -106,7 +106,7 @@ class ReparateurController extends Controller
         ]);
 
         JournalActivite::noter($request->user(), 'dette_reparateur_ajoutee', $reparateur, [
-            'modele' => $d['modele'], 'montant_total' => $total, 'montant_paye' => $d['montant_paye'],
+            'categorie' => $d['categorie'], 'modele' => $d['modele'] ?? null, 'montant_total' => $total, 'montant_paye' => $d['montant_paye'],
         ]);
 
         return response()->json(['message' => 'Dette ajoutée.', 'reste' => $prise->reste(), 'dette' => $reparateur->calculerDette()], 201);
@@ -134,8 +134,8 @@ class ReparateurController extends Controller
             }
 
             $prise->update([
-                'modele' => $d['modele'],
-                'marque' => $d['marque'],
+                'modele' => $d['modele'] ?? null,
+                'marque' => $d['marque'] ?? null,
                 'categorie' => $d['categorie'],
                 'quantite' => $d['quantite'],
                 'prix_unitaire' => $d['prix'],
@@ -173,9 +173,11 @@ class ReparateurController extends Controller
     private function validerDette(Request $request): array
     {
         return $request->validate([
-            'modele' => ['required', 'string', 'max:150'],
+            // Le type d'article (écran de téléphone, plaquette, batterie…) est obligatoire.
+            'categorie' => ['required', 'string', 'max:100'],
+            // Le modèle/précision et la marque sont facultatifs (une batterie n'a pas de modèle).
+            'modele' => ['nullable', 'string', 'max:150'],
             'marque' => ['nullable', 'string', 'max:100'],
-            'categorie' => ['nullable', 'string', 'max:100'],
             'prix' => ['required', 'integer', 'min:0'],
             'quantite' => ['required', 'integer', 'min:1'],
             'montant_paye' => ['required', 'integer', 'min:0'],

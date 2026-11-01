@@ -111,6 +111,23 @@ class OrangeMoneyService
             return;
         }
 
+        // Sécurité anti-fraude : le webhook est public, donc on vérifie que le
+        // jeton de notification correspond à celui reçu à l'initiation, ET que
+        // le montant annoncé est bien celui de notre transaction. Sinon on ignore :
+        // personne ne peut marquer une vente « payée » en envoyant un faux message.
+        $notifTokenAttendu = $transaction->reponse_operateur['notif_token'] ?? null;
+        $notifTokenRecu = $charge['notif_token'] ?? null;
+        $montantRecu = isset($charge['amount']) ? (int) $charge['amount'] : null;
+
+        if ($notifTokenAttendu && (! $notifTokenRecu || ! hash_equals((string) $notifTokenAttendu, (string) $notifTokenRecu))) {
+            Log::warning('Orange Money : jeton de notification invalide', ['order_id' => $reference]);
+            return;
+        }
+        if ($montantRecu !== null && $montantRecu !== (int) $transaction->montant) {
+            Log::warning('Orange Money : montant de notification incohérent', ['order_id' => $reference]);
+            return;
+        }
+
         DB::transaction(function () use ($transaction, $statut, $charge) {
             if ($statut === 'SUCCESS') {
                 $transaction->update([

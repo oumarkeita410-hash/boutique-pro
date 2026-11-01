@@ -27,16 +27,20 @@ class PriseReparateur extends Model
         return $this->montant_total - $this->montant_paye;
     }
 
-    /** Nom affiché : le produit du catalogue, sinon le modèle/marque saisis à la main. */
+    /** Nom affiché : le produit du catalogue, sinon « type + modèle (marque) » saisis à la main. */
     public function designation(): string
     {
-        if ($this->relationLoaded('produit') && $this->produit) {
-            return $this->produit->nom;
-        }
         if ($this->produit_id && $this->produit) {
             return $this->produit->nom;
         }
-        return trim(($this->modele ?? '').' '.($this->marque ? '('.$this->marque.')' : '')) ?: 'Article';
+        // Type d'article en premier (écran de téléphone, plaquette, batterie…), puis précision.
+        $parties = array_filter([
+            $this->categorie,
+            $this->modele,
+            $this->marque ? '('.$this->marque.')' : null,
+        ]);
+
+        return $parties !== [] ? implode(' ', $parties) : 'Article';
     }
 
     public function reparateur(): BelongsTo

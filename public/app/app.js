@@ -573,7 +573,7 @@ async function vendeurPaiement(v) {
       catch (ex) { err.textContent = ex.premierDetail(); }
     };
     $('#skip').onclick = vendeurCatalogue;
-  } catch (ex) { $('#p').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p><button class="btn mt" onclick="location.reload()">OK</button>`; }
+  } catch (ex) { $('#p').innerHTML = `<p class="muted center mt">${esc(ex.message)}</p><button class="btn mt" id="p-reload">OK</button>`; const rb = $('#p-reload'); if (rb) rb.onclick = () => location.reload(); }
 }
 
 /* File d'attente hors-ligne */
@@ -804,6 +804,7 @@ async function adminTableau() {
         <h3>D'un coup d'œil</h3>
         <div class="glance-grid">
           ${glance('coins', gnf(ca.mois), "CA du mois")}
+          ${glance('trendUp', gnf(ca.semaine), "CA de la semaine")}
           ${glance('receipt', gnf(ca.aujourdhui), "CA aujourd'hui")}
           ${glance('cart', d.ventes_aujourdhui ?? 0, "Ventes aujourd'hui", 'ventes')}
           ${glance('trendUp', gnf(d.marge_mois), "Marge du mois")}
@@ -819,6 +820,15 @@ async function adminTableau() {
           ${glance('users', (d.comptes?.verrouilles ?? 0), "Vendeurs verrouillés", 'comptes')}
         </div>
       </div>
+
+      <div class="card">
+        <h3>Ventes des 30 derniers jours</h3>
+        ${chartCourbe((d.ventes_par_jour || []).map(x => ({ label: x.jour, value: Number(x.montant), n: Number(x.nombre) })))}
+      </div>
+
+      ${blocTop('Meilleurs produits (mois)', (d.top_produits_mois || []).map(p => ({ nom: p.produit?.nom || '—', value: Number(p.quantite), suffix: ' vendus' })), 'c1')}
+      ${blocTop('Meilleurs vendeurs (mois)', (d.top_vendeurs_mois || []).map(v => ({ nom: ((v.vendeur?.prenom || '') + ' ' + (v.vendeur?.name || '')).trim() || '—', value: Number(v.montant) })), 'c2')}
+      ${blocTop('Chiffre d\'affaires par région (mois)', (d.ca_par_region_mois || []).map(r => ({ nom: r.region || '—', value: Number(r.montant) })), 'c3')}
 
       <div class="card">
         <div class="row-between"><h3>Vendeurs</h3><span class="badge">${vendeurs.length}</span></div>
@@ -1146,6 +1156,15 @@ function adminFormReparateur() {
     catch (ex) { err.textContent = ex.premierDetail(); }
   };
 }
+/* Types d'article qu'un réparateur peut prendre (écran, plaquette, batterie…). */
+const TYPES_ARTICLE = ['Écran de téléphone', 'Plaquette', 'Batterie', 'Connecteur de charge', 'Vitre arrière', 'Autre'];
+/* Menu déroulant des types. Sélectionne la valeur actuelle, ou « Autre » si elle n'est pas dans la liste. */
+function selectTypeArticle(idSel, valeur = '') {
+  const connu = TYPES_ARTICLE.includes(valeur);
+  const opts = TYPES_ARTICLE.map(t => `<option value="${esc(t)}" ${t === valeur || (!connu && t === 'Autre') ? 'selected' : ''}>${esc(t === 'Autre' ? 'Autre…' : t)}</option>`).join('');
+  return `<div class="field"><label>Type d'article</label><select id="${idSel}">${opts}</select></div>`;
+}
+
 async function adminReparateurDetail(id) {
   cadre('Réparateur', `<div id="d"><div class="spinner"></div></div>`, null, null, { retour: adminReparateurs });
   try {
@@ -1164,17 +1183,19 @@ async function adminReparateurDetail(id) {
         <div class="error-msg" id="pr-err"></div>
         <button class="btn" id="pr-btn">Enregistrer</button></div>
 
-      <div class="card"><h3>Ajouter une dette</h3>
-        <div class="field"><label>Choisir le modèle (dans le catalogue)</label><input id="d-search" placeholder="Rechercher un modèle (ex. A14, iPhone 13…)"></div>
-        <div id="d-res"></div>
-        ${champ('d-modele', 'Modèle')}
-        ${champ('d-marque', 'Marque (facultatif)')}
-        ${champ('d-cat', 'Catégorie (facultatif)')}
-        ${champ('d-prix', 'Prix unitaire (GNF)', '', 'number')}
+      <div class="card"><h3>Ajouter une dette (article pris)</h3>
+        ${selectTypeArticle('d-type', 'Écran de téléphone')}
+        <div class="field" id="d-autre-wrap" style="display:none"><label>Préciser le type</label><input id="d-autre" placeholder="ex. Haut-parleur, caméra…"></div>
+        ${champ('d-prix', 'Prix (GNF)', '', 'number')}
         ${champ('d-qte', 'Quantité', '1', 'number')}
-        ${champ('d-paye', 'Argent donné (GNF)', '0', 'number')}
+        ${champ('d-paye', 'Argent déjà donné (GNF, 0 = rien)', '0', 'number')}
+        <details style="margin-bottom:8px"><summary class="muted" style="font-size:.85rem;cursor:pointer">Précision facultative (modèle de téléphone, ou choisir dans le catalogue)</summary>
+          <div class="field" style="margin-top:8px"><label>Chercher dans le catalogue</label><input id="d-search" placeholder="ex. A14, iPhone 13…"></div>
+          <div id="d-res"></div>
+          ${champ('d-modele', 'Modèle / précision (ex. A14)')}
+        </details>
         <div class="error-msg" id="d-err"></div>
-        <button class="btn" id="d-btn">Ajouter la dette</button></div>
+        <button class="btn" id="d-btn">${ic('plus')} Ajouter la dette</button></div>
 
       <div class="card"><h3>Remboursement</h3>
         ${champ('rb-montant', 'Montant reçu (GNF)', '', 'number')}
@@ -1197,11 +1218,17 @@ async function adminReparateurDetail(id) {
       try { const res = await api('POST', '/reparateurs/' + id + '/prises', corps); toast('Enregistré. Argent donné ' + gnf(res.montant_paye) + ' · reste à payer ' + gnf(res.reste)); adminReparateurDetail(id); }
       catch (ex) { err.textContent = ex.premierDetail(); }
     };
+    // Afficher le champ « préciser » seulement quand on choisit « Autre ».
+    const majAutre = () => { $('#d-autre-wrap').style.display = $('#d-type').value === 'Autre' ? '' : 'none'; };
+    $('#d-type').addEventListener('change', majAutre); majAutre();
     let td; $('#d-search').addEventListener('input', e => { clearTimeout(td); td = setTimeout(() => chercherModeleDette(e.target.value.trim()), 300); });
     $('#d-btn').onclick = async () => {
       const err = $('#d-err'); err.textContent = '';
-      const corps = { modele: $('#d-modele').value.trim(), marque: $('#d-marque').value.trim() || null, categorie: $('#d-cat').value.trim() || null, prix: parseInt($('#d-prix').value, 10) || 0, quantite: parseInt($('#d-qte').value, 10) || 1, montant_paye: parseInt($('#d-paye').value, 10) || 0 };
-      if (!corps.modele) { err.textContent = 'Le modèle est obligatoire (choisissez-le ou tapez-le).'; return; }
+      const type = $('#d-type').value;
+      const categorie = type === 'Autre' ? ($('#d-autre').value.trim() || null) : type;
+      const corps = { categorie, modele: $('#d-modele').value.trim() || null, marque: null, prix: parseInt($('#d-prix').value, 10) || 0, quantite: parseInt($('#d-qte').value, 10) || 1, montant_paye: parseInt($('#d-paye').value, 10) || 0 };
+      if (!categorie) { err.textContent = 'Choisissez le type d\'article (ou précisez-le).'; return; }
+      if (!corps.prix) { err.textContent = 'Indiquez le prix.'; return; }
       try { const res = await api('POST', '/admin/reparateurs/' + id + '/dette', corps); toast('Dette ajoutée. Reste à payer ' + gnf(res.reste)); adminReparateurDetail(id); }
       catch (ex) { err.textContent = ex.premierDetail(); }
     };
@@ -1235,10 +1262,15 @@ async function chercherModeleDette(q) {
       : '<p class="muted" style="font-size:.85rem">Aucun résultat. Vous pouvez taper le modèle à la main ci-dessous.</p>';
     el.querySelectorAll('.tap').forEach(x => x.onclick = () => {
       $('#d-modele').value = x.dataset.mod;
-      $('#d-cat').value = x.dataset.cat;
       $('#d-prix').value = x.dataset.prix;
+      const cat = x.dataset.cat;
+      if (cat) {
+        if (TYPES_ARTICLE.includes(cat)) { $('#d-type').value = cat; }
+        else { $('#d-type').value = 'Autre'; $('#d-autre').value = cat; }
+        $('#d-autre-wrap').style.display = $('#d-type').value === 'Autre' ? '' : 'none';
+      }
       el.innerHTML = ''; $('#d-search').value = '';
-      toast('Modèle choisi : ' + x.dataset.mod);
+      toast('Choisi : ' + x.dataset.mod);
     });
   } catch (ex) { el.innerHTML = `<p class="muted">${esc(ex.message)}</p>`; }
 }
@@ -1247,19 +1279,24 @@ async function chercherModeleDette(q) {
 function adminModifierDette(reparateurId, prise) {
   cadre('Modifier la dette', `
     <div class="card">
-      ${champ('m-modele', 'Modèle', prise.modele || '')}
-      ${champ('m-marque', 'Marque', prise.marque || '')}
-      ${champ('m-cat', 'Catégorie', prise.categorie || '')}
-      ${champ('m-prix', 'Prix unitaire (GNF)', prise.prix_unitaire, 'number')}
+      ${selectTypeArticle('m-type', prise.categorie || '')}
+      <div class="field" id="m-autre-wrap" style="display:none"><label>Préciser le type</label><input id="m-autre" value="${esc(TYPES_ARTICLE.includes(prise.categorie) ? '' : (prise.categorie || ''))}"></div>
+      ${champ('m-prix', 'Prix (GNF)', prise.prix_unitaire, 'number')}
       ${champ('m-qte', 'Quantité', prise.quantite, 'number')}
       ${champ('m-paye', 'Argent donné (GNF)', prise.montant_paye, 'number')}
+      ${champ('m-modele', 'Modèle / précision (facultatif)', prise.modele || '')}
       <div class="error-msg" id="m-err"></div>
       <button class="btn" id="m-save">Enregistrer</button>
     </div>`, null, null, { retour: () => adminReparateurDetail(reparateurId) });
+  const majAutreM = () => { $('#m-autre-wrap').style.display = $('#m-type').value === 'Autre' ? '' : 'none'; };
+  $('#m-type').addEventListener('change', majAutreM); majAutreM();
   $('#m-save').onclick = async () => {
     const err = $('#m-err'); err.textContent = '';
-    const corps = { modele: $('#m-modele').value.trim(), marque: $('#m-marque').value.trim() || null, categorie: $('#m-cat').value.trim() || null, prix: parseInt($('#m-prix').value, 10) || 0, quantite: parseInt($('#m-qte').value, 10) || 1, montant_paye: parseInt($('#m-paye').value, 10) || 0 };
-    if (!corps.modele) { err.textContent = 'Le modèle est obligatoire.'; return; }
+    const type = $('#m-type').value;
+    const categorie = type === 'Autre' ? ($('#m-autre').value.trim() || null) : type;
+    const corps = { categorie, modele: $('#m-modele').value.trim() || null, marque: prise.marque || null, prix: parseInt($('#m-prix').value, 10) || 0, quantite: parseInt($('#m-qte').value, 10) || 1, montant_paye: parseInt($('#m-paye').value, 10) || 0 };
+    if (!categorie) { err.textContent = 'Choisissez le type d\'article.'; return; }
+    if (!corps.prix) { err.textContent = 'Indiquez le prix.'; return; }
     try { const res = await api('PUT', '/admin/prises/' + prise.id, corps); toast('Modifié. Reste à payer ' + gnf(res.reste)); adminReparateurDetail(reparateurId); }
     catch (ex) { err.textContent = ex.premierDetail(); }
   };

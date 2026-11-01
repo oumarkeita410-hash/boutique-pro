@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\VerifierRole::class,
         ]);
+
+        // En-têtes de sécurité sur toutes les réponses (web + API).
+        $middleware->append(\App\Http\Middleware\EnTetesSecurite::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

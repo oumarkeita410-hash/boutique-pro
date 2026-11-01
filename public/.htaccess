@@ -1,3 +1,20 @@
+# En-têtes de sécurité (s'appliquent aussi aux fichiers de la page /app).
+# Le bloc est ignoré sans risque si le module n'est pas disponible.
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(self), camera=(), microphone=(), payment=()"
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    # À activer UNIQUEMENT une fois le HTTPS en place sur tout le domaine :
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# Empêche de télécharger les fichiers sensibles s'ils se retrouvaient à la racine web.
+<FilesMatch "^(\.env|\.env\..*|composer\.(json|lock)|package(-lock)?\.json)$">
+    Require all denied
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
