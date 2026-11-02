@@ -252,7 +252,7 @@ function routerAccueil() {
   if (!u) return ecranConnexion();
   if (u.role === 'vendeur') return vendeurCatalogue();
   if (u.role === 'admin') return adminTableau();
-  if (u.role === 'conseiller') return conseillerClients();
+  if (u.role === 'conseiller') return conseillerAccueil();
   ecranConnexion();
 }
 
@@ -264,6 +264,14 @@ const ongletsVendeur = () => [
   { nom: 'Mon jour', icone: 'clock', aller: vendeurHoraire },
   { nom: 'Devis', icone: 'file', aller: vendeurDevis },
   { nom: 'Ventes', icone: 'coins', aller: vendeurMesVentes },
+  { nom: 'Accueil', icone: 'users', aller: vendeurAccueil },
+];
+/* Onglets du conseiller : accueil (file d'attente) + enregistrement client. */
+const ongletsConseiller = () => [
+  { nom: 'Accueil', icone: 'users', aller: conseillerAccueil },
+  { nom: 'Clients', icone: 'user', aller: conseillerClients },
+  { nom: 'Messages', icone: 'message', aller: () => vendeurMessages(ongletsConseiller(), 2) },
+  { nom: 'Mon jour', icone: 'clock', aller: () => vendeurHoraire(ongletsConseiller(), 3) },
 ];
 async function vendeurMesVentes() {
   cadre('Mes ventes', `<div id="mv"><div class="spinner"></div></div>`, ongletsVendeur(), 5);
@@ -607,11 +615,11 @@ async function synchroniser() {
   majBarre();
 }
 
-async function vendeurMessages() {
+async function vendeurMessages(onglets = ongletsVendeur(), idx = 2) {
   cadre('Messages', `<div id="fil"><div class="spinner"></div></div>
     <div class="card"><div class="field"><textarea id="msg" rows="3" placeholder="Écrire à l'administrateur (ex. un problème)…"></textarea></div>
       <div class="error-msg" id="m-err"></div><button class="btn" id="envoyer">Envoyer</button>
-      <button class="btn secondary block" id="wa">${ic('message')} Contacter la boutique sur WhatsApp</button></div>`, ongletsVendeur(), 2);
+      <button class="btn secondary block" id="wa">${ic('message')} Contacter la boutique sur WhatsApp</button></div>`, onglets, idx);
   $('#wa').onclick = () => whatsAppBoutique('Bonjour, ');
   const charger = async () => {
     try {
@@ -631,8 +639,8 @@ async function vendeurMessages() {
   charger();
 }
 
-async function vendeurHoraire() {
-  cadre('Mon jour de travail', `<div id="h"><div class="spinner"></div></div>`, ongletsVendeur(), 3);
+async function vendeurHoraire(onglets = ongletsVendeur(), idx = 3) {
+  cadre('Mon jour de travail', `<div id="h"><div class="spinner"></div></div>`, onglets, idx);
   try {
     const d = await api('GET', '/mon-horaire'); const m = d.maintenant || {};
     const jours = ['', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
@@ -650,6 +658,7 @@ async function vendeurHoraire() {
 function menuAdmin() {
   return [
     ['tableau', 'dashboard', 'Tableau de bord', adminTableau],
+    ['accueil', 'headset', "Accueil / file d'attente", adminAccueil],
     ['comptes', 'users', 'Comptes vendeurs', adminComptes],
     ['produits', 'box', 'Produits', adminProduits],
     ['reparateurs', 'wrench', 'Réparateurs', adminReparateurs],
@@ -1964,6 +1973,77 @@ function envoyerFactureWhatsApp(d) {
 }
 
 /* ================================================================  CONSEILLER  */
+/* ================================================================  ACCUEIL / FILE D'ATTENTE  */
+const MOTIFS_ACCUEIL = { achat: 'Achat', reparation: 'Réparation', renseignement: 'Renseignement', autre: 'Autre' };
+
+/* Rendu de la file d'attente dans un conteneur. Adapté au rôle :
+   conseiller/admin peuvent ajouter ; un vendeur agit sur les clients qu'on lui envoie. */
+async function rendreAccueil(contId) {
+  const role = store.user?.role, moi = store.user?.id;
+  const peutAjouter = role === 'conseiller' || role === 'admin';
+  const el = $('#' + contId); if (!el) return;
+  el.innerHTML = '<div class="spinner"></div>';
+  try {
+    const [d, vd] = await Promise.all([
+      api('GET', '/accueil'),
+      peutAjouter ? api('GET', '/accueil/vendeurs').catch(() => []) : Promise.resolve([]),
+    ]);
+    const vendeurs = vd || [];
+
+    const carteAjout = peutAjouter ? `
+      <div class="card"><h3>${ic('plus')} Accueillir un client</h3>
+        ${champ('ac-nom', 'Nom du client (facultatif)')}
+        ${champ('ac-tel', 'Téléphone (facultatif)')}
+        <div class="field"><label>Motif de la visite</label><select id="ac-motif">
+          <option value="achat">Achat</option><option value="reparation">Réparation</option>
+          <option value="renseignement">Renseignement</option><option value="autre">Autre</option></select></div>
+        <div class="field"><label>Envoyer vers un vendeur (facultatif)</label><select id="ac-vendeur">
+          <option value="">— Aucun —</option>${vendeurs.map(v => `<option value="${v.id}">${esc(v.nom)}</option>`).join('')}</select></div>
+        ${champ('ac-note', 'Note (facultatif)')}
+        <div class="error-msg" id="ac-err"></div>
+        <button class="btn" id="ac-btn">${ic('plus')} Ajouter à la file</button></div>` : '';
+
+    const ligne = (a, enCours) => {
+      const peutAgir = peutAjouter || (role === 'vendeur' && a.vendeur && a.vendeur.id === moi);
+      const pourMoi = role === 'vendeur' && a.vendeur && a.vendeur.id === moi;
+      return `<div class="list-item" ${pourMoi ? 'style="background:var(--surface-2);border-radius:8px"' : ''}><div class="main">
+        <div class="name"><span class="badge cat">N°${a.ticket}</span> ${esc(a.client)}${a.telephone ? ' · ' + esc(a.telephone) : ''}${pourMoi ? ' <span class="badge">pour vous</span>' : ''}</div>
+        <div class="sub">${esc(MOTIFS_ACCUEIL[a.motif] || a.motif)}${a.vendeur ? ' · ' + ic('forward', 13) + ' ' + esc(a.vendeur.nom) : ''} · attend ${a.attente_min} min (arrivé ${esc(a.arrivee)})${a.pris_par ? ' · pris par ' + esc(a.pris_par) : ''}${a.note ? ' · ' + esc(a.note) : ''}</div></div>
+        ${peutAgir ? `<div class="btn-row" style="width:auto">
+          ${!enCours ? `<button class="btn" style="width:auto;padding:6px 10px" data-prendre="${a.id}">${ic('check')} Prendre</button>` : ''}
+          <button class="btn secondary" style="width:auto;padding:6px 10px" data-fin="${a.id}">${ic('checkCircle')} Terminé</button>
+          <button class="icon-btn" data-annuler="${a.id}" title="Retirer" style="color:var(--danger)">${ic('close')}</button>
+        </div>` : ''}</div>`;
+    };
+
+    el.innerHTML = `
+      ${carteAjout}
+      <div class="card">
+        <div class="row-between"><h3>En attente</h3><span class="badge">${d.nombre_attente}</span></div>
+        ${d.en_attente.length ? d.en_attente.map(a => ligne(a, false)).join('') : '<p class="muted">Personne n\'attend pour le moment.</p>'}
+      </div>
+      <div class="card">
+        <div class="row-between"><h3>En cours</h3><span class="badge">${d.en_cours.length}</span></div>
+        ${d.en_cours.length ? d.en_cours.map(a => ligne(a, true)).join('') : '<p class="muted">Aucun client en cours.</p>'}
+      </div>
+      <p class="muted center" style="font-size:.8rem">${d.termines_jour} client(s) servi(s) aujourd'hui.</p>`;
+
+    if (peutAjouter) $('#ac-btn').onclick = async () => {
+      const err = $('#ac-err'); err.textContent = '';
+      const corps = { client_nom: $('#ac-nom').value.trim() || null, client_tel: $('#ac-tel').value.trim() || null,
+        motif: $('#ac-motif').value, vendeur_id: parseInt($('#ac-vendeur').value, 10) || null, note: $('#ac-note').value.trim() || null };
+      try { await api('POST', '/accueil', corps); toast('Client ajouté à la file.'); rendreAccueil(contId); }
+      catch (ex) { err.textContent = ex.premierDetail(); }
+    };
+    el.querySelectorAll('[data-prendre]').forEach(b => b.onclick = async () => { try { await api('POST', '/accueil/' + b.dataset.prendre + '/prendre'); rendreAccueil(contId); } catch (ex) { toast(ex.premierDetail()); } });
+    el.querySelectorAll('[data-fin]').forEach(b => b.onclick = async () => { try { await api('POST', '/accueil/' + b.dataset.fin + '/terminer'); toast('Terminé.'); rendreAccueil(contId); } catch (ex) { toast(ex.premierDetail()); } });
+    el.querySelectorAll('[data-annuler]').forEach(b => b.onclick = async () => { if (!confirm('Retirer ce client de la file ?')) return; try { await api('POST', '/accueil/' + b.dataset.annuler + '/annuler'); rendreAccueil(contId); } catch (ex) { toast(ex.premierDetail()); } });
+  } catch (ex) { el.innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
+function conseillerAccueil() { cadre('Accueil', `<div id="acc"></div>`, ongletsConseiller(), 0); rendreAccueil('acc'); }
+function vendeurAccueil() { cadre('Accueil', `<div id="acc"></div>`, ongletsVendeur(), 6); rendreAccueil('acc'); }
+function adminAccueil() { adminShell('accueil', "Accueil / file d'attente", `<div id="acc"></div>`); rendreAccueil('acc'); }
+
 function conseillerClients() {
   cadre('Enregistrer un client', `
     <div class="card">
@@ -1972,7 +2052,7 @@ function conseillerClients() {
       ${champ('c-pays', 'Pays', 'Guinée')}${champ('c-ville', 'Ville')}
       <div class="error-msg" id="c-err"></div>
       <button class="btn" id="c-btn">Enregistrer le client</button>
-    </div>`);
+    </div>`, ongletsConseiller(), 1);
   $('#c-btn').onclick = async () => {
     const err = $('#c-err'); err.textContent = '';
     const corps = { prenom: $('#c-prenom').value.trim(), nom: $('#c-nom').value.trim(), telephone: $('#c-tel').value.trim(),

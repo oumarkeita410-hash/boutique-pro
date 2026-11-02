@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\RestesController;
 use App\Http\Controllers\Admin\TableauDeBordController;
 use App\Http\Controllers\Admin\UtilisateurController;
 use App\Http\Controllers\Admin\VenteController as AdminVenteController;
+use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\ClientController;
@@ -62,6 +63,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/clients', [ClientController::class, 'index']);
         Route::get('/clients/{client}', [ClientController::class, 'show']);
         Route::post('/clients', [ClientController::class, 'store']);
+
+        // Accueil / file d'attente : conseillers + admin enregistrent, vendeurs voient.
+        // Les contrôles fins (qui peut ajouter / agir) sont dans le contrôleur.
+        Route::get('/accueil', [AccueilController::class, 'index']);
+        Route::get('/accueil/vendeurs', [AccueilController::class, 'vendeurs']);
+        Route::post('/accueil', [AccueilController::class, 'store']);
+        Route::post('/accueil/{accueil}/prendre', [AccueilController::class, 'prendre']);
+        Route::post('/accueil/{accueil}/terminer', [AccueilController::class, 'terminer']);
+        Route::post('/accueil/{accueil}/annuler', [AccueilController::class, 'annuler']);
     });
 
     Route::middleware(['role:vendeur,admin', 'throttle:60,1'])->group(function () {
