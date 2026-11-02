@@ -128,6 +128,20 @@ class ReparateurServiceTest extends TestCase
         $this->assertSame(75000, $reparateur->calculerDette());
     }
 
+    public function test_dette_manuelle_ancien_format_modele_seul_fonctionne(): void
+    {
+        $admin = $this->admin();
+        $reparateur = Reparateur::create(['prenom' => 'Ancienne']);
+
+        // Ancien format (téléphone pas encore mis à jour) : modèle, sans type.
+        $this->withToken($admin->createToken('t')->plainTextToken)
+            ->postJson("/api/admin/reparateurs/{$reparateur->id}/dette", [
+                'modele' => 'A14', 'categorie' => null, 'prix' => 120000, 'quantite' => 1, 'montant_paye' => 0,
+            ])->assertCreated();
+
+        $this->assertSame(120000, $reparateur->calculerDette());
+    }
+
     public function test_dette_manuelle_refusee_sans_type(): void
     {
         $admin = $this->admin();
