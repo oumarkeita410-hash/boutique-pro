@@ -1183,16 +1183,17 @@ async function adminReparateurDetail(id) {
         <div class="error-msg" id="pr-err"></div>
         <button class="btn" id="pr-btn">Enregistrer</button></div>
 
-      <div class="card"><h3>Ajouter une dette (article pris)</h3>
+      <div class="card"><h3>Ajouter une dette (article pris, saisi à la main)</h3>
         ${selectTypeArticle('d-type', 'Écran de téléphone')}
         <div class="field" id="d-autre-wrap" style="display:none"><label>Préciser le type</label><input id="d-autre" placeholder="ex. Haut-parleur, caméra…"></div>
+        ${champ('d-modele', 'Modèle (ex. A14, iPhone 13) — facultatif')}
+        ${champ('d-marque', 'Marque (ex. Samsung, Tecno) — facultatif')}
         ${champ('d-prix', 'Prix (GNF)', '', 'number')}
         ${champ('d-qte', 'Quantité', '1', 'number')}
         ${champ('d-paye', 'Argent déjà donné (GNF, 0 = rien)', '0', 'number')}
-        <details style="margin-bottom:8px"><summary class="muted" style="font-size:.85rem;cursor:pointer">Précision facultative (modèle de téléphone, ou choisir dans le catalogue)</summary>
+        <details style="margin-bottom:8px"><summary class="muted" style="font-size:.85rem;cursor:pointer">Ou choisir un article du catalogue (remplit automatiquement)</summary>
           <div class="field" style="margin-top:8px"><label>Chercher dans le catalogue</label><input id="d-search" placeholder="ex. A14, iPhone 13…"></div>
           <div id="d-res"></div>
-          ${champ('d-modele', 'Modèle / précision (ex. A14)')}
         </details>
         <div class="error-msg" id="d-err"></div>
         <button class="btn" id="d-btn">${ic('plus')} Ajouter la dette</button></div>
@@ -1226,7 +1227,7 @@ async function adminReparateurDetail(id) {
       const err = $('#d-err'); err.textContent = '';
       const type = $('#d-type').value;
       const categorie = type === 'Autre' ? ($('#d-autre').value.trim() || null) : type;
-      const corps = { categorie, modele: $('#d-modele').value.trim() || null, marque: null, prix: parseInt($('#d-prix').value, 10) || 0, quantite: parseInt($('#d-qte').value, 10) || 1, montant_paye: parseInt($('#d-paye').value, 10) || 0 };
+      const corps = { categorie, modele: $('#d-modele').value.trim() || null, marque: $('#d-marque').value.trim() || null, prix: parseInt($('#d-prix').value, 10) || 0, quantite: parseInt($('#d-qte').value, 10) || 1, montant_paye: parseInt($('#d-paye').value, 10) || 0 };
       if (!categorie) { err.textContent = 'Choisissez le type d\'article (ou précisez-le).'; return; }
       if (!corps.prix) { err.textContent = 'Indiquez le prix.'; return; }
       try { const res = await api('POST', '/admin/reparateurs/' + id + '/dette', corps); toast('Dette ajoutée. Reste à payer ' + gnf(res.reste)); adminReparateurDetail(id); }
@@ -1281,10 +1282,11 @@ function adminModifierDette(reparateurId, prise) {
     <div class="card">
       ${selectTypeArticle('m-type', prise.categorie || '')}
       <div class="field" id="m-autre-wrap" style="display:none"><label>Préciser le type</label><input id="m-autre" value="${esc(TYPES_ARTICLE.includes(prise.categorie) ? '' : (prise.categorie || ''))}"></div>
+      ${champ('m-modele', 'Modèle (facultatif)', prise.modele || '')}
+      ${champ('m-marque', 'Marque (facultatif)', prise.marque || '')}
       ${champ('m-prix', 'Prix (GNF)', prise.prix_unitaire, 'number')}
       ${champ('m-qte', 'Quantité', prise.quantite, 'number')}
       ${champ('m-paye', 'Argent donné (GNF)', prise.montant_paye, 'number')}
-      ${champ('m-modele', 'Modèle / précision (facultatif)', prise.modele || '')}
       <div class="error-msg" id="m-err"></div>
       <button class="btn" id="m-save">Enregistrer</button>
     </div>`, null, null, { retour: () => adminReparateurDetail(reparateurId) });
@@ -1294,7 +1296,7 @@ function adminModifierDette(reparateurId, prise) {
     const err = $('#m-err'); err.textContent = '';
     const type = $('#m-type').value;
     const categorie = type === 'Autre' ? ($('#m-autre').value.trim() || null) : type;
-    const corps = { categorie, modele: $('#m-modele').value.trim() || null, marque: prise.marque || null, prix: parseInt($('#m-prix').value, 10) || 0, quantite: parseInt($('#m-qte').value, 10) || 1, montant_paye: parseInt($('#m-paye').value, 10) || 0 };
+    const corps = { categorie, modele: $('#m-modele').value.trim() || null, marque: $('#m-marque').value.trim() || null, prix: parseInt($('#m-prix').value, 10) || 0, quantite: parseInt($('#m-qte').value, 10) || 1, montant_paye: parseInt($('#m-paye').value, 10) || 0 };
     if (!categorie) { err.textContent = 'Choisissez le type d\'article.'; return; }
     if (!corps.prix) { err.textContent = 'Indiquez le prix.'; return; }
     try { const res = await api('PUT', '/admin/prises/' + prise.id, corps); toast('Modifié. Reste à payer ' + gnf(res.reste)); adminReparateurDetail(reparateurId); }
