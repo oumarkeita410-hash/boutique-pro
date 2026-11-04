@@ -7,6 +7,11 @@ return [
     // Au-delà de ce montant dû par un réparateur, l'administrateur est alerté.
     'seuil_dette_reparateur' => (int) env('SEUIL_DETTE_REPARATEUR', 500000),
 
+    // Service après-vente (SAV) : numéro fixe affiché au conseiller pour appeler.
+    'sav' => [
+        'numero' => env('SAV_NUMERO', '+224621952252'),
+    ],
+
     // Coordonnées de la boutique (affichées, jamais secrètes).
     'contact' => [
         'email' => env('BOUTIQUE_EMAIL', 'oumarkeita410@gmail.com'),

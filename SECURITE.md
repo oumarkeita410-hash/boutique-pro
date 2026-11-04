@@ -12,6 +12,12 @@ Ce qui est **déjà** protégé dans le code, et ce qu'il faut **régler à la m
 - **Paiements** : une vente ne passe « payée » que par vérification serveur (CinetPay re-vérifié ; Orange Money : jeton + montant contrôlés). Un faux message ne peut pas marquer une vente payée.
 - **En-têtes de sécurité** sur les réponses du serveur (anti-clickjacking, anti-sniffing, politique de référent) + **CSP** sur la page (scripts limités à notre site).
 - **Secrets** (clés de paiement, WhatsApp) dans `.env`, jamais dans le code ni sur GitHub.
+- **Service après-vente (SAV)** :
+  - Réservé aux **conseillers et à l'admin** ; un vendeur n'y a pas accès. **Seul l'admin** peut modifier ou supprimer une réclamation / une entrée.
+  - **Notes vocales** : fichiers stockés **en privé** (`storage/app`, hors du web) et servis **uniquement** après authentification — jamais par une URL publique devinable.
+  - Envoi de fichier **filtré** (types audio seulement) et **limité à 10 Mo**, avec une **limite de débit** (20 envois/minute) pour empêcher de saturer le disque.
+  - Le micro n'est autorisé qu'en **HTTPS** (contexte sécurisé) et seulement pour notre propre site (`Permissions-Policy: microphone=(self)`).
+- **Réglages** (ex. numéro du SAV) modifiables **par l'admin seul**, enregistrés en base ; la valeur affichée est toujours échappée (pas d'injection possible).
 
 ## ⚠️ À régler lors de la mise en ligne (hébergement)
 

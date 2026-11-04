@@ -23,6 +23,8 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ModificationVenteController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\ReclamationController;
+use App\Http\Controllers\ReglageController;
 use App\Http\Controllers\ReparateurOperationController;
 use App\Http\Controllers\VenteController;
 use App\Http\Controllers\WhatsAppController;
@@ -74,6 +76,26 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/accueil/{accueil}/annuler', [AccueilController::class, 'annuler']);
     });
 
+    // Service après-vente (SAV) : conseillers + admin ouvrent et traitent les
+    // réclamations (appels, messages, notes vocales). L'admin voit tout ;
+    // seul l'admin peut modifier/supprimer (routes plus bas).
+    Route::middleware(['role:conseiller,admin', 'throttle:60,1'])->group(function () {
+        Route::get('/reclamations', [ReclamationController::class, 'index']);
+        Route::post('/reclamations', [ReclamationController::class, 'store']);
+        Route::get('/reclamations/{reclamation}', [ReclamationController::class, 'show']);
+        // Ajout d'un appel/message (avec note vocale) : plus serré (envoi de fichier).
+        Route::post('/reclamations/{reclamation}/interactions', [ReclamationController::class, 'ajouterInteraction'])->middleware('throttle:20,1');
+        Route::post('/reclamations/{reclamation}/statut', [ReclamationController::class, 'changerStatut']);
+        Route::get('/reclamations/{reclamation}/interactions/{interaction}/audio', [ReclamationController::class, 'audio']);
+    });
+    // Modifier / supprimer une réclamation ou une entrée : administrateur seul.
+    Route::middleware(['role:admin', 'throttle:60,1'])->group(function () {
+        Route::put('/reclamations/{reclamation}', [ReclamationController::class, 'modifier']);
+        Route::delete('/reclamations/{reclamation}', [ReclamationController::class, 'supprimer']);
+        Route::put('/reclamations/{reclamation}/interactions/{interaction}', [ReclamationController::class, 'modifierInteraction']);
+        Route::delete('/reclamations/{reclamation}/interactions/{interaction}', [ReclamationController::class, 'supprimerInteraction']);
+    });
+
     Route::middleware(['role:vendeur,admin', 'throttle:60,1'])->group(function () {
         Route::get('/catalogue', [CatalogueController::class, 'index']);
         Route::post('/ventes', [VenteController::class, 'store']);
@@ -115,6 +137,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('role:admin')->prefix('admin')->group(function () {
         Route::get('tableau-de-bord', TableauDeBordController::class);
+
+        // Réglages modifiables depuis l'app (ex. numéro du SAV).
+        Route::get('reglages', [ReglageController::class, 'index']);
+        Route::put('reglages', [ReglageController::class, 'update']);
 
         // Rapport de fin de journée + tous les restes à payer dus à la boutique.
         Route::get('rapport-jour', [RapportController::class, 'jour']);

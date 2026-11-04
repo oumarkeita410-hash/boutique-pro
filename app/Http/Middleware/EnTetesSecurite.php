@@ -21,7 +21,8 @@ class EnTetesSecurite
         $reponse->headers->set('X-Content-Type-Options', 'nosniff');
         $reponse->headers->set('X-Frame-Options', 'DENY');
         $reponse->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-        $reponse->headers->set('Permissions-Policy', 'geolocation=(self), camera=(), microphone=(), payment=()');
+        // microphone=(self) : autorisé pour les notes vocales du SAV (même origine uniquement).
+        $reponse->headers->set('Permissions-Policy', 'geolocation=(self), camera=(), microphone=(self), payment=()');
         $reponse->headers->set('Cross-Origin-Opener-Policy', 'same-origin');
 
         // En production (HTTPS), on force le navigateur à ne plus jamais utiliser http.

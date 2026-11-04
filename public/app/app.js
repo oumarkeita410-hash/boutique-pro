@@ -93,6 +93,10 @@ const ICONES = {
   out: '<circle cx="12" cy="12" r="9"/><path d="M12 16V9"/><path d="M8.5 12.5 12 9l3.5 3.5"/>',
   undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 5 5v5"/>',
   dot: '<circle cx="12" cy="12" r="6"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.6a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"/>',
+  mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/>',
+  play: '<path d="M7 4l12 8-12 8Z"/>',
+  lifebuoy: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.6"/><path d="M5.2 5.2l4.3 4.3"/><path d="M14.5 14.5l4.3 4.3"/><path d="M18.8 5.2l-4.3 4.3"/><path d="M9.5 14.5l-4.3 4.3"/>',
 };
 function ic(nom, taille = 18) {
   const p = ICONES[nom];
@@ -107,6 +111,7 @@ const TEINTES = {
   user: '#db2777', coins: '#f59e0b', card: '#4f46e5', banknote: '#16a34a',
   checkCircle: '#16a34a', message: '#0ea5e9', bell: '#dc2626', journal: '#475569',
   cart: '#2563eb', headset: '#7c3aed', shield: '#1d4ed8', clock: '#0891b2',
+  lifebuoy: '#e11d48', phone: '#16a34a', mic: '#db2777',
 };
 /* Icône « pleine » : dessin blanc dans une pastille arrondie de couleur. */
 function icTile(nom, taille = 30) {
@@ -131,6 +136,25 @@ async function api(methode, chemin, corps) {
 class ApiError extends Error {
   constructor(message, status, data) { super(message); this.status = status; this.data = data; }
   premierDetail() { const e = this.data && this.data.errors; if (e) { const k = Object.keys(e)[0]; return e[k][0]; } return this.message; }
+}
+// Envoi d'un formulaire avec fichier (ex. note vocale). On NE fixe PAS
+// Content-Type : le navigateur ajoute lui-même la bonne limite (boundary).
+async function apiFichier(methode, chemin, formData) {
+  const headers = { 'Accept': 'application/json' };
+  if (store.token) headers['Authorization'] = 'Bearer ' + store.token;
+  const res = await fetch(API + chemin, { method: methode, headers, body: formData });
+  const data = res.status === 204 ? null : await res.json().catch(() => ({}));
+  if (res.status === 401) { deconnexion(); throw new ApiError('Session terminée.', 401, data); }
+  if (!res.ok) throw new ApiError((data && data.message) || 'Erreur.', res.status, data);
+  return data;
+}
+// Récupère un fichier son protégé (avec le jeton) et renvoie une URL lisible par <audio>.
+async function urlAudio(chemin) {
+  const headers = {};
+  if (store.token) headers['Authorization'] = 'Bearer ' + store.token;
+  const res = await fetch(API + chemin, { headers });
+  if (!res.ok) throw new ApiError('Lecture impossible.', res.status, null);
+  return URL.createObjectURL(await res.blob());
 }
 
 /* ================================================================  CONNEXION  */
@@ -272,6 +296,7 @@ const ongletsConseiller = () => [
   { nom: 'Clients', icone: 'user', aller: conseillerClients },
   { nom: 'Messages', icone: 'message', aller: () => vendeurMessages(ongletsConseiller(), 2) },
   { nom: 'Mon jour', icone: 'clock', aller: () => vendeurHoraire(ongletsConseiller(), 3) },
+  { nom: 'SAV', icone: 'lifebuoy', aller: conseillerSAV },
 ];
 async function vendeurMesVentes() {
   cadre('Mes ventes', `<div id="mv"><div class="spinner"></div></div>`, ongletsVendeur(), 5);
@@ -659,6 +684,7 @@ function menuAdmin() {
   return [
     ['tableau', 'dashboard', 'Tableau de bord', adminTableau],
     ['accueil', 'headset', "Accueil / file d'attente", adminAccueil],
+    ['sav', 'lifebuoy', 'Réclamations (SAV)', adminSAV],
     ['comptes', 'users', 'Comptes vendeurs', adminComptes],
     ['produits', 'box', 'Produits', adminProduits],
     ['reparateurs', 'wrench', 'Réparateurs', adminReparateurs],
@@ -2060,6 +2086,249 @@ function conseillerClients() {
     if (!corps.prenom || !corps.nom || !corps.telephone || !corps.pays || !corps.ville) { err.textContent = 'Tous les champs sauf email sont obligatoires.'; return; }
     try { await api('POST', '/clients', corps); toast('Client enregistré.'); ['c-prenom', 'c-nom', 'c-tel', 'c-email', 'c-ville'].forEach(id => $('#' + id).value = ''); }
     catch (ex) { err.textContent = ex.premierDetail(); }
+  };
+}
+
+/* ================================================================  SAV / RÉCLAMATIONS  */
+const SAV_STATUTS = { ouverte: 'Ouverte', en_cours: 'En cours', resolue: 'Résolue', fermee: 'Fermée' };
+const SAV_STATUT_COULEUR = { ouverte: '#e11d48', en_cours: '#d97706', resolue: '#16a34a', fermee: '#64748b' };
+let SAV_NUMERO = '';
+
+function conseillerSAV() { cadre('SAV — Réclamations', `<div id="sav"></div>`, ongletsConseiller(), 4); savVue('sav', false); }
+function adminSAV() { adminShell('sav', 'Réclamations (SAV)', `<div id="sav"></div>`); savVue('sav', true); }
+
+// Liste des réclamations (même affichage pour conseiller et admin).
+async function savVue(contId, estAdmin) {
+  const el = $('#' + contId); if (!el) return;
+  el.innerHTML = `<div class="spinner" style="margin:16px auto"></div>`;
+  try {
+    const d = await api('GET', '/reclamations');
+    SAV_NUMERO = d.sav_numero || SAV_NUMERO;
+    const items = d.data || [];
+    el.innerHTML = `
+      ${estAdmin ? `<div class="card" style="margin-bottom:10px">
+        <div class="field" style="margin:0"><label>Numéro du SAV (affiché au conseiller)</label>
+          <div style="display:flex;gap:6px"><input id="sav-num" value="${esc(SAV_NUMERO || '')}" placeholder="+224…" style="flex:1"><button class="btn" id="sav-num-ok" style="width:auto">Enregistrer</button></div>
+          <div class="muted" style="font-size:.78rem;margin-top:4px">Changez-le dès que vous avez le vrai numéro de l'entreprise.</div>
+        </div></div>` : ''}
+      <div class="btn-row" style="margin-bottom:10px"><button class="btn" id="sav-nouv" style="width:auto">${ic('plus')} Nouvelle réclamation</button></div>
+      ${items.length ? `<div class="card">${items.map(r => `
+        <div class="list-item tap" data-open="${r.id}" role="button" tabindex="0"><div class="main">
+          <div class="name">n°${r.numero} — ${esc(r.client)}</div>
+          <div class="sub">${esc(r.produit)} · ${r.nb_interactions} échange(s)</div>
+          <div class="sub">${esc(r.date)}${r.conseiller ? ' · ' + esc(r.conseiller) : ''}</div>
+        </div><span style="font-weight:700;font-size:.8rem;color:${SAV_STATUT_COULEUR[r.statut] || '#64748b'}">${SAV_STATUTS[r.statut] || esc(r.statut)}</span></div>`).join('')}</div>`
+      : `<p class="muted center mt">Aucune réclamation. Touchez « Nouvelle réclamation ».</p>`}`;
+    $('#sav-nouv').onclick = () => savForm(contId, estAdmin);
+    el.querySelectorAll('[data-open]').forEach(x => x.onclick = () => savDetail(contId, estAdmin, +x.dataset.open));
+    if (estAdmin) {
+      const ok = $('#sav-num-ok');
+      if (ok) ok.onclick = async () => {
+        const v = $('#sav-num').value.trim();
+        if (!v) { toast('Entrez un numéro.'); return; }
+        ok.disabled = true;
+        try { const d = await api('PUT', '/admin/reglages', { sav_numero: v }); SAV_NUMERO = d.sav_numero || v; toast('Numéro SAV mis à jour.'); }
+        catch (ex) { toast(ex.premierDetail()); }
+        finally { ok.disabled = false; }
+      };
+    }
+  } catch (ex) { el.innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; }
+}
+
+// Formulaire d'ouverture d'une réclamation.
+function savForm(contId, estAdmin) {
+  const el = $('#' + contId); if (!el) return;
+  el.innerHTML = `
+    <button class="btn secondary" id="sav-retour" style="width:auto;padding:8px 12px">${ic('back')} Retour</button>
+    <div class="card mt">
+      <h3 style="margin:.2rem 0 .6rem">Nouvelle réclamation</h3>
+      <div class="field"><label>Chercher le client (nom ou téléphone)</label><input id="sav-rech" placeholder="Ex. Fatou ou 6xx…" autocomplete="off"></div>
+      <div id="sav-res"></div>
+      <div id="sav-choisi" class="muted" style="font-size:.85rem;margin:2px 0 6px"></div>
+      <details><summary class="muted" style="font-size:.85rem;cursor:pointer">Client pas dans la liste ? Saisir à la main</summary>
+        ${champ('sav-nom', 'Nom du client')}${champ('sav-tel', 'Téléphone du client')}
+      </details>
+      ${champ('sav-produit', 'Produit concerné')}
+      ${champ('sav-ref', 'Référence de la vente (facultatif)')}
+      <div class="field"><label>Problème</label><textarea id="sav-pb" rows="3" placeholder="Ex. l'écran s'éteint tout seul"></textarea></div>
+      <div class="error-msg" id="sav-err"></div>
+      <button class="btn" id="sav-creer">Ouvrir la réclamation</button>
+    </div>`;
+  let clientId = null;
+  $('#sav-retour').onclick = () => savVue(contId, estAdmin);
+  let tmr = null;
+  $('#sav-rech').oninput = e => {
+    clearTimeout(tmr);
+    const q = e.target.value.trim();
+    if (q.length < 2) { $('#sav-res').innerHTML = ''; return; }
+    tmr = setTimeout(async () => {
+      try {
+        const d = await api('GET', '/clients?recherche=' + encodeURIComponent(q));
+        const cs = (d.data || []).slice(0, 8);
+        $('#sav-res').innerHTML = cs.length ? `<div class="card" style="margin:.3rem 0">${cs.map(c => {
+          const nom = ((c.prenom || '') + ' ' + (c.nom || '')).trim();
+          return `<div class="list-item tap" data-cid="${c.id}" data-nom="${esc(nom)}" role="button" tabindex="0"><div class="main"><div class="name">${esc(nom)}</div><div class="sub">${esc(c.telephone || '')}</div></div><span class="badge cat">Choisir</span></div>`;
+        }).join('')}</div>` : `<p class="muted" style="font-size:.82rem;margin:4px 0">Aucun client trouvé.</p>`;
+        $('#sav-res').querySelectorAll('[data-cid]').forEach(x => x.onclick = () => {
+          clientId = +x.dataset.cid;
+          $('#sav-choisi').innerHTML = `Client choisi : <b>${esc(x.dataset.nom)}</b> — <span class="lien" id="sav-annule" style="cursor:pointer;color:var(--danger)">changer</span>`;
+          $('#sav-res').innerHTML = ''; $('#sav-rech').value = x.dataset.nom;
+          $('#sav-annule').onclick = () => { clientId = null; $('#sav-choisi').innerHTML = ''; $('#sav-rech').value = ''; };
+        });
+      } catch (ex) { /* recherche silencieuse */ }
+    }, 300);
+  };
+  $('#sav-creer').onclick = async () => {
+    const err = $('#sav-err'); err.textContent = '';
+    const body = {
+      client_id: clientId,
+      client_nom: clientId ? null : ($('#sav-nom').value.trim() || null),
+      client_tel: clientId ? null : ($('#sav-tel').value.trim() || null),
+      produit: $('#sav-produit').value.trim(),
+      vente_ref: $('#sav-ref').value.trim() || null,
+      probleme: $('#sav-pb').value.trim(),
+    };
+    if (!body.produit || !body.probleme) { err.textContent = 'Indiquez le produit et le problème.'; return; }
+    if (!clientId && !body.client_nom && !body.client_tel) { err.textContent = 'Choisissez un client ou saisissez son nom/numéro.'; return; }
+    try { const r = await api('POST', '/reclamations', body); toast('Réclamation ouverte.'); savDetail(contId, estAdmin, r.id); }
+    catch (ex) { err.textContent = ex.premierDetail(); }
+  };
+}
+
+// Détail d'une réclamation : infos, statut, historique, ajout d'appel/message + note vocale.
+async function savDetail(contId, estAdmin, id) {
+  const el = $('#' + contId); if (!el) return;
+  el.innerHTML = `<div class="spinner" style="margin:16px auto"></div>`;
+  let r;
+  try { r = await api('GET', '/reclamations/' + id); }
+  catch (ex) { el.innerHTML = `<p class="muted center mt">${esc(ex.message)}</p>`; return; }
+
+  const stCoul = SAV_STATUT_COULEUR[r.statut] || '#64748b';
+  const boutonsStatut = Object.keys(SAV_STATUTS).map(s =>
+    `<button class="btn ${s === r.statut ? '' : 'secondary'}" style="width:auto;padding:7px 10px;font-size:.85rem" data-st="${s}">${SAV_STATUTS[s]}</button>`).join('');
+
+  const inter = (r.interactions || []).map(i => `
+    <div class="list-item"><div class="main">
+      <div class="name">${i.type === 'appel' ? ic('phone', 15) : ic('message', 15)} ${esc(i.type === 'appel' ? 'Appel' : (i.type === 'message' ? 'Message' : 'Note'))}${i.auteur ? ' — ' + esc(i.auteur) : ''}</div>
+      <div class="sub">${esc(i.date)}</div>
+      ${i.resume ? `<div class="sub" style="white-space:pre-wrap;color:var(--text)">${esc(i.resume)}</div>` : ''}
+      ${i.a_audio ? `<div class="sub"><button class="btn secondary ecouter" style="width:auto;padding:5px 10px" data-url="${esc(i.audio_url)}">${ic('play', 14)} Écouter${i.duree ? ' (' + i.duree + ' s)' : ''}</button></div>` : ''}
+      ${estAdmin ? `<div class="sub"><button data-supi="${i.id}" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:.8rem;padding:0">Supprimer cette entrée</button></div>` : ''}
+    </div></div>`).join('');
+
+  el.innerHTML = `
+    <button class="btn secondary" id="sav-retour" style="width:auto;padding:8px 12px">${ic('back')} Retour</button>
+    <div class="card mt">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <h3 style="margin:.2rem 0">Réclamation n°${r.numero}</h3>
+        <span style="font-weight:700;color:${stCoul}">${SAV_STATUTS[r.statut] || esc(r.statut)}</span>
+      </div>
+      <div class="sub"><b>Client :</b> ${esc(r.client)}${r.telephone ? ' · ' + esc(r.telephone) : ''}</div>
+      <div class="sub"><b>Produit :</b> ${esc(r.produit)}</div>
+      ${r.vente_ref ? `<div class="sub"><b>Vente :</b> ${esc(r.vente_ref)}</div>` : ''}
+      <div class="sub" style="white-space:pre-wrap"><b>Problème :</b> ${esc(r.probleme)}</div>
+      <div class="sub"><b>Conseiller :</b> ${esc(r.conseiller || '—')}</div>
+    </div>
+
+    <div class="card mt">
+      <div class="muted" style="font-size:.85rem;margin-bottom:6px">${ic('phone', 14)} Numéro SAV : <b>${esc(SAV_NUMERO || '')}</b><br>Appelez le client depuis votre téléphone, puis notez l'appel ci-dessous.</div>
+      <div class="btn-row" style="flex-wrap:wrap;gap:6px">${boutonsStatut}</div>
+    </div>
+
+    <div class="card mt">
+      <h3 style="margin:.2rem 0 .5rem">Ajouter un appel / message</h3>
+      <div class="field"><label>Type</label><select id="sav-type"><option value="appel">Appel téléphonique</option><option value="message">Message</option><option value="note">Note</option></select></div>
+      <div class="field"><label>Résumé de l'échange</label><textarea id="sav-resume" rows="3" placeholder="Ex. écran cassé, remboursement proposé"></textarea></div>
+      <div class="field"><label>Note vocale (facultatif)</label>
+        <div class="btn-row" style="gap:6px"><button class="btn secondary" id="sav-rec" type="button" style="width:auto">${ic('mic')} Enregistrer</button><span id="sav-chrono" class="muted" style="font-size:.85rem"></span></div>
+        <div id="sav-apercu" style="margin-top:6px"></div>
+      </div>
+      <div class="error-msg" id="sav-ierr"></div>
+      <button class="btn" id="sav-env">Ajouter à la réclamation</button>
+    </div>
+
+    <h3 class="mt" style="margin:.4rem 0">Historique</h3>
+    <div class="card">${inter || '<p class="muted center">Aucun échange encore.</p>'}</div>
+
+    ${estAdmin ? `<div class="btn-row mt"><button class="btn secondary" id="sav-del" style="width:auto;color:var(--danger)">${ic('trash')} Supprimer la réclamation</button></div>` : ''}`;
+
+  $('#sav-retour').onclick = () => savVue(contId, estAdmin);
+
+  el.querySelectorAll('[data-st]').forEach(b => b.onclick = async () => {
+    try { await api('POST', '/reclamations/' + id + '/statut', { statut: b.dataset.st }); toast('Statut mis à jour.'); savDetail(contId, estAdmin, id); }
+    catch (ex) { toast(ex.premierDetail()); }
+  });
+
+  el.querySelectorAll('.ecouter').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try {
+      const u = await urlAudio(b.dataset.url);
+      const au = document.createElement('audio'); au.controls = true; au.src = u; au.autoplay = true; au.style.width = '100%';
+      b.replaceWith(au);
+    } catch (ex) { b.disabled = false; toast('Lecture impossible.'); }
+  });
+
+  if (estAdmin) {
+    el.querySelectorAll('[data-supi]').forEach(b => b.onclick = async () => {
+      if (!confirm('Supprimer cette entrée ?')) return;
+      try { await api('DELETE', '/reclamations/' + id + '/interactions/' + b.dataset.supi); toast('Entrée supprimée.'); savDetail(contId, estAdmin, id); }
+      catch (ex) { toast(ex.premierDetail()); }
+    });
+    const del = $('#sav-del');
+    if (del) del.onclick = async () => {
+      if (!confirm('Supprimer définitivement cette réclamation et tout son historique ?')) return;
+      try { await api('DELETE', '/reclamations/' + id); toast('Réclamation supprimée.'); savVue(contId, estAdmin); }
+      catch (ex) { toast(ex.premierDetail()); }
+    };
+  }
+
+  // Enregistreur de note vocale (micro du téléphone).
+  let rec = null, morceaux = [], blobAudio = null, dureeAudio = 0, tDeb = 0, chrono = null;
+  const apercu = $('#sav-apercu'), btnRec = $('#sav-rec');
+  const majChrono = () => { const c = $('#sav-chrono'); if (c) c.textContent = '⏺ ' + Math.round((Date.now() - tDeb) / 1000) + ' s'; };
+  const resetApercu = () => {
+    if (!blobAudio) { apercu.innerHTML = ''; return; }
+    const u = URL.createObjectURL(blobAudio);
+    apercu.innerHTML = `<audio controls src="${u}" style="width:100%"></audio><button id="sav-supaudio" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:.8rem;margin-top:4px">Supprimer la note vocale</button>`;
+    $('#sav-supaudio').onclick = () => { blobAudio = null; dureeAudio = 0; resetApercu(); };
+  };
+  btnRec.onclick = async () => {
+    if (rec && rec.state === 'recording') { rec.stop(); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+      toast("L'enregistrement vocal n'est pas disponible sur cet appareil."); return;
+    }
+    let flux;
+    try { flux = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+    catch (ex) { toast('Micro refusé ou indisponible.'); return; }
+    const types = ['audio/webm', 'audio/mp4', 'audio/ogg'];
+    const mime = types.find(t => typeof MediaRecorder.isTypeSupported === 'function' && MediaRecorder.isTypeSupported(t)) || '';
+    rec = new MediaRecorder(flux, mime ? { mimeType: mime } : undefined);
+    morceaux = [];
+    rec.ondataavailable = e => { if (e.data && e.data.size) morceaux.push(e.data); };
+    rec.onstop = () => {
+      clearInterval(chrono);
+      dureeAudio = Math.round((Date.now() - tDeb) / 1000);
+      blobAudio = new Blob(morceaux, { type: rec.mimeType || 'audio/webm' });
+      flux.getTracks().forEach(t => t.stop());
+      btnRec.innerHTML = `${ic('mic')} Enregistrer`;
+      const c = $('#sav-chrono'); if (c) c.textContent = '';
+      resetApercu();
+    };
+    rec.start(); tDeb = Date.now(); chrono = setInterval(majChrono, 500); majChrono();
+    btnRec.innerHTML = '⏹ Arrêter';
+  };
+
+  $('#sav-env').onclick = async () => {
+    const err = $('#sav-ierr'); err.textContent = '';
+    const resume = $('#sav-resume').value.trim();
+    if (!resume && !blobAudio) { err.textContent = "Écris un résumé ou enregistre une note vocale."; return; }
+    const fd = new FormData();
+    fd.append('type', $('#sav-type').value);
+    if (resume) fd.append('resume', resume);
+    if (blobAudio) { fd.append('audio', blobAudio, 'note.webm'); fd.append('duree', String(dureeAudio)); }
+    const b = $('#sav-env'); b.disabled = true; b.textContent = 'Envoi…';
+    try { await apiFichier('POST', '/reclamations/' + id + '/interactions', fd); toast('Ajouté.'); savDetail(contId, estAdmin, id); }
+    catch (ex) { err.textContent = ex.premierDetail(); b.disabled = false; b.textContent = 'Ajouter à la réclamation'; }
   };
 }
 
